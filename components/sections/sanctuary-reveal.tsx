@@ -284,8 +284,8 @@ export function SanctuaryReveal() {
       >
         <div ref={sceneRef} className="absolute inset-0 will-change-transform">
           <Image
-            src="/images/writing-studio-golden.png"
-            alt="Serene artisan writing studio with golden light through the window"
+            src="/images/writing-studio-notebook.png"
+            alt="Serene artisan writing studio with an open notebook and golden light through the window"
             fill
             priority
             className="object-cover object-[center_40%] md:object-center"
