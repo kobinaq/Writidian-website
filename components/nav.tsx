@@ -3,15 +3,53 @@
 import { Button } from "@/components/ui/button";
 import { useSound } from "@/components/sound-context";
 import { SITE } from "@/lib/constants";
-import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 
+function SoundIcon({ muted }: { muted: boolean }) {
+  if (muted) {
+    return (
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden
+      >
+        <path d="M11 5 6 9H3v6h3l5 4V5z" />
+        <path d="m23 9-6 6" />
+        <path d="m17 9 6 6" />
+      </svg>
+    );
+  }
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M11 5 6 9H3v6h3l5 4V5z" />
+      <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+      <path d="M18.5 5.5a9 9 0 0 1 0 13" />
+    </svg>
+  );
+}
+
 export function Nav() {
-  const { muted, toggleMuted, setMuted } = useSound();
+  const { muted, toggleMuted, setMuted, unlockAudio } = useSound();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -23,38 +61,38 @@ export function Nav() {
   }, [setMuted]);
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4 sm:pt-5">
-      <motion.div
-        animate={{
-          y: scrolled ? 0 : 4,
-          backgroundColor: scrolled
-            ? "rgba(247, 244, 238, 0.92)"
-            : "rgba(247, 244, 238, 0.72)",
-        }}
-        transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
-        className="pointer-events-auto flex w-full max-w-3xl items-center justify-between gap-3 rounded-full border border-ink/10 px-4 py-2 shadow-[0_12px_40px_-20px_rgba(14,12,9,0.35)] backdrop-blur-md sm:px-5"
-      >
+    <header
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
+        scrolled
+          ? "border-ink/10 bg-paper/95 backdrop-blur-md"
+          : "border-transparent bg-paper/80 backdrop-blur-sm"
+      }`}
+    >
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
         <a
           href="#top"
-          className="font-serif text-lg tracking-tight text-ink sm:text-xl"
+          className="font-serif text-xl tracking-tight text-ink sm:text-2xl"
         >
           {SITE.name}
         </a>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             type="button"
-            onClick={toggleMuted}
+            onClick={() => {
+              void unlockAudio();
+              toggleMuted();
+            }}
             aria-pressed={muted}
-            aria-label={muted ? "Unmute sanctuary sound" : "Mute sanctuary sound"}
-            className="rounded-full border border-gold/35 px-3 py-2 text-[10px] uppercase tracking-[0.14em] text-ink-muted transition-colors hover:border-gold hover:text-ink sm:text-xs"
+            aria-label={muted ? "Unmute sound" : "Mute sound"}
+            className="flex h-10 w-10 items-center justify-center text-ink-muted transition-colors hover:text-ink"
           >
-            {muted ? "Sound off" : "Sound on"}
+            <SoundIcon muted={muted} />
           </button>
           <Button className="!px-5 !py-2 !text-xs uppercase tracking-[0.12em]">
             Sign up
           </Button>
         </div>
-      </motion.div>
+      </div>
     </header>
   );
 }

@@ -2,11 +2,18 @@
 
 import { COPY, GENRES, SOUNDSCAPE_SCENES } from "@/lib/constants";
 import { gsap, registerGsap } from "@/lib/gsap";
+import {
+  useSoundscapeAudio,
+  type SoundscapeSceneId,
+} from "@/hooks/use-soundscape-audio";
+import { useSound } from "@/components/sound-context";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 import { useRef } from "react";
 
 registerGsap();
+
+const SCENE_IDS: SoundscapeSceneId[] = ["forest", "coast", "night"];
 
 export function Soundscapes() {
   const rootRef = useRef<HTMLElement>(null);
@@ -14,6 +21,9 @@ export function Soundscapes() {
   const scenesRef = useRef<HTMLDivElement>(null);
   const captionRef = useRef<HTMLParagraphElement>(null);
   const titleRef = useRef<HTMLParagraphElement>(null);
+  const lastIndexRef = useRef(-1);
+  const { setScene, fadeOutSection, ensureBeds } = useSoundscapeAudio();
+  const { unlockAudio } = useSound();
 
   useGSAP(
     () => {
@@ -30,6 +40,16 @@ export function Soundscapes() {
       const cards = gsap.utils.toArray<HTMLElement>(
         scenes.querySelectorAll("[data-scene]"),
       );
+
+      const syncScene = (index: number) => {
+        if (index === lastIndexRef.current) return;
+        lastIndexRef.current = index;
+        const scene = SOUNDSCAPE_SCENES[index];
+        if (!scene) return;
+        titleEl.textContent = scene.title;
+        caption.textContent = scene.line;
+        void setScene(SCENE_IDS[index]);
+      };
 
       if (reduced) {
         gsap.set(cards, { opacity: 0 });
@@ -52,6 +72,31 @@ export function Soundscapes() {
           scrub: 0.8,
           pin: pin,
           anticipatePin: 1,
+          onEnter: () => {
+            void unlockAudio().then(() => ensureBeds());
+            lastIndexRef.current = -1;
+            syncScene(0);
+          },
+          onEnterBack: () => {
+            void unlockAudio().then(() => ensureBeds());
+            lastIndexRef.current = -1;
+            syncScene(SCENE_IDS.length - 1);
+          },
+          onLeave: () => {
+            lastIndexRef.current = -1;
+            fadeOutSection();
+          },
+          onLeaveBack: () => {
+            lastIndexRef.current = -1;
+            fadeOutSection();
+          },
+          onUpdate: (self) => {
+            const idx = Math.min(
+              SCENE_IDS.length - 1,
+              Math.floor(self.progress * 0.999 * SCENE_IDS.length),
+            );
+            syncScene(idx);
+          },
         },
       });
 
@@ -72,7 +117,7 @@ export function Soundscapes() {
         );
       });
     },
-    { dependencies: [] },
+    { dependencies: [setScene, fadeOutSection, ensureBeds, unlockAudio] },
   );
 
   return (

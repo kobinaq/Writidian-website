@@ -175,20 +175,20 @@ export const SOCIAL_CLUTTER = [
 export const SOUNDSCAPE_SCENES = [
   {
     id: "forest",
-    title: "Forest",
-    line: "Writing under pines. Wind in the canopy. Your scene outside the window.",
+    title: "Forest night",
+    line: "Crickets in the dark. Soft wind through the pines. Your scene outside the window.",
     image: "/images/soundscape-forest.png",
   },
   {
     id: "coast",
     title: "Coast",
-    line: "Tide writing the same sentence again and again.",
+    line: "Slow tide against the shore. Salt air. The page keeps rhythm with the waves.",
     image: "/images/soundscape-coast.png",
   },
   {
     id: "night",
     title: "Night desk",
-    line: "One lamp. The rest of the world on mute.",
+    line: "One lamp. Soft room hush. The rest of the world on mute.",
     image: "/images/soundscape-night.png",
   },
 ] as const;
