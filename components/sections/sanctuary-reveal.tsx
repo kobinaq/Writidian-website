@@ -199,7 +199,7 @@ export function SanctuaryReveal() {
           trigger: root,
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.85,
+          scrub: 1.15,
           pin: pin,
           anticipatePin: 1,
           invalidateOnRefresh: true,

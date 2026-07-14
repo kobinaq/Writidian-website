@@ -41,7 +41,7 @@ export function Problem() {
           trigger: root,
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.6,
+          scrub: 1.0,
           pin: pin,
           anticipatePin: 1,
         },

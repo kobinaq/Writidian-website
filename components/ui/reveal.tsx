@@ -10,7 +10,7 @@ export function Reveal({
   children,
   className = "",
   delay = 0,
-  y = 64,
+  y = 48,
 }: {
   children: ReactNode;
   className?: string;
@@ -35,17 +35,16 @@ export function Reveal({
 
       gsap.fromTo(
         el,
-        { opacity: 0, y, rotateX: 4 },
+        { opacity: 0, y },
         {
           opacity: 1,
           y: 0,
-          rotateX: 0,
-          duration: 1.15,
+          duration: 1.25,
           delay,
-          ease: "power3.out",
+          ease: "power2.out",
           scrollTrigger: {
             trigger: el,
-            start: "top 85%",
+            start: "top 88%",
             once: true,
           },
         },

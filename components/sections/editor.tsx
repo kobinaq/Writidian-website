@@ -46,7 +46,7 @@ export function Editor() {
           trigger: root,
           start: "top 65%",
           end: "bottom 55%",
-          scrub: 0.65,
+          scrub: 1.05,
         },
       });
 

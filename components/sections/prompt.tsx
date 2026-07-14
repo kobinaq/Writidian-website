@@ -36,7 +36,7 @@ export function Prompt() {
           trigger: root,
           start: "top 70%",
           end: "center center",
-          scrub: 0.7,
+          scrub: 1.05,
         },
       });
 

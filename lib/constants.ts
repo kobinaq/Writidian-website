@@ -28,6 +28,12 @@ export const COPY = {
   editorTitle: "The editor lives here",
   editorBody:
     "Writing happens inside Writidian itself. No bouncing between tools. Open a prompt, start a draft, stay in the flow.",
+  streakTitle: "Momentum that stays with you",
+  streakBody:
+    "Build a writing streak you can feel. Each day you show up, the flame grows. Miss a day and it resets. Simple pressure that keeps you returning to the page.",
+  analyticsTitle: "See your writing rhythm",
+  analyticsBody:
+    "Track sanctuary hours, words flowed, and the shape of your week. A quiet mirror of your practice, not a leaderboard.",
   stanceTitle: "Built against the grain",
   stanceBody:
     "AI has thinned the art of writing and the wellbeing that comes with doing hard creative work yourself. Writidian takes the other path. No generators. No rewrite buttons. A space that asks you to think.",

@@ -69,7 +69,7 @@ export function Soundscapes() {
           trigger: root,
           start: "top top",
           end: "bottom bottom",
-          scrub: 0.8,
+          scrub: 1.1,
           pin: pin,
           anticipatePin: 1,
           onEnter: () => {
