@@ -1,0 +1,47 @@
+import type { Metadata } from "next";
+import { Fraunces, Source_Sans_3 } from "next/font/google";
+import { SoundProvider } from "@/components/sound-context";
+import { SITE } from "@/lib/constants";
+import "./globals.css";
+
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const sourceSans = Source_Sans_3({
+  variable: "--font-source-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: `${SITE.name} — ${SITE.tagline}`,
+  description: SITE.description,
+  openGraph: {
+    title: SITE.name,
+    description: SITE.description,
+    type: "website",
+  },
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html
+      lang="en"
+      className={`${fraunces.variable} ${sourceSans.variable} h-full antialiased`}
+    >
+      <body className="min-h-full bg-paper font-sans text-ink">
+        <SoundProvider>
+          <div className="grain" aria-hidden />
+          {children}
+        </SoundProvider>
+      </body>
+    </html>
+  );
+}
