@@ -25,7 +25,6 @@ function splitWords(text: string) {
 
 export function Hero() {
   const rootRef = useRef<HTMLElement>(null);
-  const lightRef = useRef<HTMLDivElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
   const underlineRef = useRef<SVGPathElement>(null);
 
@@ -49,23 +48,20 @@ export function Hero() {
       const rest = gsap.utils.toArray<HTMLElement>(
         root.querySelectorAll("[data-hero]"),
       );
-      const light = lightRef.current;
       const media = mediaRef.current;
       const underline = underlineRef.current;
 
       if (reduced) {
         gsap.set([...letters, ...words, ...rest], { opacity: 1, y: 0 });
         if (underline) gsap.set(underline, { strokeDashoffset: 0 });
-        if (light) gsap.set(light, { opacity: 0.9 });
-        if (media) gsap.set(media, { opacity: 1, x: 0 });
+        if (media) gsap.set(media, { opacity: 1, scale: 1 });
         return;
       }
 
       gsap.set(letters, { opacity: 0, y: 28, rotateX: 35 });
       gsap.set(words, { opacity: 0, y: 20 });
       gsap.set(rest, { opacity: 0, y: 18 });
-      if (media) gsap.set(media, { opacity: 0, x: 40 });
-      if (light) gsap.set(light, { opacity: 0.3, x: "-6%" });
+      if (media) gsap.set(media, { opacity: 0, scale: 1.04 });
       if (underline) {
         const length = underline.getTotalLength();
         gsap.set(underline, {
@@ -77,10 +73,7 @@ export function Hero() {
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       if (media) {
-        tl.to(media, { opacity: 1, x: 0, duration: 1.4 }, 0);
-      }
-      if (light) {
-        tl.to(light, { opacity: 0.95, x: "0%", duration: 1.8 }, 0);
+        tl.to(media, { opacity: 1, scale: 1, duration: 1.6 }, 0);
       }
 
       tl.to(
@@ -92,14 +85,14 @@ export function Hero() {
           duration: 0.65,
           stagger: 0.04,
         },
-        0.2,
+        0.25,
       );
 
       if (underline) {
         tl.to(
           underline,
           { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut" },
-          0.65,
+          0.7,
         );
       }
 
@@ -111,7 +104,7 @@ export function Hero() {
           duration: 0.7,
           stagger: 0.07,
         },
-        0.75,
+        0.8,
       );
 
       tl.to(
@@ -122,20 +115,8 @@ export function Hero() {
           duration: 0.8,
           stagger: 0.1,
         },
-        1.05,
+        1.1,
       );
-
-      if (light) {
-        gsap.to(light, {
-          x: "5%",
-          opacity: 0.72,
-          duration: 9,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          delay: 2,
-        });
-      }
     },
     { dependencies: [] },
   );
@@ -144,40 +125,25 @@ export function Hero() {
     <section
       id="top"
       ref={rootRef}
-      className="relative flex min-h-[100dvh] items-center overflow-hidden bg-paper px-5 pb-16 pt-24 sm:px-8 sm:pb-24 sm:pt-28"
+      className="relative flex min-h-[100dvh] items-center overflow-hidden"
     >
-      {/* Paper atmosphere */}
+      {/* Full-bleed hero plane — text sits on the empty left of the photo */}
       <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 70% at 28% 45%, #faf7f1 0%, var(--paper) 55%, #ebe4d6 100%)",
-        }}
-      />
+        ref={mediaRef}
+        className="absolute inset-0 will-change-transform"
+      >
+        <Image
+          src="/images/hero-notebook.png"
+          alt="Open notebook on a quiet desk"
+          fill
+          priority
+          className="object-cover object-[68%_center] sm:object-[62%_center] lg:object-center"
+          sizes="100vw"
+        />
+      </div>
 
-      <div
-        ref={lightRef}
-        aria-hidden
-        className="pointer-events-none absolute left-[-10%] top-[10%] h-[70%] w-[55%] rounded-full"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, color-mix(in srgb, var(--gold) 22%, transparent) 0%, transparent 70%)",
-        }}
-      />
-
-      <div
-        aria-hidden
-        className="hero-ruled pointer-events-none absolute inset-y-[18%] left-[6%] hidden w-[36%] opacity-[0.06] lg:block"
-      />
-      <div
-        aria-hidden
-        className="hero-paper-grain pointer-events-none absolute inset-0"
-      />
-
-      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-10 lg:grid-cols-12 lg:gap-8">
-        {/* Left: brand + copy (rule of thirds) */}
-        <div className="flex flex-col items-start text-left lg:col-span-5 [perspective:800px]">
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl px-5 pb-16 pt-24 sm:px-8 sm:pb-24 sm:pt-28">
+        <div className="flex max-w-xl flex-col items-start text-left [perspective:800px] lg:max-w-[42%]">
           <div className="relative inline-block">
             <h1
               className="font-serif text-[clamp(2.75rem,10vw,5.75rem)] leading-[0.92] tracking-tight text-ink"
@@ -245,31 +211,6 @@ export function Hero() {
               className="cue-line block h-5 w-px origin-top bg-gold/60"
             />
           </a>
-        </div>
-
-        {/* Right: notebook still */}
-        <div
-          ref={mediaRef}
-          className="relative lg:col-span-7"
-        >
-          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[1.5rem] sm:aspect-[5/4] lg:aspect-[4/3] lg:min-h-[28rem]">
-            <Image
-              src="/images/hero-notebook.png"
-              alt="Open notebook on a quiet desk"
-              fill
-              priority
-              className="object-cover object-[72%_center]"
-              sizes="(max-width: 1024px) 100vw, 58vw"
-            />
-            <div
-              aria-hidden
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(to right, color-mix(in srgb, var(--paper) 35%, transparent) 0%, transparent 28%)",
-              }}
-            />
-          </div>
         </div>
       </div>
     </section>
