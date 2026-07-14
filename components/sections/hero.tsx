@@ -4,36 +4,68 @@ import { Button } from "@/components/ui/button";
 import { COPY, SITE } from "@/lib/constants";
 import { gsap, registerGsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
-import { useRef } from "react";
+import Image from "next/image";
+import { useMemo, useRef } from "react";
 
 registerGsap();
+
+function splitLetters(text: string) {
+  return text.split("").map((char, i) => ({
+    char: char === " " ? "\u00A0" : char,
+    key: `${text}-${i}`,
+  }));
+}
+
+function splitWords(text: string) {
+  return text.split(" ").map((word, i) => ({
+    word,
+    key: `${word}-${i}`,
+  }));
+}
 
 export function Hero() {
   const rootRef = useRef<HTMLElement>(null);
   const lightRef = useRef<HTMLDivElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
   const underlineRef = useRef<SVGPathElement>(null);
+
+  const brandLetters = useMemo(() => splitLetters(SITE.name), []);
+  const headlineWords = useMemo(() => splitWords(COPY.heroHeadline), []);
 
   useGSAP(
     () => {
       const root = rootRef.current;
       if (!root) return;
+
       const reduced = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
-      const parts = gsap.utils.toArray<HTMLElement>(
+      const letters = gsap.utils.toArray<HTMLElement>(
+        root.querySelectorAll("[data-letter]"),
+      );
+      const words = gsap.utils.toArray<HTMLElement>(
+        root.querySelectorAll("[data-word]"),
+      );
+      const rest = gsap.utils.toArray<HTMLElement>(
         root.querySelectorAll("[data-hero]"),
       );
       const light = lightRef.current;
+      const media = mediaRef.current;
       const underline = underlineRef.current;
 
       if (reduced) {
-        gsap.set(parts, { opacity: 1, y: 0 });
+        gsap.set([...letters, ...words, ...rest], { opacity: 1, y: 0 });
         if (underline) gsap.set(underline, { strokeDashoffset: 0 });
-        if (light) gsap.set(light, { opacity: 0.85, scale: 1 });
+        if (light) gsap.set(light, { opacity: 0.9 });
+        if (media) gsap.set(media, { opacity: 1, x: 0 });
         return;
       }
 
-      gsap.set(parts, { opacity: 0, y: 28 });
+      gsap.set(letters, { opacity: 0, y: 28, rotateX: 35 });
+      gsap.set(words, { opacity: 0, y: 20 });
+      gsap.set(rest, { opacity: 0, y: 18 });
+      if (media) gsap.set(media, { opacity: 0, x: 40 });
+      if (light) gsap.set(light, { opacity: 0.3, x: "-6%" });
       if (underline) {
         const length = underline.getTotalLength();
         gsap.set(underline, {
@@ -41,25 +73,24 @@ export function Hero() {
           strokeDashoffset: length,
         });
       }
-      if (light) gsap.set(light, { opacity: 0.35, scale: 0.88 });
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
+      if (media) {
+        tl.to(media, { opacity: 1, x: 0, duration: 1.4 }, 0);
+      }
       if (light) {
-        tl.to(
-          light,
-          { opacity: 1, scale: 1.05, duration: 1.6, ease: "power2.out" },
-          0,
-        );
+        tl.to(light, { opacity: 0.95, x: "0%", duration: 1.8 }, 0);
       }
 
       tl.to(
-        parts,
+        letters,
         {
           opacity: 1,
           y: 0,
-          duration: 1,
-          stagger: 0.14,
+          rotateX: 0,
+          duration: 0.65,
+          stagger: 0.04,
         },
         0.2,
       );
@@ -67,20 +98,42 @@ export function Hero() {
       if (underline) {
         tl.to(
           underline,
-          { strokeDashoffset: 0, duration: 1.1, ease: "power2.inOut" },
-          0.55,
+          { strokeDashoffset: 0, duration: 0.9, ease: "power2.inOut" },
+          0.65,
         );
       }
 
+      tl.to(
+        words,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          stagger: 0.07,
+        },
+        0.75,
+      );
+
+      tl.to(
+        rest,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.1,
+        },
+        1.05,
+      );
+
       if (light) {
         gsap.to(light, {
-          scale: 1.12,
-          opacity: 0.75,
-          duration: 8,
+          x: "5%",
+          opacity: 0.72,
+          duration: 9,
           repeat: -1,
           yoyo: true,
           ease: "sine.inOut",
-          delay: 1.4,
+          delay: 2,
         });
       }
     },
@@ -91,106 +144,133 @@ export function Hero() {
     <section
       id="top"
       ref={rootRef}
-      className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-paper px-5 pb-24 pt-28 sm:px-8"
+      className="relative flex min-h-[100dvh] items-center overflow-hidden bg-paper px-5 pb-16 pt-24 sm:px-8 sm:pb-24 sm:pt-28"
     >
-      {/* Paper field */}
+      {/* Paper atmosphere */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 90% 70% at 50% 45%, #faf7f1 0%, var(--paper) 55%, #ebe4d6 100%)",
+            "radial-gradient(ellipse 80% 70% at 28% 45%, #faf7f1 0%, var(--paper) 55%, #ebe4d6 100%)",
         }}
       />
 
-      {/* Breathing gold light */}
       <div
         ref={lightRef}
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-[38%] h-[min(70vw,36rem)] w-[min(90vw,48rem)] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        className="pointer-events-none absolute left-[-10%] top-[10%] h-[70%] w-[55%] rounded-full"
         style={{
           background:
-            "radial-gradient(ellipse at center, color-mix(in srgb, var(--gold) 28%, transparent) 0%, color-mix(in srgb, var(--gold-soft) 12%, transparent) 42%, transparent 70%)",
+            "radial-gradient(ellipse at center, color-mix(in srgb, var(--gold) 22%, transparent) 0%, transparent 70%)",
         }}
       />
 
-      {/* Soft corner ink washes */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full opacity-40 blur-3xl"
-        style={{
-          background:
-            "radial-gradient(circle, color-mix(in srgb, var(--ink) 8%, transparent), transparent 70%)",
-        }}
+        className="hero-ruled pointer-events-none absolute inset-y-[18%] left-[6%] hidden w-[36%] opacity-[0.06] lg:block"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-16 bottom-10 h-80 w-80 rounded-full opacity-50 blur-3xl"
-        style={{
-          background:
-            "radial-gradient(circle, color-mix(in srgb, var(--gold) 16%, transparent), transparent 70%)",
-        }}
+        className="hero-paper-grain pointer-events-none absolute inset-0"
       />
 
-      {/* Faint ruled paper */}
-      <div
-        aria-hidden
-        className="hero-ruled pointer-events-none absolute inset-x-[8%] top-[22%] bottom-[18%] opacity-[0.07] sm:inset-x-[18%]"
-      />
+      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-10 lg:grid-cols-12 lg:gap-8">
+        {/* Left: brand + copy (rule of thirds) */}
+        <div className="flex flex-col items-start text-left lg:col-span-5 [perspective:800px]">
+          <div className="relative inline-block">
+            <h1
+              className="font-serif text-[clamp(2.75rem,10vw,5.75rem)] leading-[0.92] tracking-tight text-ink"
+              aria-label={SITE.name}
+            >
+              {brandLetters.map(({ char, key }) => (
+                <span
+                  key={key}
+                  data-letter
+                  className="inline-block origin-bottom will-change-transform"
+                >
+                  {char}
+                </span>
+              ))}
+            </h1>
+            <svg
+              className="absolute left-0 top-[94%] h-3 w-[92%] overflow-visible"
+              viewBox="0 0 300 12"
+              fill="none"
+              aria-hidden
+            >
+              <path
+                ref={underlineRef}
+                d="M2 8c55-7 110 5 160-2s90-3 136 3"
+                stroke="var(--gold)"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </div>
 
-      {/* Local paper grain */}
-      <div aria-hidden className="hero-paper-grain pointer-events-none absolute inset-0" />
-
-      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center">
-        <div data-hero className="relative inline-block px-2">
-          <h1 className="font-serif text-[clamp(3.5rem,11vw,7.5rem)] leading-[0.92] tracking-tight text-ink">
-            {SITE.name}
-          </h1>
-          <svg
-            className="absolute left-[6%] right-[4%] top-[92%] h-3 w-[88%] overflow-visible"
-            viewBox="0 0 300 12"
-            fill="none"
-            aria-hidden
+          <p
+            className="mt-8 max-w-md font-serif text-[clamp(1.25rem,3vw,1.85rem)] leading-snug tracking-tight text-ink/80"
+            aria-label={COPY.heroHeadline}
           >
-            <path
-              ref={underlineRef}
-              d="M2 8c55-7 110 5 160-2s90-3 136 3"
-              stroke="var(--gold)"
-              strokeWidth="2.2"
-              strokeLinecap="round"
+            {headlineWords.map(({ word, key }, i) => (
+              <span key={key} className="inline-block whitespace-nowrap">
+                <span data-word className="inline-block will-change-transform">
+                  {word}
+                </span>
+                {i < headlineWords.length - 1 ? "\u00A0" : null}
+              </span>
+            ))}
+          </p>
+
+          <p
+            data-hero
+            className="mt-4 max-w-sm text-[0.95rem] leading-relaxed text-ink-muted sm:mt-5 sm:text-lg"
+          >
+            {COPY.heroSupport}
+          </p>
+
+          <div data-hero className="mt-8 sm:mt-10">
+            <Button>Sign up free</Button>
+          </div>
+
+          <a
+            data-hero
+            href="#sanctuary"
+            className="mt-10 flex items-center gap-3 text-[11px] uppercase tracking-[0.22em] text-gold transition-opacity hover:opacity-70 sm:mt-12"
+          >
+            See the sanctuary
+            <span
+              aria-hidden
+              className="cue-line block h-5 w-px origin-top bg-gold/60"
             />
-          </svg>
+          </a>
         </div>
 
-        <p
-          data-hero
-          className="mt-10 max-w-2xl font-serif text-[clamp(1.35rem,2.8vw,1.85rem)] leading-snug tracking-tight text-ink/80"
+        {/* Right: notebook still */}
+        <div
+          ref={mediaRef}
+          className="relative lg:col-span-7"
         >
-          {COPY.heroHeadline}
-        </p>
-
-        <p
-          data-hero
-          className="mt-5 max-w-md text-base leading-relaxed text-ink-muted sm:text-lg"
-        >
-          {COPY.heroSupport}
-        </p>
-
-        <div data-hero className="mt-10">
-          <Button>Sign up free</Button>
+          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[1.5rem] sm:aspect-[5/4] lg:aspect-[4/3] lg:min-h-[28rem]">
+            <Image
+              src="/images/hero-notebook.png"
+              alt="Open notebook on a quiet desk"
+              fill
+              priority
+              className="object-cover object-[72%_center]"
+              sizes="(max-width: 1024px) 100vw, 58vw"
+            />
+            <div
+              aria-hidden
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(to right, color-mix(in srgb, var(--paper) 35%, transparent) 0%, transparent 28%)",
+              }}
+            />
+          </div>
         </div>
-
-        <a
-          data-hero
-          href="#sanctuary"
-          className="mt-16 flex flex-col items-center gap-2 text-[11px] uppercase tracking-[0.22em] text-gold transition-opacity hover:opacity-70"
-        >
-          See the sanctuary
-          <span
-            aria-hidden
-            className="cue-line block h-8 w-px origin-top bg-gold/60"
-          />
-        </a>
       </div>
     </section>
   );

@@ -68,14 +68,14 @@ export function Nav() {
           : "border-transparent bg-paper/80 backdrop-blur-sm"
       }`}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:h-16 sm:px-8">
         <a
           href="#top"
-          className="font-serif text-xl tracking-tight text-ink sm:text-2xl"
+          className="font-serif text-lg tracking-tight text-ink sm:text-2xl"
         >
           {SITE.name}
         </a>
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3">
           <button
             type="button"
             onClick={() => {
@@ -88,7 +88,7 @@ export function Nav() {
           >
             <SoundIcon muted={muted} />
           </button>
-          <Button className="!px-5 !py-2 !text-xs uppercase tracking-[0.12em]">
+          <Button className="!px-4 !py-2 !text-[11px] uppercase tracking-[0.12em] sm:!px-5 sm:!text-xs">
             Sign up
           </Button>
         </div>

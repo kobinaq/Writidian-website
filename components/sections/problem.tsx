@@ -51,12 +51,12 @@ export function Problem() {
   );
 
   return (
-    <section ref={rootRef} className="relative h-[220vh] bg-espresso text-paper">
+    <section ref={rootRef} className="relative h-[170vh] bg-espresso text-paper md:h-[220vh]">
       <div
         ref={pinRef}
         className="flex h-[100dvh] items-center justify-center px-5 sm:px-8"
       >
-        <p className="max-w-4xl text-center font-serif text-[clamp(1.75rem,4.5vw,3.5rem)] leading-[1.25] tracking-tight">
+        <p className="max-w-4xl text-center font-serif text-[clamp(1.35rem,5.2vw,3.5rem)] leading-[1.3] tracking-tight">
           {words.map((word, i) => (
             <span
               key={`${word}-${i}`}

@@ -53,21 +53,21 @@ export function Prompt() {
     <section
       id="prompt"
       ref={rootRef}
-      className="relative overflow-hidden bg-surface/60 px-5 py-32 sm:px-8 sm:py-48"
+      className="relative overflow-hidden bg-surface/60 px-5 py-20 sm:px-8 sm:py-48"
     >
       <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2 lg:gap-20">
         <div ref={copyRef}>
-          <h2 className="font-serif text-[clamp(2.25rem,5vw,4rem)] leading-[1.08] tracking-tight text-ink">
+          <h2 className="font-serif text-[clamp(1.85rem,6vw,4rem)] leading-[1.08] tracking-tight text-ink">
             {COPY.promptTitle}
           </h2>
-          <p className="mt-6 max-w-md text-lg leading-relaxed text-ink-muted">
+          <p className="mt-4 max-w-md text-base leading-relaxed text-ink-muted sm:mt-6 sm:text-lg">
             {COPY.promptBody}
           </p>
         </div>
 
         <article
           ref={cardRef}
-          className="relative rounded-[1.75rem] border border-gold/50 bg-paper px-8 py-14 text-center shadow-[0_40px_80px_-40px_rgba(14,12,9,0.45)] will-change-transform sm:px-14 sm:py-20"
+          className="relative rounded-2xl border border-gold/50 bg-paper px-5 py-10 text-center shadow-[0_40px_80px_-40px_rgba(14,12,9,0.45)] will-change-transform sm:rounded-[1.75rem] sm:px-14 sm:py-20"
         >
           <div
             aria-hidden
@@ -79,7 +79,7 @@ export function Prompt() {
           <p className="mt-8 font-serif text-[clamp(1.35rem,2.8vw,2rem)] leading-relaxed text-ink">
             {COPY.samplePrompt}
           </p>
-          <div className="mt-12 inline-flex rounded-full border border-gold px-7 py-3 text-sm tracking-wide text-gold">
+          <div className="mt-8 inline-flex rounded-full border border-gold px-6 py-2.5 text-sm tracking-wide text-gold sm:mt-12 sm:px-7 sm:py-3">
             Write Now
           </div>
         </article>

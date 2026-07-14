@@ -26,6 +26,12 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover" as const,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,7 +42,7 @@ export default function RootLayout({
       lang="en"
       className={`${fraunces.variable} ${sourceSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-paper font-sans text-ink">
+      <body className="min-h-full overflow-x-hidden bg-paper font-sans text-ink">
         <SoundProvider>
           <div className="grain" aria-hidden />
           {children}

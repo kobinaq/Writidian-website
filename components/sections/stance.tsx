@@ -5,7 +5,7 @@ import { COPY } from "@/lib/constants";
 
 export function Stance() {
   return (
-    <section className="relative overflow-hidden bg-espresso px-5 py-32 text-paper sm:px-8 sm:py-44">
+    <section className="relative overflow-hidden bg-espresso px-5 py-20 text-paper sm:px-8 sm:py-44">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-40"
@@ -18,7 +18,7 @@ export function Stance() {
         <h2 className="font-serif text-[clamp(2.25rem,5vw,3.75rem)] leading-[1.1] tracking-tight">
           {COPY.stanceTitle}
         </h2>
-        <p className="mt-8 text-lg leading-relaxed text-paper/70 sm:text-xl">
+        <p className="mt-5 text-base leading-relaxed text-paper/70 sm:mt-8 sm:text-xl">
           {COPY.stanceBody}
         </p>
       </Reveal>

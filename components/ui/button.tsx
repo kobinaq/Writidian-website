@@ -34,12 +34,12 @@ export function Button({
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 400, damping: 28 }}
-      className={`inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-medium tracking-wide transition-colors duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${variants[variant]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium tracking-wide transition-colors duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] sm:gap-2 sm:px-7 sm:py-3 ${variants[variant]} ${className}`}
     >
       <span>{children}</span>
       <span
         aria-hidden
-        className="flex h-7 w-7 items-center justify-center rounded-full bg-paper/15 text-base leading-none"
+        className="flex h-6 w-6 items-center justify-center rounded-full bg-paper/15 text-sm leading-none sm:h-7 sm:w-7 sm:text-base"
       >
         →
       </span>
