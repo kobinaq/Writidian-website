@@ -5,16 +5,139 @@ import { useIsMobile } from "@/hooks/use-is-mobile";
 import { SOCIAL_CLUTTER } from "@/lib/constants";
 import { gsap, registerGsap, ScrollTrigger } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
+import { motion } from "motion/react";
 import Image from "next/image";
 import { useMemo, useRef } from "react";
 
 registerGsap();
 
+function NotificationCard({
+  platform,
+  title,
+  body,
+  accent,
+  index,
+  compact,
+}: {
+  platform: string;
+  title: string;
+  body: string;
+  accent: string;
+  index: number;
+  compact?: boolean;
+}) {
+  const floatDuration = 3.2 + (index % 5) * 0.35;
+  const floatDelay = index * 0.18;
+  const tilt = ((index % 5) - 2) * 2.2;
+  const floatY = compact ? 4 : 8;
+
+  return (
+    <motion.div
+      className={`relative ${compact ? "w-[min(46vw,11.5rem)]" : "w-[min(72vw,17.5rem)]"}`}
+      initial={{ opacity: 0, scale: 0.82, y: 18 }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        y: [0, -floatY, 0],
+        rotate: [tilt, tilt + 1.4, tilt],
+      }}
+      transition={{
+        opacity: { duration: 0.45, delay: floatDelay * 0.35 },
+        scale: {
+          type: "spring",
+          stiffness: 280,
+          damping: 18,
+          delay: floatDelay * 0.35,
+        },
+        y: {
+          duration: floatDuration,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: floatDelay,
+        },
+        rotate: {
+          duration: floatDuration * 1.15,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: floatDelay,
+        },
+      }}
+    >
+      <motion.span
+        aria-hidden
+        className="absolute -right-1 -top-1 z-10 h-2.5 w-2.5 rounded-full sm:h-3 sm:w-3"
+        style={{ background: accent }}
+        animate={{ scale: [1, 1.35, 1], opacity: [1, 0.55, 1] }}
+        transition={{
+          duration: 1.6 + (index % 3) * 0.2,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: index * 0.12,
+        }}
+      />
+      <div
+        className={`rounded-2xl border border-white/30 bg-white/92 shadow-[0_18px_40px_-16px_rgba(0,0,0,0.55)] backdrop-blur-md ${
+          compact ? "p-2.5" : "p-3.5"
+        }`}
+      >
+        <div className="mb-1.5 flex items-center gap-2 sm:mb-2">
+          <span
+            className={`relative flex shrink-0 items-center justify-center rounded-full font-bold text-white ${
+              compact ? "h-6 w-6 text-[9px]" : "h-8 w-8 text-[11px]"
+            }`}
+            style={{ background: accent }}
+          >
+            {platform.slice(0, 1)}
+          </span>
+          <div className="min-w-0 flex-1">
+            <p
+              className={`truncate font-semibold text-ink ${
+                compact ? "text-[10px]" : "text-xs"
+              }`}
+            >
+              {title}
+            </p>
+            <p className="text-[9px] uppercase tracking-[0.14em] text-ink-muted sm:text-[10px]">
+              {platform}
+            </p>
+          </div>
+          <span className="shrink-0 text-[9px] text-ink-muted sm:text-[10px]">
+            now
+          </span>
+        </div>
+        <p
+          className={`text-left leading-snug text-ink/85 ${
+            compact ? "text-[10px] line-clamp-2" : "text-[12px]"
+          }`}
+        >
+          {body}
+        </p>
+        {!compact && (
+          <div className="mt-2.5 h-1 overflow-hidden rounded-full bg-ink/8">
+            <motion.div
+              className="h-full rounded-full"
+              style={{ background: accent }}
+              initial={{ width: "12%" }}
+              animate={{ width: ["12%", "88%", "40%", "70%"] }}
+              transition={{
+                duration: 5 + (index % 4),
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: index * 0.2,
+              }}
+            />
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
 export function SanctuaryReveal() {
   const rootRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<HTMLDivElement>(null);
-  const ledgerRef = useRef<HTMLDivElement>(null);
+  const clutterRef = useRef<HTMLDivElement>(null);
   const veilRef = useRef<HTMLDivElement>(null);
   const captionRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
@@ -22,7 +145,7 @@ export function SanctuaryReveal() {
   const { unlock, setSanctuaryVolume, fadeOutPastHero } =
     useHeroSanctuaryAudio();
 
-  const lines = useMemo(
+  const clutter = useMemo(
     () =>
       isMobile
         ? SOCIAL_CLUTTER.filter((item) => item.mobile)
@@ -35,24 +158,21 @@ export function SanctuaryReveal() {
       const root = rootRef.current;
       const pin = pinRef.current;
       const scene = sceneRef.current;
-      const ledger = ledgerRef.current;
+      const clutterEl = clutterRef.current;
       const veil = veilRef.current;
       const caption = captionRef.current;
       const progress = progressRef.current;
-      if (!root || !pin || !scene || !ledger) return;
+      if (!root || !pin || !scene || !clutterEl) return;
 
       const reduced = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
-      const strikes = gsap.utils.toArray<HTMLElement>(
-        ledger.querySelectorAll("[data-strike]"),
-      );
-      const rows = gsap.utils.toArray<HTMLElement>(
-        ledger.querySelectorAll("[data-row]"),
+      const pieces = gsap.utils.toArray<HTMLElement>(
+        clutterEl.querySelectorAll("[data-clutter]"),
       );
 
       if (reduced) {
-        gsap.set(ledger, { opacity: 0 });
+        gsap.set(pieces, { opacity: 0 });
         gsap.set(scene, { scale: 1, filter: "none" });
         gsap.set(veil, { opacity: 0 });
         gsap.set(caption, { opacity: 1, y: 0 });
@@ -61,11 +181,16 @@ export function SanctuaryReveal() {
       }
 
       gsap.set(scene, { scale: 1.06, filter: "blur(8px) brightness(0.45)" });
-      gsap.set(veil, { opacity: 0.55 });
+      gsap.set(veil, { opacity: 0.6 });
       gsap.set(caption, { opacity: 0, y: 24 });
-      gsap.set(ledger, { opacity: 1, y: 0, rotate: -0.6 });
-      gsap.set(strikes, { scaleX: 0 });
-      gsap.set(rows, { opacity: 1 });
+      gsap.set(pieces, {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        rotate: 0,
+        scale: 1,
+        filter: "blur(0px)",
+      });
       if (progress) gsap.set(progress, { scaleX: 0 });
 
       const tl = gsap.timeline({
@@ -89,35 +214,24 @@ export function SanctuaryReveal() {
         },
       });
 
-      // Gold strikethroughs draw across each ledger line
-      strikes.forEach((strike, i) => {
+      pieces.forEach((piece, i) => {
+        const ox = Number(piece.dataset.ox ?? 0);
+        const oy = Number(piece.dataset.oy ?? 0);
+        const rot = Number(piece.dataset.rot ?? 0);
         tl.to(
-          strike,
-          { scaleX: 1, duration: 0.12 },
-          0.05 + i * 0.045,
+          piece,
+          {
+            x: `${ox}vw`,
+            y: `${oy}vh`,
+            rotate: rot,
+            scale: 1.2,
+            opacity: 0,
+            filter: "blur(16px)",
+            duration: 0.55,
+          },
+          0.04 + i * 0.03,
         );
       });
-
-      // Struck lines fade as the page clears
-      rows.forEach((row, i) => {
-        tl.to(
-          row,
-          { opacity: 0.28, duration: 0.1 },
-          0.12 + i * 0.045,
-        );
-      });
-
-      tl.to(
-        ledger,
-        {
-          opacity: 0,
-          y: -36,
-          rotate: -2.4,
-          filter: "blur(8px)",
-          duration: 0.35,
-        },
-        0.42,
-      );
 
       tl.to(
         scene,
@@ -126,10 +240,10 @@ export function SanctuaryReveal() {
           filter: "blur(0px) brightness(1)",
           duration: 0.55,
         },
-        0.28,
+        0.2,
       );
-      tl.to(veil, { opacity: 0, duration: 0.45 }, 0.3);
-      tl.to(caption, { opacity: 1, y: 0, duration: 0.3 }, 0.58);
+      tl.to(veil, { opacity: 0, duration: 0.45 }, 0.22);
+      tl.to(caption, { opacity: 1, y: 0, duration: 0.3 }, 0.55);
       if (progress) tl.to(progress, { scaleX: 1, duration: 1 }, 0);
 
       const unlockOnce = () => {
@@ -151,7 +265,7 @@ export function SanctuaryReveal() {
         unlock,
         setSanctuaryVolume,
         fadeOutPastHero,
-        lines,
+        clutter,
         isMobile,
       ],
     },
@@ -185,89 +299,33 @@ export function SanctuaryReveal() {
           className="absolute inset-0 z-10 bg-espresso/55"
         />
 
-        {/* Crossed-out ledger */}
         <div
-          ref={ledgerRef}
-          className="pointer-events-none absolute inset-x-0 top-[12%] z-20 flex justify-center px-4 sm:top-[14%] sm:px-8"
+          ref={clutterRef}
+          className="pointer-events-none absolute inset-0 z-20"
           aria-hidden
         >
-          <div
-            className="relative w-full max-w-lg overflow-hidden shadow-[0_24px_60px_-20px_rgba(14,12,9,0.65)] sm:max-w-xl"
-            style={{
-              background:
-                "linear-gradient(180deg, #F7F4EE 0%, #F3EDE3 55%, #EFE8DB 100%)",
-            }}
-          >
-            {/* Paper grain + ruled field */}
+          {clutter.map((item, index) => (
             <div
-              className="pointer-events-none absolute inset-0 opacity-[0.55]"
+              key={item.id}
+              data-clutter
+              data-ox={item.ox}
+              data-oy={item.oy}
+              data-rot={item.rot}
+              className="absolute will-change-transform"
               style={{
-                backgroundImage: `
-                  repeating-linear-gradient(
-                    transparent,
-                    transparent 2.35rem,
-                    color-mix(in srgb, var(--gold) 28%, transparent) 2.35rem,
-                    color-mix(in srgb, var(--gold) 28%, transparent) calc(2.35rem + 1px)
-                  )
-                `,
-                backgroundPosition: "0 2.6rem",
+                left: `${isMobile ? item.mx : item.x}%`,
+                top: `${isMobile ? item.my : item.y}%`,
               }}
-            />
-            {/* Classic ledger margin */}
-            <div
-              aria-hidden
-              className="absolute bottom-3 left-[2.15rem] top-10 w-px sm:left-[2.6rem]"
-              style={{
-                background:
-                  "color-mix(in srgb, #9a3b2f 55%, transparent)",
-              }}
-            />
-
-            <div className="relative px-5 pb-5 pt-4 sm:px-7 sm:pb-6 sm:pt-5">
-              <div className="mb-3 flex items-end justify-between border-b border-ink/10 pb-2.5">
-                <p className="font-serif text-[11px] uppercase tracking-[0.2em] text-ink/55 sm:text-xs">
-                  Distractions
-                </p>
-                <p className="text-[10px] uppercase tracking-[0.18em] text-gold sm:text-[11px]">
-                  Strike through
-                </p>
+            >
+              <div className="-translate-x-1/2 -translate-y-1/2">
+                <NotificationCard
+                  {...item}
+                  index={index}
+                  compact={isMobile}
+                />
               </div>
-
-              <ul className="space-y-0">
-                {lines.map((item, index) => (
-                  <li
-                    key={item.id}
-                    data-row
-                    className="relative flex min-h-[2.35rem] items-center pl-6 sm:min-h-[2.5rem] sm:pl-8"
-                  >
-                    <span
-                      aria-hidden
-                      className="absolute left-0 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full bg-ink/25"
-                    />
-                    <p
-                      className={`relative w-full pr-2 leading-snug text-ink/90 ${
-                        item.tone === "serif"
-                          ? "font-serif text-[0.95rem] sm:text-[1.05rem]"
-                          : "font-sans text-[0.8rem] tracking-wide sm:text-[0.88rem]"
-                      }`}
-                    >
-                      {item.line}
-                      {/* Gold strike — draws left → right via scaleX */}
-                      <span
-                        data-strike
-                        className="absolute left-0 top-[52%] h-[1.5px] w-full origin-left bg-gold"
-                        style={{
-                          transform: "scaleX(0)",
-                          boxShadow: "0 0 0 0.5px color-mix(in srgb, var(--gold) 40%, transparent)",
-                        }}
-                      />
-                    </p>
-                    <span className="sr-only">Line {index + 1}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
-          </div>
+          ))}
         </div>
 
         <div
