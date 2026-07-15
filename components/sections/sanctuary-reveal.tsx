@@ -1,5 +1,6 @@
 "use client";
 
+import { BrandLogo, type BrandKey } from "@/components/brand-logos";
 import { useHeroSanctuaryAudio } from "@/hooks/use-hero-sanctuary-audio";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { SOCIAL_CLUTTER } from "@/lib/constants";
@@ -11,7 +12,17 @@ import { useMemo, useRef } from "react";
 
 registerGsap();
 
+type NotifTheme = "ios" | "dark" | "whatsapp" | "discord";
+
+function themeFor(brand: BrandKey): NotifTheme {
+  if (brand === "whatsapp") return "whatsapp";
+  if (brand === "discord") return "discord";
+  if (brand === "tiktok" || brand === "x") return "dark";
+  return "ios";
+}
+
 function NotificationCard({
+  brand,
   platform,
   title,
   body,
@@ -19,6 +30,7 @@ function NotificationCard({
   index,
   compact,
 }: {
+  brand: BrandKey;
   platform: string;
   title: string;
   body: string;
@@ -30,10 +42,34 @@ function NotificationCard({
   const floatDelay = index * 0.18;
   const tilt = ((index % 5) - 2) * 2.2;
   const floatY = compact ? 4 : 8;
+  const theme = themeFor(brand);
+  const iconSize = compact ? 22 : 28;
+
+  const shell =
+    theme === "dark"
+      ? "border border-white/10 bg-[#1C1C1E]/95 text-white"
+      : theme === "discord"
+        ? "border border-white/10 bg-[#2B2D31]/96 text-white"
+        : theme === "whatsapp"
+          ? "border border-[#25D366]/25 bg-white/95 text-ink"
+          : "border border-black/5 bg-white/94 text-ink";
+
+  const muted =
+    theme === "dark" || theme === "discord"
+      ? "text-white/55"
+      : "text-ink-muted";
+
+  const titleCls =
+    theme === "dark" || theme === "discord" ? "text-white" : "text-ink";
+
+  const bodyCls =
+    theme === "dark" || theme === "discord"
+      ? "text-white/75"
+      : "text-ink/80";
 
   return (
     <motion.div
-      className={`relative ${compact ? "w-[min(46vw,11.5rem)]" : "w-[min(72vw,17.5rem)]"}`}
+      className={`relative ${compact ? "w-[min(48vw,12.5rem)]" : "w-[min(74vw,18rem)]"}`}
       initial={{ opacity: 0, scale: 0.82, y: 18 }}
       animate={{
         opacity: 1,
@@ -75,55 +111,99 @@ function NotificationCard({
           delay: index * 0.12,
         }}
       />
+
       <div
-        className={`rounded-2xl border border-white/30 bg-white/92 shadow-[0_18px_40px_-16px_rgba(0,0,0,0.55)] backdrop-blur-md ${
-          compact ? "p-2.5" : "p-3.5"
+        className={`relative overflow-hidden rounded-[1.15rem] shadow-[0_18px_40px_-16px_rgba(0,0,0,0.55)] backdrop-blur-md ${shell} ${
+          compact ? "p-2.5" : "p-3"
         }`}
       >
-        <div className="mb-1.5 flex items-center gap-2 sm:mb-2">
+        {theme === "whatsapp" && (
           <span
-            className={`relative flex shrink-0 items-center justify-center rounded-full font-bold text-white ${
-              compact ? "h-6 w-6 text-[9px]" : "h-8 w-8 text-[11px]"
+            aria-hidden
+            className="absolute inset-y-0 left-0 w-[3px] bg-[#25D366]"
+          />
+        )}
+        {theme === "discord" && (
+          <span
+            aria-hidden
+            className="absolute inset-y-0 left-0 w-[3px] bg-[#5865F2]"
+          />
+        )}
+
+        {/* App header row — iOS / Android style */}
+        <div className="mb-1.5 flex items-center gap-2">
+          <span
+            className={`relative flex shrink-0 overflow-hidden shadow-sm ${
+              brand === "whatsapp" || brand === "pinterest"
+                ? "rounded-full"
+                : "rounded-[0.45rem]"
+            } ${
+              brand === "slack" || brand === "calendar"
+                ? "ring-1 ring-black/10"
+                : ""
             }`}
-            style={{ background: accent }}
           >
-            {platform.slice(0, 1)}
+            <BrandLogo brand={brand} size={iconSize} />
           </span>
           <div className="min-w-0 flex-1">
-            <p
-              className={`truncate font-semibold text-ink ${
-                compact ? "text-[10px]" : "text-xs"
-              }`}
-            >
-              {title}
-            </p>
-            <p className="text-[9px] uppercase tracking-[0.14em] text-ink-muted sm:text-[10px]">
-              {platform}
-            </p>
+            <div className="flex items-center gap-1.5">
+              <p
+                className={`truncate font-semibold tracking-tight ${
+                  compact ? "text-[10px]" : "text-[11px]"
+                } ${titleCls}`}
+              >
+                {platform}
+              </p>
+              {brand === "whatsapp" && (
+                <span className="text-[9px] text-[#25D366]">●</span>
+              )}
+            </div>
           </div>
-          <span className="shrink-0 text-[9px] text-ink-muted sm:text-[10px]">
-            now
-          </span>
+          <span className={`shrink-0 text-[9px] ${muted}`}>now</span>
         </div>
+
         <p
-          className={`text-left leading-snug text-ink/85 ${
+          className={`text-left font-semibold leading-snug ${
+            compact ? "text-[11px]" : "text-[13px]"
+          } ${titleCls}`}
+        >
+          {title}
+        </p>
+        <p
+          className={`mt-0.5 text-left leading-snug ${
             compact ? "text-[10px] line-clamp-2" : "text-[12px]"
-          }`}
+          } ${bodyCls}`}
         >
           {body}
         </p>
-        {!compact && (
-          <div className="mt-2.5 h-1 overflow-hidden rounded-full bg-ink/8">
+
+        {/* Platform flourishes */}
+        {brand === "instagram" && !compact && (
+          <div className="mt-2 flex gap-1.5">
+            <span className="h-8 w-8 overflow-hidden rounded-md bg-gradient-to-br from-[#fdf497] via-[#fd5949] to-[#d6249f] opacity-80" />
+            <span className="h-8 flex-1 rounded-md bg-ink/5" />
+          </div>
+        )}
+        {brand === "pinterest" && !compact && (
+          <div className="mt-2 h-10 overflow-hidden rounded-lg bg-gradient-to-br from-[#ffd6de] to-[#E60023]/30" />
+        )}
+        {brand === "youtube" && !compact && (
+          <div className="mt-2 flex h-10 items-center justify-center rounded-lg bg-ink/5">
+            <span className="flex h-6 w-9 items-center justify-center rounded-md bg-[#FF0000]">
+              <span className="ml-0.5 border-y-[5px] border-l-[8px] border-y-transparent border-l-white" />
+            </span>
+          </div>
+        )}
+        {brand === "tiktok" && !compact && (
+          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
             <motion.div
-              className="h-full rounded-full"
-              style={{ background: accent }}
-              initial={{ width: "12%" }}
-              animate={{ width: ["12%", "88%", "40%", "70%"] }}
+              className="h-full rounded-full bg-gradient-to-r from-[#25F4EE] to-[#FE2C55]"
+              initial={{ width: "20%" }}
+              animate={{ width: ["20%", "75%", "40%"] }}
               transition={{
-                duration: 5 + (index % 4),
+                duration: 4.5,
                 repeat: Infinity,
                 ease: "easeInOut",
-                delay: index * 0.2,
               }}
             />
           </div>
