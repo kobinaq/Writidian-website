@@ -11,43 +11,54 @@ import { useMemo, useRef } from "react";
 
 registerGsap();
 
-function NotificationCard({
-  platform,
-  title,
-  body,
-  accent,
+const TEAR_SHAPES = [
+  "polygon(2% 6%, 18% 1%, 38% 7%, 56% 2%, 74% 8%, 92% 3%, 100% 14%, 97% 38%, 100% 62%, 94% 86%, 78% 98%, 54% 93%, 32% 100%, 12% 94%, 0% 78%, 3% 48%, 0% 22%)",
+  "polygon(0% 10%, 22% 2%, 44% 8%, 68% 0%, 88% 7%, 100% 18%, 96% 42%, 100% 68%, 92% 92%, 70% 100%, 46% 94%, 24% 100%, 6% 88%, 0% 64%, 4% 36%)",
+  "polygon(4% 0%, 28% 5%, 52% 0%, 76% 6%, 98% 2%, 100% 28%, 94% 52%, 100% 76%, 88% 100%, 58% 95%, 34% 100%, 10% 92%, 0% 70%, 5% 42%, 0% 16%)",
+  "polygon(0% 4%, 16% 0%, 40% 6%, 62% 1%, 84% 8%, 100% 4%, 98% 32%, 100% 58%, 95% 84%, 72% 100%, 48% 94%, 22% 100%, 0% 82%, 3% 54%, 0% 28%)",
+  "polygon(6% 2%, 30% 0%, 54% 7%, 78% 1%, 100% 10%, 97% 36%, 100% 60%, 93% 88%, 68% 100%, 42% 95%, 18% 100%, 0% 86%, 2% 58%, 0% 30%, 4% 12%)",
+] as const;
+
+function PaperScrap({
+  line,
+  tone,
   index,
   compact,
 }: {
-  platform: string;
-  title: string;
-  body: string;
-  accent: string;
+  line: string;
+  tone: "serif" | "sans";
   index: number;
   compact?: boolean;
 }) {
-  const floatDuration = 3.2 + (index % 5) * 0.35;
-  const floatDelay = index * 0.18;
-  const tilt = ((index % 5) - 2) * 2.2;
-  const floatY = compact ? 4 : 8;
+  const floatDuration = 3.4 + (index % 5) * 0.4;
+  const floatDelay = index * 0.16;
+  const tilt = ((index % 5) - 2) * 3.4;
+  const floatY = compact ? 3 : 6;
+  const tear = TEAR_SHAPES[index % TEAR_SHAPES.length];
+  const paperTint =
+    index % 3 === 0
+      ? "#F7F4EE"
+      : index % 3 === 1
+        ? "#F3EDE3"
+        : "#EFE8DB";
 
   return (
     <motion.div
-      className={`relative ${compact ? "w-[min(46vw,11.5rem)]" : "w-[min(72vw,17.5rem)]"}`}
-      initial={{ opacity: 0, scale: 0.82, y: 18 }}
+      className={`relative ${compact ? "w-[min(48vw,12rem)]" : "w-[min(70vw,16.5rem)]"}`}
+      initial={{ opacity: 0, scale: 0.86, y: 14 }}
       animate={{
         opacity: 1,
         scale: 1,
         y: [0, -floatY, 0],
-        rotate: [tilt, tilt + 1.4, tilt],
+        rotate: [tilt, tilt + 1.8, tilt],
       }}
       transition={{
-        opacity: { duration: 0.45, delay: floatDelay * 0.35 },
+        opacity: { duration: 0.5, delay: floatDelay * 0.3 },
         scale: {
           type: "spring",
-          stiffness: 280,
-          damping: 18,
-          delay: floatDelay * 0.35,
+          stiffness: 220,
+          damping: 20,
+          delay: floatDelay * 0.3,
         },
         y: {
           duration: floatDuration,
@@ -56,78 +67,48 @@ function NotificationCard({
           delay: floatDelay,
         },
         rotate: {
-          duration: floatDuration * 1.15,
+          duration: floatDuration * 1.2,
           repeat: Infinity,
           ease: "easeInOut",
           delay: floatDelay,
         },
       }}
     >
-      <motion.span
-        aria-hidden
-        className="absolute -right-1 -top-1 z-10 h-2.5 w-2.5 rounded-full sm:h-3 sm:w-3"
-        style={{ background: accent }}
-        animate={{ scale: [1, 1.35, 1], opacity: [1, 0.55, 1] }}
-        transition={{
-          duration: 1.6 + (index % 3) * 0.2,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: index * 0.12,
-        }}
-      />
       <div
-        className={`rounded-2xl border border-white/30 bg-white/92 shadow-[0_18px_40px_-16px_rgba(0,0,0,0.55)] backdrop-blur-md ${
-          compact ? "p-2.5" : "p-3.5"
+        className={`relative shadow-[0_14px_28px_-14px_rgba(14,12,9,0.55)] ${
+          compact ? "px-3.5 py-3" : "px-4 py-3.5"
         }`}
+        style={{
+          backgroundColor: paperTint,
+          clipPath: tear,
+        }}
       >
-        <div className="mb-1.5 flex items-center gap-2 sm:mb-2">
-          <span
-            className={`relative flex shrink-0 items-center justify-center rounded-full font-bold text-white ${
-              compact ? "h-6 w-6 text-[9px]" : "h-8 w-8 text-[11px]"
-            }`}
-            style={{ background: accent }}
-          >
-            {platform.slice(0, 1)}
-          </span>
-          <div className="min-w-0 flex-1">
-            <p
-              className={`truncate font-semibold text-ink ${
-                compact ? "text-[10px]" : "text-xs"
-              }`}
-            >
-              {title}
-            </p>
-            <p className="text-[9px] uppercase tracking-[0.14em] text-ink-muted sm:text-[10px]">
-              {platform}
-            </p>
-          </div>
-          <span className="shrink-0 text-[9px] text-ink-muted sm:text-[10px]">
-            now
-          </span>
-        </div>
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.14]"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(transparent, transparent 13px, color-mix(in srgb, var(--gold) 55%, transparent) 13px, color-mix(in srgb, var(--gold) 55%, transparent) 14px)",
+            backgroundPosition: "0 10px",
+          }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-[12%] top-[18%] h-px bg-gold/35"
+        />
         <p
-          className={`text-left leading-snug text-ink/85 ${
-            compact ? "text-[10px] line-clamp-2" : "text-[12px]"
+          className={`relative text-left leading-snug text-ink ${
+            tone === "serif" ? "font-serif" : "font-sans"
+          } ${
+            compact
+              ? "text-[11px]"
+              : tone === "serif"
+                ? "text-[15px]"
+                : "text-[13px]"
           }`}
         >
-          {body}
+          {line}
         </p>
-        {!compact && (
-          <div className="mt-2.5 h-1 overflow-hidden rounded-full bg-ink/8">
-            <motion.div
-              className="h-full rounded-full"
-              style={{ background: accent }}
-              initial={{ width: "12%" }}
-              animate={{ width: ["12%", "88%", "40%", "70%"] }}
-              transition={{
-                duration: 5 + (index % 4),
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: index * 0.2,
-              }}
-            />
-          </div>
-        )}
       </div>
     </motion.div>
   );
@@ -224,9 +205,9 @@ export function SanctuaryReveal() {
             x: `${ox}vw`,
             y: `${oy}vh`,
             rotate: rot,
-            scale: 1.2,
+            scale: 1.15,
             opacity: 0,
-            filter: "blur(16px)",
+            filter: "blur(14px)",
             duration: 0.55,
           },
           0.04 + i * 0.03,
@@ -284,11 +265,11 @@ export function SanctuaryReveal() {
       >
         <div ref={sceneRef} className="absolute inset-0 will-change-transform">
           <Image
-            src="/images/writing-studio-notebook.png"
-            alt="Serene artisan writing studio with an open notebook and golden light through the window"
+            src="/images/writing-sanctuary-focus.png"
+            alt="Writer focused at a desk with headphones, papers, and a city window beyond"
             fill
             priority
-            className="object-cover object-[center_40%] md:object-center"
+            className="object-cover object-[72%_center] sm:object-[68%_center] md:object-[62%_center]"
             sizes="100vw"
           />
         </div>
@@ -318,8 +299,9 @@ export function SanctuaryReveal() {
               }}
             >
               <div className="-translate-x-1/2 -translate-y-1/2">
-                <NotificationCard
-                  {...item}
+                <PaperScrap
+                  line={item.line}
+                  tone={item.tone}
                   index={index}
                   compact={isMobile}
                 />
