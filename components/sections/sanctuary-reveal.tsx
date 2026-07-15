@@ -265,7 +265,7 @@ export function SanctuaryReveal() {
       >
         <div ref={sceneRef} className="absolute inset-0 will-change-transform">
           <Image
-            src="/images/writing-sanctuary-focus.png"
+            src="/images/writing-sanctuary-focus.jpg"
             alt="Writer focused at a desk with headphones, papers, and a city window beyond"
             fill
             priority
@@ -318,7 +318,7 @@ export function SanctuaryReveal() {
             Your writing sanctuary
           </p>
           <p className="mx-auto mt-2 max-w-xl font-serif text-xl text-paper sm:mt-3 sm:text-3xl">
-            Clear the noise. Keep the page.
+            Clear the distractions. Build your world.
           </p>
         </div>
 
