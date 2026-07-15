@@ -54,7 +54,7 @@ export const GENRES = [
   "Poetry",
 ] as const;
 
-/** Torn-paper distraction scraps for the sanctuary reveal */
+/** Ledger-line distractions for the sanctuary reveal */
 export const SOCIAL_CLUTTER = [
   {
     id: "s1",
