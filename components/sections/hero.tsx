@@ -4,10 +4,24 @@ import { Button } from "@/components/ui/button";
 import { COPY } from "@/lib/constants";
 import { gsap, registerGsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
-import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useMemo, useRef } from "react";
 
 registerGsap();
+
+const HeroJournal = dynamic(
+  () =>
+    import("@/components/hero/hero-journal").then((m) => m.HeroJournal),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        aria-hidden
+        className="h-full w-full bg-[radial-gradient(ellipse_at_55%_45%,#ebe4d4_0%,transparent_65%)]"
+      />
+    ),
+  },
+);
 
 /* Words set in italic serif for emphasis */
 const ITALIC_WORDS = new Set(["craft"]);
@@ -53,13 +67,13 @@ export function Hero() {
 
       gsap.set(words, { opacity: 0, y: 26, rotateX: 24 });
       gsap.set(rest, { opacity: 0, y: 16 });
-      if (media) gsap.set(media, { opacity: 0, scale: 1.045 });
+      if (media) gsap.set(media, { opacity: 0, scale: 1.04 });
       if (rule) gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       if (media) {
-        tl.to(media, { opacity: 1, scale: 1, duration: 1.7 }, 0);
+        tl.to(media, { opacity: 1, scale: 1, duration: 1.4 }, 0);
       }
       if (rule) {
         tl.to(
@@ -101,20 +115,18 @@ export function Hero() {
       ref={rootRef}
       className="relative flex min-h-[100dvh] items-center overflow-hidden"
     >
-      {/* Full-bleed photograph — copy rests on its empty left side */}
-      <div ref={mediaRef} className="absolute inset-0 will-change-transform">
-        <Image
-          src="/images/hero-notebook.png"
-          alt="Open notebook on a quiet desk in warm light"
-          fill
-          priority
-          className="object-cover object-[68%_center] sm:object-[62%_center] lg:object-center"
-          sizes="100vw"
-        />
-      </div>
+      {/* Warm paper field — atmosphere behind copy + journal */}
+      <div
+        aria-hidden
+        className="absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_70%_40%,#efe6d4_0%,var(--paper)_48%,#ebe4d6_100%)]"
+      />
+      <div
+        aria-hidden
+        className="absolute inset-0 opacity-[0.35] bg-[radial-gradient(circle_at_78%_55%,rgba(199,168,115,0.22)_0%,transparent_42%)]"
+      />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl px-6 pb-20 pt-28 sm:px-10 sm:pb-24">
-        <div className="flex max-w-xl flex-col items-start text-left [perspective:900px] lg:max-w-[46%]">
+      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-8 px-6 pb-20 pt-28 sm:px-10 sm:pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-6 lg:pt-24">
+        <div className="flex max-w-xl flex-col items-start text-left [perspective:900px] lg:max-w-none">
           {/* Eyebrow — letterspaced small caps over a drawn hairline */}
           <div data-hero className="flex w-full items-center gap-4">
             <p className="whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.32em] text-gold">
@@ -176,6 +188,16 @@ export function Hero() {
               className="cue-line block h-5 w-px origin-top bg-gold/60"
             />
           </a>
+        </div>
+
+        {/* 3D journal mount */}
+        <div
+          ref={mediaRef}
+          className="relative mx-auto h-[min(52vh,420px)] w-full max-w-lg will-change-transform sm:h-[min(56vh,480px)] lg:mx-0 lg:h-[min(72vh,620px)] lg:max-w-none"
+          role="img"
+          aria-label="Leather journal opening with handwritten text"
+        >
+          <HeroJournal />
         </div>
       </div>
 
