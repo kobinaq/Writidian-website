@@ -219,6 +219,7 @@ export function SanctuaryReveal() {
   const sceneRef = useRef<HTMLDivElement>(null);
   const clutterRef = useRef<HTMLDivElement>(null);
   const veilRef = useRef<HTMLDivElement>(null);
+  const noiseLineRef = useRef<HTMLDivElement>(null);
   const captionRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
@@ -247,6 +248,7 @@ export function SanctuaryReveal() {
       const reduced = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
+      const noiseLine = noiseLineRef.current;
       const pieces = gsap.utils.toArray<HTMLElement>(
         clutterEl.querySelectorAll("[data-clutter]"),
       );
@@ -255,6 +257,7 @@ export function SanctuaryReveal() {
         gsap.set(pieces, { opacity: 0 });
         gsap.set(scene, { scale: 1, filter: "none" });
         gsap.set(veil, { opacity: 0 });
+        if (noiseLine) gsap.set(noiseLine, { opacity: 0 });
         gsap.set(caption, { opacity: 1, y: 0 });
         if (progress) gsap.set(progress, { scaleX: 1 });
         return;
@@ -262,6 +265,7 @@ export function SanctuaryReveal() {
 
       gsap.set(scene, { scale: 1.06, filter: "blur(8px) brightness(0.45)" });
       gsap.set(veil, { opacity: 0.6 });
+      if (noiseLine) gsap.set(noiseLine, { opacity: 1, y: 0 });
       gsap.set(caption, { opacity: 0, y: 24 });
       gsap.set(pieces, {
         opacity: 1,
@@ -312,6 +316,14 @@ export function SanctuaryReveal() {
           0.04 + i * 0.03,
         );
       });
+
+      if (noiseLine) {
+        tl.to(
+          noiseLine,
+          { opacity: 0, y: -20, filter: "blur(6px)", duration: 0.22 },
+          0.16,
+        );
+      }
 
       tl.to(
         scene,
@@ -376,8 +388,25 @@ export function SanctuaryReveal() {
         <div
           ref={veilRef}
           aria-hidden
-          className="absolute inset-0 z-10 bg-espresso/55"
+          className="absolute inset-0 z-10"
+          style={{
+            background:
+              "radial-gradient(ellipse 90% 80% at 50% 45%, rgba(14,12,9,0.5) 0%, rgba(14,12,9,0.78) 100%)",
+          }}
         />
+
+        {/* Act I — the noise, named */}
+        <div
+          ref={noiseLineRef}
+          className="pointer-events-none absolute inset-x-0 top-[16%] z-30 px-6 text-center sm:top-[18%]"
+        >
+          <p className="text-[10px] uppercase tracking-[0.3em] text-paper/50 sm:text-[11px]">
+            Every time you sit down to write
+          </p>
+          <p className="mx-auto mt-3 max-w-2xl font-serif text-2xl italic leading-snug text-paper/90 sm:text-4xl">
+            The world will not stop talking.
+          </p>
+        </div>
 
         <div
           ref={clutterRef}
@@ -408,19 +437,29 @@ export function SanctuaryReveal() {
           ))}
         </div>
 
+        {/* Act II — the quiet, kept */}
         <div
           ref={captionRef}
-          className="absolute inset-x-0 bottom-0 z-30 bg-gradient-to-t from-espresso/90 via-espresso/45 to-transparent px-5 pb-[max(3.5rem,calc(env(safe-area-inset-bottom)+2.5rem))] pt-20 text-center sm:px-8 sm:pb-14 sm:pt-28"
+          className="absolute inset-x-0 bottom-0 z-30 bg-gradient-to-t from-espresso/95 via-espresso/50 to-transparent px-5 pb-[max(3.5rem,calc(env(safe-area-inset-bottom)+2.5rem))] pt-24 text-center sm:px-8 sm:pb-16 sm:pt-32"
         >
-          <p className="text-[10px] uppercase tracking-[0.24em] text-gold-soft sm:text-xs">
-            Your writing sanctuary
+          <div className="mx-auto flex max-w-md items-center gap-4">
+            <span aria-hidden className="h-px flex-1 bg-gold-soft/40" />
+            <p className="whitespace-nowrap text-[10px] uppercase tracking-[0.3em] text-gold-soft sm:text-[11px]">
+              Your writing sanctuary
+            </p>
+            <span aria-hidden className="h-px flex-1 bg-gold-soft/40" />
+          </div>
+          <p className="mx-auto mt-4 max-w-2xl font-serif text-2xl leading-snug text-paper sm:mt-5 sm:text-4xl">
+            In here, it is just you{" "}
+            <span className="italic text-gold-soft">and the page.</span>
           </p>
-          <p className="mx-auto mt-2 max-w-xl font-serif text-xl text-paper sm:mt-3 sm:text-3xl">
-            Clear the noise. Keep the page.
+          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-paper/65 sm:text-base">
+            Soundscapes for your ears, a prompt for your mind, and a door the
+            noise cannot get through.
           </p>
         </div>
 
-        <div className="absolute inset-x-5 bottom-3 z-40 h-0.5 overflow-hidden rounded-full bg-paper/20 sm:inset-x-16 sm:bottom-5">
+        <div className="absolute inset-x-5 bottom-3 z-40 h-px overflow-hidden bg-paper/15 sm:inset-x-16 sm:bottom-5">
           <div ref={progressRef} className="hero-progress h-full bg-gold-soft" />
         </div>
       </div>
