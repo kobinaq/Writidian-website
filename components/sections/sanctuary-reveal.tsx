@@ -376,7 +376,7 @@ export function SanctuaryReveal() {
       >
         <div ref={sceneRef} className="absolute inset-0 will-change-transform">
           <Image
-            src="/images/writing-sanctuary-focus.png"
+            src="/images/writing-sanctuary-focus.jpg"
             alt="Writer focused at a desk with headphones, papers, and a city window beyond"
             fill
             priority
