@@ -72,6 +72,7 @@ export function Soundscapes() {
           scrub: 1.1,
           pin: pin,
           anticipatePin: 1,
+          invalidateOnRefresh: true,
           onEnter: () => {
             void unlockAudio().then(() => ensureBeds());
             lastIndexRef.current = -1;

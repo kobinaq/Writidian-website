@@ -30,7 +30,7 @@ export function Problem() {
         return;
       }
 
-      gsap.set(spans, { opacity: 0.14, y: 18 });
+      gsap.set(spans, { opacity: 0.28, y: 18 });
 
       gsap.to(spans, {
         opacity: 1,
@@ -44,6 +44,7 @@ export function Problem() {
           scrub: 1.0,
           pin: pin,
           anticipatePin: 1,
+          invalidateOnRefresh: true,
         },
       });
     },
