@@ -29,7 +29,7 @@ export function Reveal({
       ).matches;
 
       if (reduced) {
-        gsap.set(el, { opacity: 1, y: 0, clearProps: "all" });
+        gsap.set(el, { opacity: 1, y: 0 });
         return;
       }
 
@@ -54,7 +54,7 @@ export function Reveal({
   );
 
   return (
-    <div ref={ref} className={className} style={{ opacity: 0 }}>
+    <div ref={ref} data-reveal className={className}>
       {children}
     </div>
   );

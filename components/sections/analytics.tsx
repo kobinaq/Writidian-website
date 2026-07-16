@@ -202,8 +202,8 @@ export function Analytics() {
                 ))}
               </div>
               <div className="mt-4 flex justify-between text-[9px] uppercase tracking-[0.14em] text-ink-muted sm:text-[10px]">
-                {MONTHS.map((m) => (
-                  <span key={m}>{m}</span>
+                {MONTHS.map((m, i) => (
+                  <span key={`${m}-${i}`}>{m}</span>
                 ))}
               </div>
               <div className="mt-4 flex items-center justify-end gap-1.5 text-[10px] text-ink-muted">

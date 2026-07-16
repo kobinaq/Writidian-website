@@ -59,7 +59,17 @@ export function Nav() {
   const [progress, setProgress] = useState(0);
   const [active, setActive] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const lastY = useRef(0);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -70,11 +80,7 @@ export function Nav() {
     const reduce = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    if (reduce) {
-      setReady(true);
-      return;
-    }
-    const id = window.setTimeout(() => setReady(true), 40);
+    const id = window.setTimeout(() => setReady(true), reduce ? 0 : 40);
     return () => window.clearTimeout(id);
   }, []);
 
@@ -96,6 +102,7 @@ export function Nav() {
         setHidden(false);
       } else if (y > lastY.current + 6) {
         setHidden(true);
+        setMenuOpen(false);
       } else if (y < lastY.current - 6) {
         setHidden(false);
       }
@@ -171,7 +178,7 @@ export function Nav() {
                 <a
                   key={link.id}
                   href={link.href}
-                  className={`relative text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 ${
+                  className={`relative rounded-sm text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold ${
                     isActive ? (onDark ? "text-gold-soft" : "text-gold") : mutedInk
                   } ${hoverInk}`}
                 >
@@ -197,7 +204,7 @@ export function Nav() {
               }}
               aria-pressed={muted}
               aria-label={muted ? "Unmute sound" : "Mute sound"}
-              className={`group relative flex h-9 items-center justify-center gap-2 px-2 transition-colors duration-300 ${mutedInk} ${hoverInk} ${
+              className={`group relative flex h-9 items-center justify-center gap-2 rounded-sm px-2 transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold ${mutedInk} ${hoverInk} ${
                 !muted && onDark ? "text-gold-soft" : ""
               } ${!muted && !onDark ? "text-gold" : ""}`}
             >
@@ -215,10 +222,79 @@ export function Nav() {
               </span>
             </button>
 
-            <Button className="!rounded-sm !px-3.5 !py-2 !text-[11px] uppercase tracking-[0.14em] sm:!px-4 sm:!text-xs">
-              Begin writing
+            <Button className="!rounded-sm !px-2.5 !py-2 !text-[11px] uppercase tracking-[0.14em] sm:!px-4 sm:!text-xs">
+              <span className="sm:hidden">Begin</span>
+              <span className="hidden sm:inline">Begin writing</span>
             </Button>
+
+            {/* Section menu — mobile only */}
+            <button
+              type="button"
+              onClick={() => setMenuOpen((open) => !open)}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-sections"
+              aria-label={menuOpen ? "Close section menu" : "Open section menu"}
+              className={`flex h-9 w-9 items-center justify-center rounded-sm transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold md:hidden ${mutedInk} ${hoverInk}`}
+            >
+              <span className="relative flex h-3 w-4 flex-col justify-between" aria-hidden>
+                <span
+                  className={`h-px w-full bg-current transition-transform duration-300 ${
+                    menuOpen ? "translate-y-[5.5px] rotate-45" : ""
+                  }`}
+                />
+                <span
+                  className={`h-px w-full bg-current transition-opacity duration-300 ${
+                    menuOpen ? "opacity-0" : "opacity-100"
+                  }`}
+                />
+                <span
+                  className={`h-px w-full bg-current transition-transform duration-300 ${
+                    menuOpen ? "-translate-y-[5.5px] -rotate-45" : ""
+                  }`}
+                />
+              </span>
+            </button>
           </div>
+        </div>
+
+        {/* Section list panel — mobile only */}
+        <div
+          id="mobile-sections"
+          className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] md:hidden ${
+            menuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          }`}
+        >
+          <nav
+            aria-label="Page sections"
+            className={`overflow-hidden ${menuOpen ? "" : "pointer-events-none invisible"}`}
+          >
+            <div
+              className={`flex flex-col border-t px-4 py-3 ${
+                onDark ? "border-paper/10" : "border-ink/10"
+              }`}
+            >
+              {LINKS.map((link) => {
+                const isActive = active === link.id;
+                return (
+                  <a
+                    key={link.id}
+                    href={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    tabIndex={menuOpen ? undefined : -1}
+                    className={`rounded-sm py-2.5 text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold ${
+                      isActive
+                        ? onDark
+                          ? "text-gold-soft"
+                          : "text-gold"
+                        : mutedInk
+                    } ${hoverInk}`}
+                  >
+                    {link.label}
+                  </a>
+                );
+              })}
+            </div>
+          </nav>
         </div>
 
         {/* Reading progress hairline */}

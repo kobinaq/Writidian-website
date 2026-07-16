@@ -72,6 +72,7 @@ export function Soundscapes() {
           scrub: 1.1,
           pin: pin,
           anticipatePin: 1,
+          invalidateOnRefresh: true,
           onEnter: () => {
             void unlockAudio().then(() => ensureBeds());
             lastIndexRef.current = -1;
@@ -124,7 +125,7 @@ export function Soundscapes() {
     <section
       id="soundscapes"
       ref={rootRef}
-      className="relative h-[220vh] md:h-[280vh] bg-paper"
+      className="relative h-[180vh] bg-paper md:h-[280vh]"
     >
       <div ref={pinRef} className="flex h-[100dvh] flex-col overflow-hidden">
         <div className="mx-auto flex w-full max-w-6xl min-h-0 flex-1 flex-col justify-center gap-5 px-5 py-16 sm:gap-8 sm:px-8 sm:py-20 lg:grid lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.15fr)] lg:items-center lg:gap-14 lg:py-16">

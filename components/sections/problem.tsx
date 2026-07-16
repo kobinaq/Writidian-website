@@ -30,7 +30,7 @@ export function Problem() {
         return;
       }
 
-      gsap.set(spans, { opacity: 0.14, y: 18 });
+      gsap.set(spans, { opacity: 0.28, y: 18 });
 
       gsap.to(spans, {
         opacity: 1,
@@ -44,6 +44,7 @@ export function Problem() {
           scrub: 1.0,
           pin: pin,
           anticipatePin: 1,
+          invalidateOnRefresh: true,
         },
       });
     },
@@ -51,7 +52,7 @@ export function Problem() {
   );
 
   return (
-    <section ref={rootRef} className="relative h-[170vh] bg-espresso text-paper md:h-[220vh]">
+    <section ref={rootRef} className="relative h-[140vh] bg-espresso text-paper md:h-[220vh]">
       <div
         ref={pinRef}
         className="flex h-[100dvh] items-center justify-center px-5 sm:px-8"

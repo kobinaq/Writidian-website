@@ -1,6 +1,6 @@
 "use client";
 
-import { COPY } from "@/lib/constants";
+import { APP_URL, COPY } from "@/lib/constants";
 import { gsap, registerGsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
@@ -79,9 +79,14 @@ export function Prompt() {
           <p className="mt-8 font-serif text-[clamp(1.35rem,2.8vw,2rem)] leading-relaxed text-ink">
             {COPY.samplePrompt}
           </p>
-          <div className="mt-8 inline-flex rounded-full border border-gold px-6 py-2.5 text-sm tracking-wide text-gold sm:mt-12 sm:px-7 sm:py-3">
-            Write Now
-          </div>
+          <a
+            href={APP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-8 inline-flex rounded-full border border-gold px-6 py-2.5 text-sm tracking-wide text-gold transition-colors duration-300 hover:bg-gold/10 hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold sm:mt-12 sm:px-7 sm:py-3"
+          >
+            Write now
+          </a>
         </article>
       </div>
     </section>

@@ -15,11 +15,14 @@ export function Footer() {
             href={APP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="transition-colors hover:text-ink"
+            className="rounded-sm transition-colors hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
           >
             Open app
           </a>
-          <a href="#soundscapes" className="transition-colors hover:text-ink">
+          <a
+            href="#soundscapes"
+            className="rounded-sm transition-colors hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+          >
             Features
           </a>
           <p className="text-ink-muted/80">© {year} {SITE.name}</p>

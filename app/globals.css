@@ -39,6 +39,14 @@ body {
   color: var(--espresso);
 }
 
+/* Reveal targets start hidden only when JS can run, so content
+   stays visible without JavaScript (and for crawlers). */
+@media (scripting: enabled) {
+  [data-reveal] {
+    opacity: 0;
+  }
+}
+
 .sketch-underline {
   display: inline-block;
   position: relative;
