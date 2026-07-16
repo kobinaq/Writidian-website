@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "build:journal": "node scripts/build-journal-glb.mjs",
     "start": "next start",
     "lint": "eslint"
   },
