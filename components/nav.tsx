@@ -222,8 +222,9 @@ export function Nav() {
               </span>
             </button>
 
-            <Button className="!rounded-sm !px-3.5 !py-2 !text-[11px] uppercase tracking-[0.14em] sm:!px-4 sm:!text-xs">
-              Begin writing
+            <Button className="!rounded-sm !px-2.5 !py-2 !text-[11px] uppercase tracking-[0.14em] sm:!px-4 sm:!text-xs">
+              <span className="sm:hidden">Begin</span>
+              <span className="hidden sm:inline">Begin writing</span>
             </Button>
 
             {/* Section menu — mobile only */}

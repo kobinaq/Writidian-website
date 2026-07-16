@@ -52,7 +52,7 @@ export function Problem() {
   );
 
   return (
-    <section ref={rootRef} className="relative h-[170vh] bg-espresso text-paper md:h-[220vh]">
+    <section ref={rootRef} className="relative h-[140vh] bg-espresso text-paper md:h-[220vh]">
       <div
         ref={pinRef}
         className="flex h-[100dvh] items-center justify-center px-5 sm:px-8"
