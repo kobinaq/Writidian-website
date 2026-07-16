@@ -67,14 +67,11 @@ export function Hero() {
 
       gsap.set(words, { opacity: 0, y: 26, rotateX: 24 });
       gsap.set(rest, { opacity: 0, y: 16 });
-      if (media) gsap.set(media, { opacity: 0, scale: 1.04 });
+      // Keep the journal mount visible early so the closed pose + spin aren't hidden
+      if (media) gsap.set(media, { opacity: 1, scale: 1 });
       if (rule) gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-
-      if (media) {
-        tl.to(media, { opacity: 1, scale: 1, duration: 1.4 }, 0);
-      }
       if (rule) {
         tl.to(
           rule,

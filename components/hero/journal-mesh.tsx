@@ -13,7 +13,8 @@ const COVER_CLOSED = 0;
 const COVER_OPEN = -2.15;
 
 const T = {
-  spinStart: 0.15,
+  // Delay so the hero media fade-in (~1.4s) doesn't hide the closed book + spin
+  spinStart: 1.35,
   spinDur: 5.0,
   openDelay: 0.3,
   openDur: 1.65,
