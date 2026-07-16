@@ -114,7 +114,7 @@ export function Hero() {
         {/* Soft left wash so copy stays readable over the desk */}
         <div
           aria-hidden
-          className="absolute inset-0 bg-[linear-gradient(90deg,rgba(247,244,238,0.82)_0%,rgba(247,244,238,0.42)_34%,rgba(247,244,238,0.08)_55%,transparent_70%)]"
+          className="absolute inset-0 bg-[linear-gradient(90deg,rgba(232,223,205,0.92)_0%,rgba(232,223,205,0.55)_34%,rgba(232,223,205,0.14)_55%,transparent_70%)]"
         />
       </div>
 
