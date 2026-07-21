@@ -9,7 +9,20 @@ import {
   type AmbientHandle,
 } from "@/lib/ambient-audio";
 
-export type SoundscapeSceneId = "forest" | "coast" | "night";
+export type SoundscapeSceneId =
+  | "romance"
+  | "horror"
+  | "scifi"
+  | "fantasy"
+  | "literary";
+
+const ALL_IDS: SoundscapeSceneId[] = [
+  "romance",
+  "horror",
+  "scifi",
+  "fantasy",
+  "literary",
+];
 
 export function useSoundscapeAudio() {
   const { muted, unlockAudio } = useSound();
@@ -42,14 +55,21 @@ export function useSoundscapeAudio() {
   const ensureBeds = useCallback(async () => {
     const ctx = await unlockAudio();
     if (!ctx) return null;
-    if (!bedsRef.current.forest) {
-      bedsRef.current.forest = createForestNightAmbience(ctx);
+    // Map genres onto existing ambient beds (distinct enough for scrub cues)
+    if (!bedsRef.current.romance) {
+      bedsRef.current.romance = createCalmLike(ctx, "coast");
     }
-    if (!bedsRef.current.coast) {
-      bedsRef.current.coast = createCoastAmbience(ctx);
+    if (!bedsRef.current.horror) {
+      bedsRef.current.horror = createCalmLike(ctx, "night");
     }
-    if (!bedsRef.current.night) {
-      bedsRef.current.night = createNightDeskAmbience(ctx);
+    if (!bedsRef.current.scifi) {
+      bedsRef.current.scifi = createCalmLike(ctx, "forest");
+    }
+    if (!bedsRef.current.fantasy) {
+      bedsRef.current.fantasy = createCalmLike(ctx, "coast");
+    }
+    if (!bedsRef.current.literary) {
+      bedsRef.current.literary = createCalmLike(ctx, "night");
     }
     await Promise.all(
       Object.values(bedsRef.current).map((b) => b?.resume()),
@@ -59,14 +79,17 @@ export function useSoundscapeAudio() {
 
   const setScene = useCallback(
     async (scene: SoundscapeSceneId | null) => {
-      if (scene === activeRef.current && inSectionRef.current === (scene !== null)) {
+      if (
+        scene === activeRef.current &&
+        inSectionRef.current === (scene !== null)
+      ) {
         return;
       }
       const beds = await ensureBeds();
       if (!beds) return;
       activeRef.current = scene;
       inSectionRef.current = scene !== null;
-      (["forest", "coast", "night"] as SoundscapeSceneId[]).forEach((id) => {
+      ALL_IDS.forEach((id) => {
         const target =
           !mutedRef.current && scene === id && inSectionRef.current ? 1 : 0;
         beds[id]?.setTargetVolume(target, 0.55);
@@ -85,4 +108,13 @@ export function useSoundscapeAudio() {
   }, []);
 
   return { setScene, fadeOutSection, ensureBeds };
+}
+
+function createCalmLike(
+  ctx: AudioContext,
+  kind: "forest" | "coast" | "night",
+): AmbientHandle {
+  if (kind === "forest") return createForestNightAmbience(ctx);
+  if (kind === "coast") return createCoastAmbience(ctx);
+  return createNightDeskAmbience(ctx);
 }

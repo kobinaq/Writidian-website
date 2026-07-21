@@ -40,10 +40,10 @@ function NotificationCard({
 }) {
   const floatDuration = 3.2 + (index % 5) * 0.35;
   const floatDelay = index * 0.18;
-  const tilt = ((index % 5) - 2) * 2.2;
-  const floatY = compact ? 4 : 8;
+  const tilt = compact ? ((index % 5) - 2) * 1.1 : ((index % 5) - 2) * 2.2;
+  const floatY = compact ? 2 : 8;
   const theme = themeFor(brand);
-  const iconSize = compact ? 22 : 28;
+  const iconSize = compact ? 20 : 28;
 
   const shell =
     theme === "dark"
@@ -69,13 +69,13 @@ function NotificationCard({
 
   return (
     <motion.div
-      className={`relative ${compact ? "w-[min(48vw,12.5rem)]" : "w-[min(74vw,18rem)]"}`}
-      initial={{ opacity: 0, scale: 0.82, y: 18 }}
+      className={`relative ${compact ? "w-[min(42vw,10.25rem)]" : "w-[min(74vw,18rem)]"}`}
+      initial={{ opacity: 0, scale: 0.88, y: 12 }}
       animate={{
         opacity: 1,
         scale: 1,
         y: [0, -floatY, 0],
-        rotate: [tilt, tilt + 1.4, tilt],
+        rotate: [tilt, tilt + (compact ? 0.6 : 1.4), tilt],
       }}
       transition={{
         opacity: { duration: 0.45, delay: floatDelay * 0.35 },
@@ -223,6 +223,7 @@ export function SanctuaryReveal() {
   const captionRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
+  const mobileReady = isMobile !== null;
   const { unlock, setSanctuaryVolume, fadeOutPastHero } =
     useHeroSanctuaryAudio();
 
@@ -243,7 +244,7 @@ export function SanctuaryReveal() {
       const veil = veilRef.current;
       const caption = captionRef.current;
       const progress = progressRef.current;
-      if (!root || !pin || !scene || !clutterEl) return;
+      if (!root || !pin || !scene || !clutterEl || !mobileReady) return;
 
       const reduced = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
@@ -253,19 +254,26 @@ export function SanctuaryReveal() {
         clutterEl.querySelectorAll("[data-clutter]"),
       );
 
+      // CSS filters on full-bleed images flash white on many mobile browsers.
+      // Mobile: dim with the veil only. Desktop: keep blur/brightness scrub.
+      const mobile = Boolean(isMobile);
+
       if (reduced) {
         gsap.set(pieces, { opacity: 0 });
-        gsap.set(scene, { scale: 1, filter: "none" });
+        gsap.set(scene, { scale: 1, filter: "none", clearProps: "filter" });
         gsap.set(veil, { opacity: 0 });
-        if (noiseLine) gsap.set(noiseLine, { opacity: 0 });
+        if (noiseLine) gsap.set(noiseLine, { opacity: 0, filter: "none" });
         gsap.set(caption, { opacity: 1, y: 0 });
         if (progress) gsap.set(progress, { scaleX: 1 });
         return;
       }
 
-      gsap.set(scene, { scale: 1.06, filter: "blur(8px) brightness(0.45)" });
-      gsap.set(veil, { opacity: 0.6 });
-      if (noiseLine) gsap.set(noiseLine, { opacity: 1, y: 0 });
+      gsap.set(scene, {
+        scale: mobile ? 1.04 : 1.06,
+        filter: mobile ? "none" : "blur(8px) brightness(0.45)",
+      });
+      gsap.set(veil, { opacity: mobile ? 0.72 : 0.6 });
+      if (noiseLine) gsap.set(noiseLine, { opacity: 1, y: 0, filter: "none" });
       gsap.set(caption, { opacity: 0, y: 24 });
       gsap.set(pieces, {
         opacity: 1,
@@ -273,7 +281,7 @@ export function SanctuaryReveal() {
         y: 0,
         rotate: 0,
         scale: 1,
-        filter: "blur(0px)",
+        filter: "none",
       });
       if (progress) gsap.set(progress, { scaleX: 0 });
 
@@ -283,7 +291,7 @@ export function SanctuaryReveal() {
           trigger: root,
           start: "top top",
           end: "bottom bottom",
-          scrub: 1.15,
+          scrub: mobile ? 0.85 : 1.15,
           pin: pin,
           anticipatePin: 1,
           invalidateOnRefresh: true,
@@ -299,18 +307,21 @@ export function SanctuaryReveal() {
       });
 
       pieces.forEach((piece, i) => {
-        const ox = Number(piece.dataset.ox ?? 0);
-        const oy = Number(piece.dataset.oy ?? 0);
+        const ox = Number(
+          mobile ? (piece.dataset.mox ?? piece.dataset.ox) : piece.dataset.ox,
+        );
+        const oy = Number(
+          mobile ? (piece.dataset.moy ?? piece.dataset.oy) : piece.dataset.oy,
+        );
         const rot = Number(piece.dataset.rot ?? 0);
         tl.to(
           piece,
           {
             x: `${ox}vw`,
             y: `${oy}vh`,
-            rotate: rot,
-            scale: 1.2,
+            rotate: rot * (mobile ? 0.7 : 1),
+            scale: mobile ? 0.92 : 1.15,
             opacity: 0,
-            filter: "blur(16px)",
             duration: 0.55,
           },
           0.04 + i * 0.03,
@@ -320,22 +331,39 @@ export function SanctuaryReveal() {
       if (noiseLine) {
         tl.to(
           noiseLine,
-          { opacity: 0, y: -20, filter: "blur(6px)", duration: 0.22 },
+          { opacity: 0, y: mobile ? -12 : -20, duration: 0.22 },
           0.16,
         );
       }
 
-      tl.to(
-        scene,
-        {
-          scale: 1,
-          filter: "blur(0px) brightness(1)",
-          duration: 0.55,
-        },
-        0.2,
-      );
-      tl.to(veil, { opacity: 0, duration: 0.45 }, 0.22);
-      tl.to(caption, { opacity: 1, y: 0, duration: 0.3 }, 0.55);
+      if (mobile) {
+        tl.to(scene, { scale: 1, duration: 0.55 }, 0.2);
+      } else {
+        tl.to(
+          scene,
+          {
+            scale: 1,
+            filter: "blur(0px) brightness(1)",
+            duration: 0.55,
+          },
+          0.2,
+        );
+      }
+      // Keep a whisper of veil on mobile so a compositor glitch never
+      // exposes the light paper page behind the pin.
+      tl.to(veil, { opacity: mobile ? 0.08 : 0, duration: 0.45 }, 0.22);
+      if (caption) {
+        tl.to(caption, { opacity: 1, y: 0, duration: 0.3 }, 0.55);
+        const desc = caption.querySelector<HTMLElement>("[data-sanctuary-desc]");
+        if (desc) {
+          gsap.set(desc, { opacity: 0, y: 16, scale: 0.96 });
+          tl.to(
+            desc,
+            { opacity: 1, y: 0, scale: 1, duration: 0.35 },
+            0.62,
+          );
+        }
+      }
       if (progress) tl.to(progress, { scaleX: 1, duration: 1 }, 0);
 
       const unlockOnce = () => {
@@ -359,6 +387,7 @@ export function SanctuaryReveal() {
         fadeOutPastHero,
         clutter,
         isMobile,
+        mobileReady,
       ],
     },
   );
@@ -374,7 +403,10 @@ export function SanctuaryReveal() {
         ref={pinRef}
         className="relative h-[100dvh] overflow-hidden bg-espresso"
       >
-        <div ref={sceneRef} className="absolute inset-0 will-change-transform">
+        <div
+          ref={sceneRef}
+          className="absolute inset-0 bg-espresso will-change-transform"
+        >
           <Image
             src="/images/writing-sanctuary-focus.jpg"
             alt="Writer focused at a desk with headphones, papers, and a city window beyond"
@@ -398,12 +430,12 @@ export function SanctuaryReveal() {
         {/* Act I — the noise, named */}
         <div
           ref={noiseLineRef}
-          className="pointer-events-none absolute inset-x-0 top-[16%] z-30 px-6 text-center sm:top-[18%]"
+          className="pointer-events-none absolute inset-x-0 top-[12%] z-30 px-5 text-center sm:top-[18%] sm:px-6"
         >
-          <p className="text-[10px] uppercase tracking-[0.3em] text-paper/50 sm:text-[11px]">
+          <p className="font-accent text-sm tracking-wide text-paper/50 sm:text-base">
             Every time you sit down to write
           </p>
-          <p className="mx-auto mt-3 max-w-2xl font-serif text-2xl italic leading-snug text-paper/90 sm:text-4xl">
+          <p className="mx-auto mt-3 max-w-3xl font-serif text-[1.65rem] italic leading-snug text-paper/90 sm:mt-4 sm:text-5xl">
             The world will not stop talking.
           </p>
         </div>
@@ -413,28 +445,32 @@ export function SanctuaryReveal() {
           className="pointer-events-none absolute inset-0 z-20"
           aria-hidden
         >
-          {clutter.map((item, index) => (
-            <div
-              key={item.id}
-              data-clutter
-              data-ox={item.ox}
-              data-oy={item.oy}
-              data-rot={item.rot}
-              className="absolute will-change-transform"
-              style={{
-                left: `${isMobile ? item.mx : item.x}%`,
-                top: `${isMobile ? item.my : item.y}%`,
-              }}
-            >
-              <div className="-translate-x-1/2 -translate-y-1/2">
-                <NotificationCard
-                  {...item}
-                  index={index}
-                  compact={isMobile}
-                />
-              </div>
-            </div>
-          ))}
+          {mobileReady
+            ? clutter.map((item, index) => (
+                <div
+                  key={item.id}
+                  data-clutter
+                  data-ox={item.ox}
+                  data-oy={item.oy}
+                  data-mox={item.mox}
+                  data-moy={item.moy}
+                  data-rot={item.rot}
+                  className="absolute will-change-transform"
+                  style={{
+                    left: `${isMobile ? item.mx : item.x}%`,
+                    top: `${isMobile ? item.my : item.y}%`,
+                  }}
+                >
+                  <div className="-translate-x-1/2 -translate-y-1/2">
+                    <NotificationCard
+                      {...item}
+                      index={index}
+                      compact={Boolean(isMobile)}
+                    />
+                  </div>
+                </div>
+              ))
+            : null}
         </div>
 
         {/* Act II — the quiet, kept */}
@@ -444,16 +480,19 @@ export function SanctuaryReveal() {
         >
           <div className="mx-auto flex max-w-md items-center gap-4">
             <span aria-hidden className="h-px flex-1 bg-gold-soft/40" />
-            <p className="whitespace-nowrap text-[10px] uppercase tracking-[0.3em] text-gold-soft sm:text-[11px]">
+            <p className="font-accent whitespace-nowrap text-sm tracking-wide text-gold-soft sm:text-base">
               Your writing sanctuary
             </p>
             <span aria-hidden className="h-px flex-1 bg-gold-soft/40" />
           </div>
-          <p className="mx-auto mt-4 max-w-2xl font-serif text-2xl leading-snug text-paper sm:mt-5 sm:text-4xl">
+          <p className="mx-auto mt-4 max-w-3xl font-serif text-[1.75rem] leading-snug text-paper sm:mt-5 sm:text-5xl">
             In here, it is just you{" "}
             <span className="italic text-gold-soft">and the page.</span>
           </p>
-          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-paper/65 sm:text-base">
+          <p
+            data-sanctuary-desc
+            className="font-accent mx-auto mt-4 max-w-lg text-base leading-relaxed text-paper/70 sm:mt-5 sm:text-xl"
+          >
             Soundscapes for your ears, a prompt for your mind, and a door the
             noise cannot get through.
           </p>

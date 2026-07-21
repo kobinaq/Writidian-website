@@ -21,6 +21,16 @@
   --color-espresso: var(--espresso);
   --font-serif: var(--font-fraunces);
   --font-sans: var(--font-source-sans);
+  --font-eyebrow: var(--font-handlee);
+  --font-accent: var(--font-pangolin);
+}
+
+.font-eyebrow {
+  font-family: var(--font-handlee), cursive;
+}
+
+.font-accent {
+  font-family: var(--font-pangolin), cursive;
 }
 
 html {

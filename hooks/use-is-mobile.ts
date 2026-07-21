@@ -2,9 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-/** True when viewport is below Tailwind `md` (768px). */
-export function useIsMobile(breakpoint = 768) {
-  const [isMobile, setIsMobile] = useState(false);
+/**
+ * True when viewport is below Tailwind `md` (768px).
+ * Returns `null` until mounted so callers can wait before layout-sensitive work.
+ */
+export function useIsMobile(breakpoint = 768): boolean | null {
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useEffect(() => {
     const mq = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);

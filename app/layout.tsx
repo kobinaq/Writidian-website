@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Source_Sans_3 } from "next/font/google";
+import { Fraunces, Handlee, Pangolin, Source_Sans_3 } from "next/font/google";
 import { SoundProvider } from "@/components/sound-context";
 import { SITE } from "@/lib/constants";
 import "./globals.css";
@@ -12,6 +12,20 @@ const fraunces = Fraunces({
 
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const handlee = Handlee({
+  variable: "--font-handlee",
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const pangolin = Pangolin({
+  variable: "--font-pangolin",
+  weight: "400",
   subsets: ["latin"],
   display: "swap",
 });
@@ -40,7 +54,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${sourceSans.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${sourceSans.variable} ${handlee.variable} ${pangolin.variable} h-full antialiased`}
     >
       <body className="min-h-full overflow-x-hidden bg-paper font-sans text-ink">
         <SoundProvider>

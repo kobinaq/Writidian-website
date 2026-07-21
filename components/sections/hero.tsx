@@ -4,12 +4,10 @@ import { Button } from "@/components/ui/button";
 import { COPY } from "@/lib/constants";
 import { gsap, registerGsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
-import Image from "next/image";
 import { useMemo, useRef } from "react";
 
 registerGsap();
 
-/* Words set in italic serif for emphasis */
 const ITALIC_WORDS = new Set(["craft"]);
 
 function splitWords(text: string) {
@@ -24,6 +22,7 @@ export function Hero() {
   const rootRef = useRef<HTMLElement>(null);
   const mediaRef = useRef<HTMLDivElement>(null);
   const ruleRef = useRef<HTMLSpanElement>(null);
+  const tabletRef = useRef<HTMLDivElement>(null);
 
   const headlineWords = useMemo(() => splitWords(COPY.heroHeadline), []);
 
@@ -43,10 +42,12 @@ export function Hero() {
       );
       const media = mediaRef.current;
       const rule = ruleRef.current;
+      const tablet = tabletRef.current;
 
       if (reduced) {
         gsap.set([...words, ...rest], { opacity: 1, y: 0 });
         if (media) gsap.set(media, { opacity: 1, scale: 1 });
+        if (tablet) gsap.set(tablet, { opacity: 1, y: 0 });
         if (rule) gsap.set(rule, { scaleX: 1 });
         return;
       }
@@ -54,6 +55,7 @@ export function Hero() {
       gsap.set(words, { opacity: 0, y: 26, rotateX: 24 });
       gsap.set(rest, { opacity: 0, y: 16 });
       if (media) gsap.set(media, { opacity: 0, scale: 1.045 });
+      if (tablet) gsap.set(tablet, { opacity: 0, y: 40 });
       if (rule) gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
@@ -91,6 +93,10 @@ export function Hero() {
         },
         1.2,
       );
+
+      if (tablet) {
+        tl.to(tablet, { opacity: 1, y: 0, duration: 1 }, 0.9);
+      }
     },
     { dependencies: [] },
   );
@@ -99,25 +105,22 @@ export function Hero() {
     <section
       id="top"
       ref={rootRef}
-      className="relative flex min-h-[100dvh] items-center overflow-hidden"
+      className="relative flex min-h-[100dvh] items-center overflow-hidden bg-paper"
     >
-      {/* Full-bleed photograph — copy rests on its empty left side */}
-      <div ref={mediaRef} className="absolute inset-0 will-change-transform">
-        <Image
-          src="/images/hero-notebook.png"
-          alt="Open notebook on a quiet desk in warm light"
-          fill
-          priority
-          className="object-cover object-[68%_center] sm:object-[62%_center] lg:object-center"
-          sizes="100vw"
-        />
-      </div>
+      <div
+        ref={mediaRef}
+        aria-hidden
+        className="absolute inset-0 will-change-transform"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 70% at 70% 40%, color-mix(in srgb, var(--gold) 18%, transparent), transparent 55%), linear-gradient(160deg, var(--surface) 0%, var(--paper) 45%, color-mix(in srgb, var(--gold) 8%, var(--paper)) 100%)",
+        }}
+      />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl px-6 pb-20 pt-28 sm:px-10 sm:pb-24">
-        <div className="flex max-w-xl flex-col items-start text-left [perspective:900px] lg:max-w-[46%]">
-          {/* Eyebrow — letterspaced small caps over a drawn hairline */}
+      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-10 px-6 pb-20 pt-28 sm:gap-12 sm:px-10 sm:pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-14">
+        <div className="flex max-w-xl flex-col items-start text-left [perspective:900px]">
           <div data-hero className="flex w-full items-center gap-4">
-            <p className="whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.32em] text-gold">
+            <p className="font-eyebrow whitespace-nowrap text-[15px] tracking-wide text-gold">
               A writing sanctuary
             </p>
             <span
@@ -127,9 +130,8 @@ export function Hero() {
             />
           </div>
 
-          {/* Headline — the voice of the page, not a logotype */}
           <h1
-            className="mt-7 font-serif text-[clamp(2.6rem,7.5vw,4.9rem)] leading-[1.04] tracking-tight text-ink sm:mt-9"
+            className="mt-7 font-serif text-[clamp(2.4rem,6.5vw,4.5rem)] leading-[1.04] tracking-tight text-ink sm:mt-9"
             aria-label={COPY.heroHeadline}
           >
             {headlineWords.map(({ word, italic, key }, i) => (
@@ -149,26 +151,25 @@ export function Hero() {
 
           <p
             data-hero
-            className="mt-6 max-w-md text-[1rem] leading-relaxed text-ink-muted sm:mt-7 sm:text-lg"
+            className="font-accent mt-6 max-w-md text-[1.15rem] leading-relaxed text-ink-muted sm:mt-7 sm:text-xl"
           >
             {COPY.heroSupport}
           </p>
 
-          {/* CTA — one clear action, one quiet promise */}
           <div
             data-hero
             className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4 sm:mt-11"
           >
             <Button>Begin writing</Button>
-            <p className="text-[11px] uppercase tracking-[0.22em] text-ink-muted">
-              Free to start · No AI, ever
+            <p className="font-eyebrow text-[13px] tracking-wide text-ink-muted">
+              Free to start
             </p>
           </div>
 
           <a
             data-hero
             href="#sanctuary"
-            className="mt-12 flex items-center gap-3 text-[11px] uppercase tracking-[0.24em] text-gold transition-opacity hover:opacity-70 sm:mt-16"
+            className="font-eyebrow mt-12 flex items-center gap-3 text-[13px] tracking-wide text-gold transition-opacity hover:opacity-70 sm:mt-16"
           >
             Enter the sanctuary
             <span
@@ -177,15 +178,35 @@ export function Hero() {
             />
           </a>
         </div>
-      </div>
 
-      {/* Folio mark — quiet editorial detail */}
-      <p
-        aria-hidden
-        className="absolute bottom-6 right-6 hidden font-serif text-xs italic tracking-wide text-ink/45 sm:right-10 lg:block"
-      >
-        Writidian · est. for the patient craft
-      </p>
+        {/* Landscape iPad frame with product journey video */}
+        <div
+          ref={tabletRef}
+          data-hero
+          className="relative mx-auto w-full max-w-[34rem] lg:max-w-none"
+        >
+          <div className="relative aspect-[1180/820] w-full overflow-hidden rounded-[1.35rem] border-[10px] border-[#2a2622] bg-espresso shadow-[0_40px_80px_-30px_rgba(14,12,9,0.55)] sm:rounded-[1.6rem] sm:border-[12px]">
+            <div
+              aria-hidden
+              className="absolute left-1/2 top-2 z-10 h-1.5 w-16 -translate-x-1/2 rounded-full bg-black/40 sm:top-2.5 sm:h-2 sm:w-20"
+            />
+            <video
+              className="absolute inset-0 h-full w-full object-cover"
+              src="/videos/hero-ipad-journey.webm"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label="Writidian app journey from daily prompt to the editor"
+            />
+          </div>
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -inset-6 -z-10 rounded-[2rem] bg-gold/10 blur-2xl"
+          />
+        </div>
+      </div>
     </section>
   );
 }

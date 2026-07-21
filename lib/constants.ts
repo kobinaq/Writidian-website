@@ -1,11 +1,27 @@
 export const APP_URL = "https://app.writidian.com";
+export const CONTACT_EMAIL = "hello@writidian.com";
 
 export const SITE = {
   name: "Writidian",
   tagline: "A space for intentional writing.",
   description:
-    "Writidian is a writing sanctuary for people who want to think and write for themselves. Soundscapes, daily prompts, and a built-in editor. No AI.",
+    "Writidian is a writing sanctuary for people who want to think and write for themselves. Soundscapes, daily prompts, and a built-in editor.",
 };
+
+export const SOCIALS = [
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/company/writidian",
+  },
+] as const;
+
+export const FOOTER_LINKS = [
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/about#contact" },
+  { label: "Privacy", href: "/privacy" },
+  { label: "Terms", href: "/terms" },
+  { label: "Our stance on AI", href: "/stance" },
+] as const;
 
 export const COPY = {
   heroHeadline: "Write like the craft still matters.",
@@ -43,6 +59,54 @@ export const COPY = {
   finalSupport: "Sign up and step into your sanctuary.",
 };
 
+export const SAMPLE_PROMPTS = [
+  {
+    label: "Atmosphere",
+    text: "In your shared apartment, your two roommates are mad at each other. There's tension in the atmosphere. What happened?",
+  },
+  {
+    label: "Nostalgia",
+    text: "There is a song you refuse to listen to anymore because it transports you to a time you can't get back. What time is that?",
+  },
+  {
+    label: "Threshold",
+    text: "You find a door that was not there yesterday. The handle is warm. Do you open it — and what waits on the other side?",
+  },
+] as const;
+
+export const MOMENTUM_STATS = [
+  {
+    id: "compass",
+    label: "Thematic Compass",
+    value: "Fantasy · 42%",
+    detail: "Your drafts lean toward worlds that ask for wonder.",
+  },
+  {
+    id: "resonance",
+    label: "Soundscape Resonance",
+    value: "Arcsine Drift",
+    detail: "The bed that held your longest uninterrupted session.",
+  },
+  {
+    id: "rhythm",
+    label: "Flow Rhythm",
+    value: "24 min avg",
+    detail: "Quiet stretches where the timer disappeared.",
+  },
+  {
+    id: "hours",
+    label: "Sanctuary Hours",
+    value: "18.4 h",
+    detail: "Time spent inside the writing room this month.",
+  },
+  {
+    id: "words",
+    label: "Words Flowed",
+    value: "12,480",
+    detail: "Not a leaderboard — a mirror of showing up.",
+  },
+] as const;
+
 export const GENRES = [
   "Romance",
   "Horror",
@@ -56,8 +120,8 @@ export const GENRES = [
 
 /**
  * Social-style notification clutter for the sanctuary reveal.
- * Layout: left + right columns below the narration band (y ≈ 16–36%),
- * so the center headline stays clear with breathing room.
+ * Desktop: left + right columns below the narration band.
+ * Mobile (mx/my): tight 2×3 grid below narration; mox/moy = gentler scatter.
  */
 export const SOCIAL_CLUTTER = [
   {
@@ -69,10 +133,12 @@ export const SOCIAL_CLUTTER = [
     accent: "#E1306C",
     x: 16,
     y: 42,
-    mx: 18,
-    my: 40,
+    mx: 24,
+    my: 42,
     ox: -48,
     oy: -28,
+    mox: -28,
+    moy: -18,
     rot: -5,
     mobile: true,
   },
@@ -85,10 +151,12 @@ export const SOCIAL_CLUTTER = [
     accent: "#000000",
     x: 84,
     y: 42,
-    mx: 82,
-    my: 40,
+    mx: 76,
+    my: 42,
     ox: 48,
     oy: -30,
+    mox: 28,
+    moy: -18,
     rot: 5,
     mobile: true,
   },
@@ -101,10 +169,12 @@ export const SOCIAL_CLUTTER = [
     accent: "#5865F2",
     x: 18,
     y: 56,
-    mx: 20,
-    my: 54,
+    mx: 24,
+    my: 57,
     ox: -52,
     oy: 6,
+    mox: -30,
+    moy: 8,
     rot: -4,
     mobile: true,
   },
@@ -117,10 +187,12 @@ export const SOCIAL_CLUTTER = [
     accent: "#FE2C55",
     x: 86,
     y: 56,
-    mx: 80,
-    my: 56,
+    mx: 76,
+    my: 57,
     ox: 50,
     oy: 4,
+    mox: 30,
+    moy: 8,
     rot: 6,
     mobile: false,
   },
@@ -133,10 +205,12 @@ export const SOCIAL_CLUTTER = [
     accent: "#E60023",
     x: 50,
     y: 62,
-    mx: 50,
-    my: 66,
+    mx: 76,
+    my: 72,
     ox: 0,
     oy: 36,
+    mox: 26,
+    moy: 22,
     rot: -3,
     mobile: true,
   },
@@ -149,10 +223,12 @@ export const SOCIAL_CLUTTER = [
     accent: "#4A154B",
     x: 82,
     y: 70,
-    mx: 78,
-    my: 70,
+    mx: 76,
+    my: 57,
     ox: 44,
     oy: 32,
+    mox: 28,
+    moy: 8,
     rot: 4,
     mobile: true,
   },
@@ -165,10 +241,12 @@ export const SOCIAL_CLUTTER = [
     accent: "#25D366",
     x: 15,
     y: 70,
-    mx: 20,
-    my: 78,
+    mx: 24,
+    my: 72,
     ox: -50,
     oy: 38,
+    mox: -26,
+    moy: 22,
     rot: -5,
     mobile: true,
   },
@@ -181,10 +259,12 @@ export const SOCIAL_CLUTTER = [
     accent: "#E74C3C",
     x: 85,
     y: 82,
-    mx: 82,
-    my: 82,
+    mx: 76,
+    my: 84,
     ox: 46,
     oy: 36,
+    mox: 28,
+    moy: 24,
     rot: 5,
     mobile: false,
   },
@@ -197,10 +277,12 @@ export const SOCIAL_CLUTTER = [
     accent: "#10A37F",
     x: 20,
     y: 84,
-    mx: 36,
+    mx: 24,
     my: 84,
     ox: -44,
     oy: 28,
+    mox: -28,
+    moy: 24,
     rot: -4,
     mobile: false,
   },
@@ -217,28 +299,58 @@ export const SOCIAL_CLUTTER = [
     my: 88,
     ox: 8,
     oy: 40,
+    mox: 0,
+    moy: 28,
     rot: 3,
     mobile: false,
   },
 ] as const;
 
+/** Genre soundscapes aligned with the Writidian app Genres tab. */
 export const SOUNDSCAPE_SCENES = [
   {
-    id: "forest",
-    title: "Forest night",
-    line: "Crickets in the dark. Soft wind through the pines. Your scene outside the window.",
-    image: "/images/soundscape-forest.png",
+    id: "romance",
+    title: "Romance",
+    track: "Arcsine Drift",
+    line: "Soft pulse under candlelight. The page keeps the heart honest.",
+    image: "/images/writing-sanctuary-focus.jpg",
+    tint: "rgba(120, 60, 70, 0.45)",
+    midTint: "rgba(180, 120, 100, 0.25)",
   },
   {
-    id: "coast",
-    title: "Coast",
-    line: "Slow tide against the shore. Salt air. The page keeps rhythm with the waves.",
-    image: "/images/soundscape-coast.png",
+    id: "horror",
+    title: "Horror",
+    track: "Basement Door Ajar",
+    line: "A low hum in the walls. Something waits just past the margin.",
+    image: "/images/writing-sanctuary-focus.jpg",
+    tint: "rgba(30, 20, 40, 0.55)",
+    midTint: "rgba(60, 40, 50, 0.35)",
   },
   {
-    id: "night",
-    title: "Night desk",
-    line: "One lamp. Soft room hush. The rest of the world on mute.",
-    image: "/images/soundscape-night.png",
+    id: "scifi",
+    title: "Science Fiction",
+    track: "Orbital Sand Hymn",
+    line: "Vacuum hush and distant engines. Tomorrow written in present tense.",
+    image: "/images/writing-sanctuary-focus.jpg",
+    tint: "rgba(20, 40, 70, 0.5)",
+    midTint: "rgba(40, 80, 120, 0.3)",
+  },
+  {
+    id: "fantasy",
+    title: "Fantasy",
+    track: "Moonglass Spires",
+    line: "Wind through ancient stone. Magic that still costs something.",
+    image: "/images/writing-sanctuary-focus.jpg",
+    tint: "rgba(40, 50, 80, 0.48)",
+    midTint: "rgba(90, 70, 130, 0.28)",
+  },
+  {
+    id: "literary",
+    title: "Literary Fiction",
+    track: "Sunlit Inkflow",
+    line: "Quiet rooms. Precise sentences. The truth arrives slowly.",
+    image: "/images/writing-sanctuary-focus.jpg",
+    tint: "rgba(50, 40, 30, 0.42)",
+    midTint: "rgba(140, 110, 70, 0.22)",
   },
 ] as const;

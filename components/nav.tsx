@@ -3,13 +3,20 @@
 import { Button } from "@/components/ui/button";
 import { useSound } from "@/components/sound-context";
 import { SITE } from "@/lib/constants";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-const LINKS = [
+const SECTION_LINKS = [
   { href: "#sanctuary", label: "Sanctuary", id: "sanctuary" },
   { href: "#soundscapes", label: "Sound", id: "soundscapes" },
   { href: "#prompt", label: "Prompt", id: "prompt" },
   { href: "#editor", label: "Write", id: "editor" },
+] as const;
+
+const PAGE_LINKS = [
+  { href: "/about", label: "About" },
+  { href: "/stance", label: "Stance" },
 ] as const;
 
 function SoundIcon({ muted }: { muted: boolean }) {
@@ -52,6 +59,8 @@ function SoundIcon({ muted }: { muted: boolean }) {
 }
 
 export function Nav() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const { muted, toggleMuted, setMuted, unlockAudio } = useSound();
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -80,9 +89,9 @@ export function Nav() {
 
   useEffect(() => {
     const sanctuary = document.getElementById("sanctuary");
-    const sections = LINKS.map((l) => document.getElementById(l.id)).filter(
-      (el): el is HTMLElement => Boolean(el),
-    );
+    const sections = SECTION_LINKS.map((l) =>
+      document.getElementById(l.id),
+    ).filter((el): el is HTMLElement => Boolean(el));
 
     const onScroll = () => {
       const y = window.scrollY;
@@ -91,7 +100,6 @@ export function Nav() {
       setProgress(max > 0 ? Math.min(1, Math.max(0, y / max)) : 0);
       setScrolled(y > 20);
 
-      // Hide on scroll down, reveal on scroll up (after leaving the top)
       if (y < 48) {
         setHidden(false);
       } else if (y > lastY.current + 6) {
@@ -101,13 +109,13 @@ export function Nav() {
       }
       lastY.current = y;
 
-      // Dark surface while the sanctuary pin fills the viewport
       if (sanctuary) {
         const r = sanctuary.getBoundingClientRect();
         setOnDark(r.top <= 56 && r.bottom > window.innerHeight * 0.45);
+      } else {
+        setOnDark(false);
       }
 
-      // Active reading-list item
       let current: string | null = null;
       for (const el of sections) {
         const r = el.getBoundingClientRect();
@@ -119,18 +127,11 @@ export function Nav() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [pathname]);
 
   const ink = onDark ? "text-paper" : "text-ink";
   const mutedInk = onDark ? "text-paper/55" : "text-ink-muted";
   const hoverInk = onDark ? "hover:text-paper" : "hover:text-ink";
-  const barBg = onDark
-    ? scrolled
-      ? "bg-espresso/90 border-paper/10"
-      : "bg-espresso/55 border-paper/5"
-    : scrolled
-      ? "bg-paper/92 border-ink/10"
-      : "bg-paper/70 border-ink/5";
 
   return (
     <header
@@ -138,17 +139,14 @@ export function Nav() {
         hidden ? "-translate-y-[120%] opacity-0" : "translate-y-0 opacity-100"
       } ${ready ? "" : "translate-y-[-8px] opacity-0"}`}
     >
-      <div
-        className={`relative mx-auto max-w-6xl overflow-hidden rounded-md border backdrop-blur-md transition-[background-color,border-color,height] duration-300 ${barBg}`}
-      >
+      <div className="relative mx-auto max-w-6xl">
         <div
-          className={`flex items-center justify-between gap-3 px-3 transition-[height] duration-300 sm:px-5 ${
+          className={`flex items-center justify-between gap-3 px-1 transition-[height] duration-300 sm:px-2 ${
             scrolled ? "h-12 sm:h-[3.25rem]" : "h-14 sm:h-16"
           }`}
         >
-          {/* Wordmark */}
-          <a
-            href="#top"
+          <Link
+            href={isHome ? "#top" : "/"}
             className={`group relative shrink-0 font-serif tracking-tight transition-colors duration-300 ${ink} ${
               scrolled ? "text-lg sm:text-xl" : "text-lg sm:text-2xl"
             }`}
@@ -158,36 +156,59 @@ export function Nav() {
               aria-hidden
               className="absolute -bottom-0.5 left-0 h-px w-[1.1em] origin-left bg-gold transition-transform duration-500 group-hover:scale-x-125"
             />
-          </a>
+          </Link>
 
-          {/* Reading list — desktop */}
           <nav
-            aria-label="Page sections"
+            aria-label="Primary"
             className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-6 md:flex lg:gap-8"
           >
-            {LINKS.map((link) => {
-              const isActive = active === link.id;
-              return (
-                <a
-                  key={link.id}
-                  href={link.href}
-                  className={`relative text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 ${
-                    isActive ? (onDark ? "text-gold-soft" : "text-gold") : mutedInk
-                  } ${hoverInk}`}
-                >
-                  {link.label}
-                  <span
-                    aria-hidden
-                    className={`absolute -bottom-1 left-0 h-px w-full origin-left bg-gold transition-transform duration-300 ${
-                      isActive ? "scale-x-100" : "scale-x-0"
-                    }`}
-                  />
-                </a>
-              );
-            })}
+            {isHome
+              ? SECTION_LINKS.map((link) => {
+                  const isActive = active === link.id;
+                  return (
+                    <a
+                      key={link.id}
+                      href={link.href}
+                      className={`font-eyebrow relative text-[13px] tracking-wide transition-colors duration-300 ${
+                        isActive
+                          ? onDark
+                            ? "text-gold-soft"
+                            : "text-gold"
+                          : mutedInk
+                      } ${hoverInk}`}
+                    >
+                      {link.label}
+                      <span
+                        aria-hidden
+                        className={`absolute -bottom-1 left-0 h-px w-full origin-left bg-gold transition-transform duration-300 ${
+                          isActive ? "scale-x-100" : "scale-x-0"
+                        }`}
+                      />
+                    </a>
+                  );
+                })
+              : PAGE_LINKS.map((link) => {
+                  const isActive = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={`font-eyebrow relative text-[13px] tracking-wide transition-colors duration-300 ${
+                        isActive ? "text-gold" : mutedInk
+                      } ${hoverInk}`}
+                    >
+                      {link.label}
+                      <span
+                        aria-hidden
+                        className={`absolute -bottom-1 left-0 h-px w-full origin-left bg-gold transition-transform duration-300 ${
+                          isActive ? "scale-x-100" : "scale-x-0"
+                        }`}
+                      />
+                    </Link>
+                  );
+                })}
           </nav>
 
-          {/* Actions */}
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
             <button
               type="button"
@@ -203,14 +224,12 @@ export function Nav() {
             >
               <span
                 className={`flex h-8 w-8 items-center justify-center rounded-sm transition-shadow ${
-                  !muted
-                    ? "ring-1 ring-gold/40"
-                    : "ring-1 ring-transparent"
+                  !muted ? "ring-1 ring-gold/40" : "ring-1 ring-transparent"
                 }`}
               >
                 <SoundIcon muted={muted} />
               </span>
-              <span className="pointer-events-none absolute left-1/2 top-full z-10 mt-1.5 -translate-x-1/2 whitespace-nowrap rounded-sm border border-ink/10 bg-paper px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-ink opacity-0 shadow-sm transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
+              <span className="pointer-events-none absolute left-1/2 top-full z-10 mt-1.5 -translate-x-1/2 whitespace-nowrap rounded-sm border border-ink/10 bg-paper px-2 py-1 font-eyebrow text-[11px] tracking-wide text-ink opacity-0 shadow-sm transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
                 {muted ? "Sound off" : "Sound on"}
               </span>
             </button>
@@ -221,7 +240,6 @@ export function Nav() {
           </div>
         </div>
 
-        {/* Reading progress hairline */}
         <div
           aria-hidden
           className={`absolute inset-x-0 bottom-0 h-px ${
