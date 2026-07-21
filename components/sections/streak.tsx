@@ -127,7 +127,7 @@ export function Streak() {
 
           <div
             ref={statsRef}
-            className="relative mt-10 min-h-[8.5rem] sm:mt-12 sm:min-h-[9.5rem]"
+            className="relative mt-10 min-h-[11rem] sm:mt-12 sm:min-h-[12.5rem]"
           >
             {MOMENTUM_STATS.map((stat) => (
               <div
@@ -138,12 +138,26 @@ export function Streak() {
                 <p className="font-eyebrow text-[14px] tracking-wide text-gold">
                   {stat.label}
                 </p>
-                <p className="mt-2 font-serif text-3xl text-ink sm:text-4xl">
-                  {stat.value}
-                </p>
-                <p className="font-accent mt-2 max-w-sm text-sm leading-relaxed text-ink-muted sm:text-base">
-                  {stat.detail}
-                </p>
+                {stat.value ? (
+                  <p className="mt-2 font-serif text-2xl text-ink sm:text-3xl">
+                    {stat.value}
+                  </p>
+                ) : null}
+                {stat.detail ? (
+                  <p className="font-accent mt-2 max-w-sm text-sm leading-relaxed text-ink-muted sm:text-base">
+                    {stat.detail}
+                  </p>
+                ) : null}
+                {stat.bullets.length > 0 ? (
+                  <ul className="font-accent mt-3 max-w-md space-y-2 text-sm leading-relaxed text-ink-muted sm:text-base">
+                    {stat.bullets.map((bullet) => (
+                      <li key={bullet} className="flex gap-2.5">
+                        <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-gold" />
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
               </div>
             ))}
           </div>

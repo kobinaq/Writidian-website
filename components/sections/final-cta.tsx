@@ -6,7 +6,10 @@ import { COPY } from "@/lib/constants";
 
 export function FinalCta() {
   return (
-    <section className="relative overflow-hidden bg-espresso px-5 py-20 text-paper sm:px-8 sm:py-48">
+    <section
+      data-nav-theme="dark"
+      className="relative overflow-hidden bg-espresso px-5 py-20 text-paper sm:px-8 sm:py-48"
+    >
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-40"
@@ -24,7 +27,7 @@ export function FinalCta() {
         </p>
         <div className="mt-8 flex justify-center sm:mt-12">
           <Button className="!bg-paper !text-espresso !border-paper hover:!bg-gold-soft hover:!border-gold-soft">
-            Sign up free
+            Sign up for free
           </Button>
         </div>
       </Reveal>

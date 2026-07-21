@@ -10,18 +10,18 @@ import {
 } from "@/lib/ambient-audio";
 
 export type SoundscapeSceneId =
+  | "journaling"
+  | "literary"
   | "romance"
   | "horror"
-  | "scifi"
-  | "fantasy"
-  | "literary";
+  | "nonbinaural";
 
 const ALL_IDS: SoundscapeSceneId[] = [
+  "journaling",
+  "literary",
   "romance",
   "horror",
-  "scifi",
-  "fantasy",
-  "literary",
+  "nonbinaural",
 ];
 
 export function useSoundscapeAudio() {
@@ -55,21 +55,20 @@ export function useSoundscapeAudio() {
   const ensureBeds = useCallback(async () => {
     const ctx = await unlockAudio();
     if (!ctx) return null;
-    // Map genres onto existing ambient beds (distinct enough for scrub cues)
+    if (!bedsRef.current.journaling) {
+      bedsRef.current.journaling = createCalmLike(ctx, "night");
+    }
+    if (!bedsRef.current.literary) {
+      bedsRef.current.literary = createCalmLike(ctx, "coast");
+    }
     if (!bedsRef.current.romance) {
       bedsRef.current.romance = createCalmLike(ctx, "coast");
     }
     if (!bedsRef.current.horror) {
       bedsRef.current.horror = createCalmLike(ctx, "night");
     }
-    if (!bedsRef.current.scifi) {
-      bedsRef.current.scifi = createCalmLike(ctx, "forest");
-    }
-    if (!bedsRef.current.fantasy) {
-      bedsRef.current.fantasy = createCalmLike(ctx, "coast");
-    }
-    if (!bedsRef.current.literary) {
-      bedsRef.current.literary = createCalmLike(ctx, "night");
+    if (!bedsRef.current.nonbinaural) {
+      bedsRef.current.nonbinaural = createCalmLike(ctx, "forest");
     }
     await Promise.all(
       Object.values(bedsRef.current).map((b) => b?.resume()),

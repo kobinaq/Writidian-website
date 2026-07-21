@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button";
 import { COPY } from "@/lib/constants";
 import { gsap, registerGsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
+import Image from "next/image";
 import { useMemo, useRef } from "react";
 
 registerGsap();
 
-const ITALIC_WORDS = new Set(["craft"]);
+const ITALIC_WORDS = new Set(["human"]);
 
 function splitWords(text: string) {
   return text.split(" ").map((word, i) => ({
@@ -54,48 +55,26 @@ export function Hero() {
 
       gsap.set(words, { opacity: 0, y: 26, rotateX: 24 });
       gsap.set(rest, { opacity: 0, y: 16 });
-      if (media) gsap.set(media, { opacity: 0, scale: 1.045 });
-      if (tablet) gsap.set(tablet, { opacity: 0, y: 40 });
+      if (media) gsap.set(media, { opacity: 0, scale: 1.04 });
+      if (tablet) gsap.set(tablet, { opacity: 0, y: 48, rotateX: 8 });
       if (rule) gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       if (media) {
-        tl.to(media, { opacity: 1, scale: 1, duration: 1.7 }, 0);
+        tl.to(media, { opacity: 1, scale: 1, duration: 1.8 }, 0);
       }
       if (rule) {
-        tl.to(
-          rule,
-          { scaleX: 1, duration: 0.9, ease: "power2.inOut" },
-          0.35,
-        );
+        tl.to(rule, { scaleX: 1, duration: 0.9, ease: "power2.inOut" }, 0.4);
       }
-
       tl.to(
         words,
-        {
-          opacity: 1,
-          y: 0,
-          rotateX: 0,
-          duration: 0.85,
-          stagger: 0.085,
-        },
+        { opacity: 1, y: 0, rotateX: 0, duration: 0.85, stagger: 0.085 },
         0.55,
       );
-
-      tl.to(
-        rest,
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          stagger: 0.12,
-        },
-        1.2,
-      );
-
+      tl.to(rest, { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 }, 1.15);
       if (tablet) {
-        tl.to(tablet, { opacity: 1, y: 0, duration: 1 }, 0.9);
+        tl.to(tablet, { opacity: 1, y: 0, rotateX: 0, duration: 1.1 }, 0.85);
       }
     },
     { dependencies: [] },
@@ -105,23 +84,29 @@ export function Hero() {
     <section
       id="top"
       ref={rootRef}
-      className="relative flex min-h-[100dvh] items-center overflow-hidden bg-paper"
+      className="relative flex min-h-[100dvh] items-center overflow-hidden"
     >
-      <div
-        ref={mediaRef}
-        aria-hidden
-        className="absolute inset-0 will-change-transform"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 70% at 70% 40%, color-mix(in srgb, var(--gold) 18%, transparent), transparent 55%), linear-gradient(160deg, var(--surface) 0%, var(--paper) 45%, color-mix(in srgb, var(--gold) 8%, var(--paper)) 100%)",
-        }}
-      />
+      {/* Full-bleed desk photograph */}
+      <div ref={mediaRef} className="absolute inset-0 will-change-transform">
+        <Image
+          src="/images/hero-mid-story.jpg"
+          alt="Open journal mid-story, handwritten pages and a fountain pen on a quiet desk"
+          fill
+          priority
+          className="object-cover object-[72%_center] sm:object-[66%_center] lg:object-[60%_center]"
+          sizes="100vw"
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-[linear-gradient(105deg,rgba(247,244,238,0.96)_0%,rgba(247,244,238,0.82)_28%,rgba(247,244,238,0.35)_48%,rgba(247,244,238,0.08)_62%,transparent_75%)]"
+        />
+      </div>
 
-      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-10 px-6 pb-20 pt-28 sm:gap-12 sm:px-10 sm:pb-24 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-14">
+      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 px-6 pb-20 pt-28 sm:gap-14 sm:px-10 sm:pb-24 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.15fr)] lg:gap-10 lg:pt-32">
         <div className="flex max-w-xl flex-col items-start text-left [perspective:900px]">
           <div data-hero className="flex w-full items-center gap-4">
-            <p className="font-eyebrow whitespace-nowrap text-[15px] tracking-wide text-gold">
-              A writing sanctuary
+            <p className="font-serif text-2xl tracking-tight text-ink sm:text-3xl">
+              Writidian
             </p>
             <span
               ref={ruleRef}
@@ -130,8 +115,15 @@ export function Hero() {
             />
           </div>
 
+          <p
+            data-hero
+            className="font-eyebrow mt-5 text-[15px] tracking-wide text-gold"
+          >
+            {COPY.heroEyebrow}
+          </p>
+
           <h1
-            className="mt-7 font-serif text-[clamp(2.4rem,6.5vw,4.5rem)] leading-[1.04] tracking-tight text-ink sm:mt-9"
+            className="mt-5 font-serif text-[clamp(2.5rem,6.8vw,4.6rem)] leading-[1.04] tracking-tight text-ink sm:mt-6"
             aria-label={COPY.heroHeadline}
           >
             {headlineWords.map(({ word, italic, key }, i) => (
@@ -162,7 +154,7 @@ export function Hero() {
           >
             <Button>Begin writing</Button>
             <p className="font-eyebrow text-[13px] tracking-wide text-ink-muted">
-              Free to start
+              Free to start · No credit card required
             </p>
           </div>
 
@@ -179,31 +171,33 @@ export function Hero() {
           </a>
         </div>
 
-        {/* Landscape iPad frame with product journey video */}
+        {/* Landscape tablet — product journey */}
         <div
           ref={tabletRef}
           data-hero
-          className="relative mx-auto w-full max-w-[34rem] lg:max-w-none"
+          className="relative mx-auto w-full max-w-[36rem] [perspective:1200px] lg:mr-0 lg:max-w-none"
         >
-          <div className="relative aspect-[1180/820] w-full overflow-hidden rounded-[1.35rem] border-[10px] border-[#2a2622] bg-espresso shadow-[0_40px_80px_-30px_rgba(14,12,9,0.55)] sm:rounded-[1.6rem] sm:border-[12px]">
-            <div
-              aria-hidden
-              className="absolute left-1/2 top-2 z-10 h-1.5 w-16 -translate-x-1/2 rounded-full bg-black/40 sm:top-2.5 sm:h-2 sm:w-20"
-            />
-            <video
-              className="absolute inset-0 h-full w-full object-cover"
-              src="/videos/hero-ipad-journey.webm"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-label="Writidian app journey from daily prompt to the editor"
-            />
+          <div className="relative aspect-[1180/820] w-full overflow-hidden rounded-[1.4rem] bg-[#1c1916] p-[0.65rem] shadow-[0_50px_100px_-40px_rgba(14,12,9,0.65)] ring-1 ring-black/40 sm:rounded-[1.75rem] sm:p-3">
+            <div className="relative h-full w-full overflow-hidden rounded-[0.95rem] bg-paper sm:rounded-[1.15rem]">
+              <div
+                aria-hidden
+                className="absolute left-1/2 top-1.5 z-10 h-1 w-14 -translate-x-1/2 rounded-full bg-ink/15 sm:top-2 sm:h-1.5 sm:w-16"
+              />
+              <video
+                className="absolute inset-0 h-full w-full object-cover"
+                src="/videos/hero-ipad-journey.webm"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label="Writidian app journey from daily prompt to the editor"
+              />
+            </div>
           </div>
           <div
             aria-hidden
-            className="pointer-events-none absolute -inset-6 -z-10 rounded-[2rem] bg-gold/10 blur-2xl"
+            className="pointer-events-none absolute -inset-x-8 -bottom-6 -z-10 h-16 rounded-[100%] bg-espresso/25 blur-2xl"
           />
         </div>
       </div>

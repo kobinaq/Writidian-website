@@ -88,7 +88,9 @@ export function Nav() {
   }, []);
 
   useEffect(() => {
-    const sanctuary = document.getElementById("sanctuary");
+    const darkZones = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-nav-theme='dark']"),
+    );
     const sections = SECTION_LINKS.map((l) =>
       document.getElementById(l.id),
     ).filter((el): el is HTMLElement => Boolean(el));
@@ -109,12 +111,14 @@ export function Nav() {
       }
       lastY.current = y;
 
-      if (sanctuary) {
-        const r = sanctuary.getBoundingClientRect();
-        setOnDark(r.top <= 56 && r.bottom > window.innerHeight * 0.45);
-      } else {
-        setOnDark(false);
-      }
+      // Espresso / photo-pin sections under the nav → light ink
+      const probeY = 52;
+      setOnDark(
+        darkZones.some((el) => {
+          const r = el.getBoundingClientRect();
+          return r.top <= probeY && r.bottom > probeY + 8;
+        }),
+      );
 
       let current: string | null = null;
       for (const el of sections) {

@@ -3,9 +3,9 @@ export const CONTACT_EMAIL = "hello@writidian.com";
 
 export const SITE = {
   name: "Writidian",
-  tagline: "A space for intentional writing.",
+  tagline: "A distraction-free writing haven.",
   description:
-    "Writidian is a writing sanctuary for people who want to think and write for themselves. Soundscapes, daily prompts, and a built-in editor.",
+    "Writidian is a supportive digital environment for anyone who wants to write — soundscapes, daily prompts, and an uncluttered editor built for critical thinking.",
 };
 
 export const SOCIALS = [
@@ -24,39 +24,48 @@ export const FOOTER_LINKS = [
 ] as const;
 
 export const COPY = {
-  heroHeadline: "Write like the craft still matters.",
+  heroEyebrow: "A distraction-free writing haven",
+  heroHeadline: "To grow your inner human writer.",
   heroSupport:
-    "A quiet space that raises your odds of finishing what you started.",
-  problemWords:
-    "Phones, tabs, and digital noise compete with focus. The place you sit down in should help you finish, not work against you.",
-  soundscapesTitle: "Soundscapes that match your story",
+    "Experience this supportive digital environment for anyone who wants to write",
+  sanctuaryQuiet:
+    "In here, it's just you, your thoughts and the page.",
+  sanctuaryDesc:
+    "Each feature within Writidian is built to help you think critically through the art of writing. We value the power of the human mind.",
+  problemLead:
+    "The modern digital environment is hostile to the human writing process. Distracted are everywhere, and the chance to think critically is now often deferred to AI models.",
+  problemPurpose:
+    "Writidian's purpose is to help you create a dedicated, immersive ecosystem for critical thinking through writing.",
+  problemBridge: "We're doing this with:",
+  soundscapesTitle: "Soundscapes that support your flow",
   soundscapesBody:
-    "Pair the scene on the page with the world in your ears. Writing a forest chapter? Step into forest sound. Each soundscape is built to hold the mood while you write.",
-  binaurals:
-    "Binaurals for focused headspace. Alpha for relaxed focus, Beta for alertness, Gamma for peak attention, Theta for creativity, Delta for deep calm.",
+    "Writidian's in-built library of soundscapes puts you in the right headspace to carve out the world you're building in your mind, and sustain the focus you need to finish your drafts.",
+  soundscapesBullets: [
+    "Binaural sounds for peak attention and focus",
+    "Non-binaural sounds for everyday auditory experiences",
+    "Genre soundscapes for putting you in the mood while you write in a specific genre e.g science fiction, fantasy, romance, journaling, etc.",
+  ],
   binauralsTip: "Use headphones for best effect.",
-  promptTitle: "A prompt waiting every morning",
+  promptTitle:
+    "A new writing prompt every day to spark your creative and reflective mind.",
   promptBody:
-    "A new prompt every day from a large collection. Sometimes a scene starter you continue. Built to provoke thinking and get you writing immediately.",
+    "Quickly get rid of writer's block with Writidian's prompt of the day! Every day presents an opportunity for a new story.",
   samplePromptLabel: "Nostalgia",
   samplePrompt:
     "There is a song you refuse to listen to anymore because it transports you to a time you can't get back. What time is that?",
-  editorTitle: "The editor lives here",
+  editorTitle: "Your uncluttered editor lives here",
   editorBody:
-    "Writing happens inside Writidian itself. No bouncing between tools. Open a prompt, start a draft, stay in the flow.",
-  streakTitle: "Momentum that stays with you",
+    'A clean sheet for your words awaits you with only the features you need, where you need them. A true representation of "Less is more".',
+  streakTitle: "Building a writing habit with a momentum that stays with you",
   streakBody:
-    "Build a writing streak you can feel. Each day you show up, the flame grows. Miss a day and it resets. Simple pressure that keeps you returning to the page.",
-  analyticsTitle: "See your writing rhythm",
-  analyticsBody:
-    "Track sanctuary hours, words flowed, and the shape of your week. A quiet mirror of your practice, not a leaderboard.",
+    "With only 100 words a day, you can start building your writing streak. You're practically building a critical thinking streak too!",
   stanceTitle: "Built against the grain",
   stanceBody:
     "AI has thinned the art of writing and the wellbeing that comes with doing hard creative work yourself. Writidian takes the other path. No generators. No rewrite buttons. A space that asks you to think.",
   platformNote:
     "Writidian is a web app today. A mobile app is in the pipeline.",
-  finalCta: "Start writing for free.",
-  finalSupport: "Sign up and step into your sanctuary.",
+  finalCta: "Start your Writidian journey today",
+  finalSupport: "Sign up for free * No credit card required",
 };
 
 export const SAMPLE_PROMPTS = [
@@ -76,46 +85,41 @@ export const SAMPLE_PROMPTS = [
 
 export const MOMENTUM_STATS = [
   {
-    id: "compass",
-    label: "Thematic Compass",
-    value: "Fantasy · 42%",
-    detail: "Your drafts lean toward worlds that ask for wonder.",
-  },
-  {
-    id: "resonance",
-    label: "Soundscape Resonance",
-    value: "Arcsine Drift",
-    detail: "The bed that held your longest uninterrupted session.",
-  },
-  {
     id: "rhythm",
-    label: "Flow Rhythm",
-    value: "24 min avg",
-    detail: "Quiet stretches where the timer disappeared.",
+    label: "See your writing rhythm",
+    value: "Sanctuary Hours · Words Flowed",
+    detail:
+      "Track Sanctuary hours, words flowed, and your daily momentum. Log off-device writing in case you prefer to write in a physical book.",
+    bullets: [] as readonly string[],
   },
   {
-    id: "hours",
-    label: "Sanctuary Hours",
-    value: "18.4 h",
-    detail: "Time spent inside the writing room this month.",
-  },
-  {
-    id: "words",
-    label: "Words Flowed",
-    value: "12,480",
-    detail: "Not a leaderboard — a mirror of showing up.",
+    id: "advanced",
+    label: "Learn from advanced statistics.",
+    value: "Patterns that sharpen your practice",
+    detail: "",
+    bullets: [
+      "Understand with prompt categories your gravitate to a lot more",
+      'Find out which soundscapes you prefer most when "zoning in".',
+      "Track your peak writing hours for higher productivity",
+    ] as readonly string[],
   },
 ] as const;
 
 export const GENRES = [
+  "Journaling",
+  "Literary Fiction",
   "Romance",
   "Horror",
-  "Sci-fi",
+  "Non-binaural",
+  "Science Fiction",
   "Fantasy",
-  "Literary",
-  "Journaling",
-  "Mystery",
-  "Poetry",
+] as const;
+
+export const EDITOR_SAMPLE_LINES = [
+  '"Mister! Mister! MISTER!"',
+  "Her last call woke me up.",
+  "Apparently, she bore the name Linda. Her face was unfamiliar but I knew her somehow.",
+  '"We need to go now! They\'ll be here any minute!" she yelled over me as I lay on the cold hard floor.',
 ] as const;
 
 /**
@@ -306,51 +310,61 @@ export const SOCIAL_CLUTTER = [
   },
 ] as const;
 
-/** Genre soundscapes aligned with the Writidian app Genres tab. */
+/** Sample soundscapes from client copy — category in title, track name as featured bed. */
 export const SOUNDSCAPE_SCENES = [
+  {
+    id: "journaling",
+    title: "Journaling",
+    track: "Bubbly Reflection",
+    line: "A soft bed for reflection — thoughts finding their way onto the page.",
+    image: "/images/writing-studio-notebook.png",
+    tint: "rgba(36, 28, 18, 0.42)",
+    midTint: "rgba(150, 120, 70, 0.2)",
+    objectPos: "object-[48%_48%]",
+    fgPos: "object-[45%_75%]",
+  },
+  {
+    id: "literary",
+    title: "Literary Fiction",
+    track: "Dusty Photo Frame",
+    line: "Quiet rooms. Precise sentences. Memory settling into ink.",
+    image: "/images/hero-mid-story.jpg",
+    tint: "rgba(40, 32, 22, 0.45)",
+    midTint: "rgba(120, 95, 60, 0.22)",
+    objectPos: "object-[55%_40%]",
+    fgPos: "object-[50%_78%]",
+  },
   {
     id: "romance",
     title: "Romance",
-    track: "Arcsine Drift",
-    line: "Soft pulse under candlelight. The page keeps the heart honest.",
-    image: "/images/writing-sanctuary-focus.jpg",
-    tint: "rgba(120, 60, 70, 0.45)",
-    midTint: "rgba(180, 120, 100, 0.25)",
+    track: "Amber Drift",
+    line: "Warm pulse under soft light. The page keeps the heart honest.",
+    image: "/images/writing-studio-golden.png",
+    tint: "rgba(90, 40, 50, 0.42)",
+    midTint: "rgba(180, 110, 90, 0.22)",
+    objectPos: "object-[55%_38%]",
+    fgPos: "object-[50%_78%]",
   },
   {
     id: "horror",
     title: "Horror",
     track: "Basement Door Ajar",
     line: "A low hum in the walls. Something waits just past the margin.",
-    image: "/images/writing-sanctuary-focus.jpg",
-    tint: "rgba(30, 20, 40, 0.55)",
-    midTint: "rgba(60, 40, 50, 0.35)",
+    image: "/images/soundscape-night.png",
+    tint: "rgba(8, 6, 16, 0.58)",
+    midTint: "rgba(40, 25, 45, 0.38)",
+    objectPos: "object-[45%_50%]",
+    fgPos: "object-[48%_82%]",
   },
   {
-    id: "scifi",
-    title: "Science Fiction",
-    track: "Orbital Sand Hymn",
-    line: "Vacuum hush and distant engines. Tomorrow written in present tense.",
-    image: "/images/writing-sanctuary-focus.jpg",
-    tint: "rgba(20, 40, 70, 0.5)",
-    midTint: "rgba(40, 80, 120, 0.3)",
-  },
-  {
-    id: "fantasy",
-    title: "Fantasy",
-    track: "Moonglass Spires",
-    line: "Wind through ancient stone. Magic that still costs something.",
-    image: "/images/writing-sanctuary-focus.jpg",
-    tint: "rgba(40, 50, 80, 0.48)",
-    midTint: "rgba(90, 70, 130, 0.28)",
-  },
-  {
-    id: "literary",
-    title: "Literary Fiction",
-    track: "Sunlit Inkflow",
-    line: "Quiet rooms. Precise sentences. The truth arrives slowly.",
-    image: "/images/writing-sanctuary-focus.jpg",
-    tint: "rgba(50, 40, 30, 0.42)",
-    midTint: "rgba(140, 110, 70, 0.22)",
+    id: "nonbinaural",
+    title: "Non-binaural",
+    track: "Light rain Birdsong",
+    line: "Everyday weather for everyday writing — rain, birds, and room to think.",
+    image: "/images/soundscape-forest.png",
+    tint: "rgba(20, 35, 30, 0.48)",
+    midTint: "rgba(50, 90, 70, 0.28)",
+    objectPos: "object-[50%_36%]",
+    fgPos: "object-[52%_85%]",
   },
 ] as const;

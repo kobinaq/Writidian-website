@@ -11,6 +11,7 @@ export function Prompt() {
   const rootRef = useRef<HTMLElement>(null);
   const stackRef = useRef<HTMLDivElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
+  const orderRef = useRef(0);
 
   useGSAP(
     () => {
@@ -26,76 +27,63 @@ export function Prompt() {
         stack.querySelectorAll("[data-prompt-card]"),
       );
 
+      const layout = (front: number, animate: boolean) => {
+        cards.forEach((card, ci) => {
+          const order = (ci - front + cards.length) % cards.length;
+          const props = {
+            y: order * 18,
+            x: order * 10,
+            rotate: order === 0 ? -1.5 : order === 1 ? 2.5 : -3.5,
+            scale: 1 - order * 0.045,
+            opacity: order === 0 ? 1 : order === 1 ? 0.92 : 0.78,
+            zIndex: cards.length - order,
+            filter: order === 0 ? "none" : `brightness(${1 - order * 0.06})`,
+          };
+          if (animate) {
+            gsap.to(card, { ...props, duration: 0.85, ease: "power2.inOut" });
+          } else {
+            gsap.set(card, props);
+          }
+        });
+      };
+
       if (reduced) {
-        gsap.set([copy, ...cards], { opacity: 1, y: 0, rotate: 0 });
+        gsap.set(copy, { opacity: 1, y: 0 });
+        layout(0, false);
         return;
       }
 
-      gsap.set(copy, { opacity: 0, y: 40 });
-      cards.forEach((card, i) => {
-        gsap.set(card, {
-          opacity: i === 0 ? 1 : 0.7,
-          y: i * 14,
-          rotate: (i - 1) * 2.2,
-          scale: 1 - i * 0.03,
-          zIndex: cards.length - i,
-        });
-      });
+      gsap.set(copy, { opacity: 0, y: 36 });
+      layout(0, false);
 
-      const enter = gsap.timeline({
-        scrollTrigger: {
-          trigger: root,
-          start: "top 70%",
-          end: "center center",
-          scrub: 1.05,
-        },
-      });
-
-      enter.to(copy, { opacity: 1, y: 0, duration: 0.35 }, 0);
-      cards.forEach((card, i) => {
-        enter.to(
-          card,
-          {
-            opacity: i === 0 ? 1 : 0.7,
-            y: i * 12,
-            rotate: (i - 1) * 1.8,
-            scale: 1 - i * 0.025,
-            duration: 0.45,
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: root,
+            start: "top 72%",
+            end: "center 55%",
+            scrub: 1,
           },
-          0.05 + i * 0.04,
-        );
-      });
+        })
+        .to(copy, { opacity: 1, y: 0, duration: 0.4 }, 0);
 
       const shuffle = gsap.timeline({
         repeat: -1,
-        repeatDelay: 1.6,
+        repeatDelay: 2.2,
         scrollTrigger: {
           trigger: root,
-          start: "top 60%",
-          end: "bottom 20%",
+          start: "top 55%",
+          end: "bottom 25%",
           toggleActions: "play pause resume pause",
         },
       });
 
-      SAMPLE_PROMPTS.forEach((_, i) => {
-        const next = (i + 1) % SAMPLE_PROMPTS.length;
-        shuffle.to({}, {
-          duration: 2,
-          onStart: () => {
-            cards.forEach((card, ci) => {
-              const order = (ci - next + cards.length) % cards.length;
-              gsap.to(card, {
-                y: order * 12,
-                rotate: (order - 1) * 1.8,
-                scale: 1 - order * 0.025,
-                opacity: order === 0 ? 1 : 0.65,
-                zIndex: cards.length - order,
-                duration: 0.75,
-                ease: "power2.inOut",
-              });
-            });
-          },
-        });
+      shuffle.to({}, {
+        duration: 2.4,
+        onStart: () => {
+          orderRef.current = (orderRef.current + 1) % cards.length;
+          layout(orderRef.current, true);
+        },
       });
     },
     { dependencies: [] },
@@ -105,26 +93,27 @@ export function Prompt() {
     <section
       id="prompt"
       ref={rootRef}
-      className="relative overflow-hidden bg-surface/60 px-5 py-20 sm:px-8 sm:py-48"
+      className="relative overflow-hidden bg-surface/50 px-5 py-20 sm:px-8 sm:py-44"
     >
-      <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2 lg:gap-20">
+      <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-2 lg:gap-20">
         <div
           ref={stackRef}
-          className="relative order-2 mx-auto h-[22rem] w-full max-w-md sm:h-[26rem] lg:order-1"
+          className="relative order-2 mx-auto h-[24rem] w-full max-w-md sm:h-[28rem] lg:order-1"
         >
-          {SAMPLE_PROMPTS.map((prompt) => (
+          {SAMPLE_PROMPTS.map((prompt, i) => (
             <article
               key={prompt.label}
               data-prompt-card
-              className="absolute inset-x-0 top-0 rounded-2xl bg-paper px-5 py-10 text-center shadow-[0_28px_60px_-36px_rgba(14,12,9,0.4)] will-change-transform sm:rounded-[1.5rem] sm:px-10 sm:py-14"
+              className="absolute inset-x-0 top-0 rounded-[1.35rem] bg-white px-6 py-11 text-center shadow-[0_32px_70px_-40px_rgba(14,12,9,0.5)] will-change-transform sm:px-11 sm:py-14"
+              style={{ zIndex: SAMPLE_PROMPTS.length - i }}
             >
               <p className="font-eyebrow text-[14px] tracking-wide text-gold">
                 {prompt.label}
               </p>
-              <p className="mt-6 font-serif text-[clamp(1.15rem,2.4vw,1.7rem)] leading-relaxed text-ink">
+              <p className="mt-7 font-serif text-[clamp(1.2rem,2.5vw,1.75rem)] leading-relaxed text-ink">
                 {prompt.text}
               </p>
-              <div className="mt-8 inline-flex rounded-full border border-ink/15 px-6 py-2.5 text-sm tracking-wide text-ink sm:mt-10">
+              <div className="mt-9 inline-flex rounded-full border border-ink/12 px-7 py-2.5 text-sm tracking-wide text-ink">
                 Write Now
               </div>
             </article>
@@ -132,10 +121,13 @@ export function Prompt() {
         </div>
 
         <div ref={copyRef} className="order-1 lg:order-2">
-          <h2 className="font-serif text-[clamp(1.85rem,6vw,4rem)] leading-[1.08] tracking-tight text-ink">
+          <p className="font-eyebrow text-[15px] tracking-wide text-gold">
+            Daily prompts
+          </p>
+          <h2 className="mt-3 font-serif text-[clamp(1.85rem,6vw,4rem)] leading-[1.08] tracking-tight text-ink">
             {COPY.promptTitle}
           </h2>
-          <p className="font-accent mt-4 max-w-md text-base leading-relaxed text-ink-muted sm:mt-6 sm:text-lg">
+          <p className="font-accent mt-5 max-w-md text-base leading-relaxed text-ink-muted sm:mt-6 sm:text-lg">
             {COPY.promptBody}
           </p>
         </div>

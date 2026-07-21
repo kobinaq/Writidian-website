@@ -3,7 +3,7 @@
 import { BrandLogo, type BrandKey } from "@/components/brand-logos";
 import { useHeroSanctuaryAudio } from "@/hooks/use-hero-sanctuary-audio";
 import { useIsMobile } from "@/hooks/use-is-mobile";
-import { SOCIAL_CLUTTER } from "@/lib/constants";
+import { COPY, SOCIAL_CLUTTER } from "@/lib/constants";
 import { gsap, registerGsap, ScrollTrigger } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import { motion } from "motion/react";
@@ -396,6 +396,7 @@ export function SanctuaryReveal() {
     <div
       id="sanctuary"
       ref={rootRef}
+      data-nav-theme="dark"
       className="relative h-[160vh] bg-espresso md:h-[260vh]"
       aria-label="Clear the noise"
     >
@@ -432,10 +433,10 @@ export function SanctuaryReveal() {
           ref={noiseLineRef}
           className="pointer-events-none absolute inset-x-0 top-[12%] z-30 px-5 text-center sm:top-[18%] sm:px-6"
         >
-          <p className="font-accent text-sm tracking-wide text-paper/50 sm:text-base">
+          <p className="font-accent text-base tracking-wide text-paper/55 sm:text-lg">
             Every time you sit down to write
           </p>
-          <p className="mx-auto mt-3 max-w-3xl font-serif text-[1.65rem] italic leading-snug text-paper/90 sm:mt-4 sm:text-5xl">
+          <p className="mx-auto mt-3 max-w-3xl font-serif text-[1.85rem] italic leading-snug text-paper/90 sm:mt-4 sm:text-[3.25rem]">
             The world will not stop talking.
           </p>
         </div>
@@ -485,16 +486,15 @@ export function SanctuaryReveal() {
             </p>
             <span aria-hidden className="h-px flex-1 bg-gold-soft/40" />
           </div>
-          <p className="mx-auto mt-4 max-w-3xl font-serif text-[1.75rem] leading-snug text-paper sm:mt-5 sm:text-5xl">
-            In here, it is just you{" "}
+          <p className="mx-auto mt-4 max-w-3xl font-serif text-[1.95rem] leading-snug text-paper sm:mt-5 sm:text-[3.25rem]">
+            In here, it&apos;s just you, your thoughts{" "}
             <span className="italic text-gold-soft">and the page.</span>
           </p>
           <p
             data-sanctuary-desc
             className="font-accent mx-auto mt-4 max-w-lg text-base leading-relaxed text-paper/70 sm:mt-5 sm:text-xl"
           >
-            Soundscapes for your ears, a prompt for your mind, and a door the
-            noise cannot get through.
+            {COPY.sanctuaryDesc}
           </p>
         </div>
 
