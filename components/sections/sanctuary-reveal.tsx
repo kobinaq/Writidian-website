@@ -396,7 +396,7 @@ export function SanctuaryReveal() {
     <div
       id="sanctuary"
       ref={rootRef}
-      className="relative h-[200vh] md:h-[260vh]"
+      className="relative h-[160vh] bg-espresso md:h-[260vh]"
       aria-label="Clear the noise"
     >
       <div
