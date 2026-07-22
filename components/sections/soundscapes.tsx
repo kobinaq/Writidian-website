@@ -132,13 +132,13 @@ export function Soundscapes() {
             <h2 className="font-serif text-[clamp(1.85rem,6vw,3.75rem)] leading-[1.08] tracking-tight text-ink">
               {COPY.soundscapesTitle}
             </h2>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-ink-muted sm:mt-6 sm:text-lg">
+            <p className="font-accent mt-3 max-w-md text-sm leading-relaxed text-ink-muted sm:mt-6 sm:text-lg">
               {COPY.soundscapesBody}
             </p>
-            <p className="mt-3 hidden max-w-md text-sm leading-relaxed text-ink md:block">
+            <p className="font-accent mt-3 hidden max-w-md text-sm leading-relaxed text-ink md:block">
               {COPY.binaurals}
             </p>
-            <p className="mt-1 hidden text-sm italic text-ink-muted md:block">
+            <p className="font-accent mt-1 hidden text-sm italic text-ink-muted md:block">
               {COPY.binauralsTip}
             </p>
           </div>
@@ -170,18 +170,18 @@ export function Soundscapes() {
             <div className="mt-3 min-h-[3.25rem] shrink-0 sm:mt-5 sm:min-h-[4.5rem]">
               <p
                 ref={titleRef}
-                className="text-[10px] uppercase tracking-[0.22em] text-gold sm:text-xs"
+                className="font-eyebrow text-[10px] uppercase tracking-[0.22em] text-gold sm:text-xs"
               />
               <p
                 ref={captionRef}
-                className="mt-1.5 text-sm leading-relaxed text-ink-muted sm:mt-2 sm:text-base"
+                className="font-accent mt-1.5 text-sm leading-relaxed text-ink-muted sm:mt-2 sm:text-base"
               />
             </div>
           </div>
         </div>
 
         <div className="shrink-0 overflow-hidden border-t border-ink/5 bg-surface/80 py-3 sm:py-4">
-          <div className="marquee-track flex w-max gap-8 whitespace-nowrap px-4 text-[11px] uppercase tracking-[0.2em] text-ink-muted sm:gap-10 sm:text-sm">
+          <div className="marquee-track font-eyebrow flex w-max gap-8 whitespace-nowrap px-4 text-[11px] uppercase tracking-[0.2em] text-ink-muted sm:gap-10 sm:text-sm">
             {[...GENRES, ...GENRES].map((g, i) => (
               <span key={`${g}-${i}`} className="flex items-center gap-8 sm:gap-10">
                 {g}

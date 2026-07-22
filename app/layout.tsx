@@ -1,20 +1,8 @@
 import type { Metadata } from "next";
-import { Fraunces, Source_Sans_3 } from "next/font/google";
+import { fraunces, handlee, lora, sourceSans } from "@/app/fonts";
 import { SoundProvider } from "@/components/sound-context";
 import { SITE } from "@/lib/constants";
 import "./globals.css";
-
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const sourceSans = Source_Sans_3({
-  variable: "--font-source-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: `${SITE.name} — ${SITE.tagline}`,
@@ -40,7 +28,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${sourceSans.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${sourceSans.variable} ${lora.variable} ${handlee.variable} h-full antialiased`}
     >
       <body className="min-h-full overflow-x-hidden bg-paper font-sans text-ink">
         <SoundProvider>

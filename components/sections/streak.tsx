@@ -91,7 +91,7 @@ export function Streak() {
           <h2 className="font-serif text-[clamp(1.85rem,5vw,3.75rem)] leading-[1.08] tracking-tight text-ink">
             {COPY.streakTitle}
           </h2>
-          <p className="mt-5 max-w-md text-base leading-relaxed text-ink-muted sm:mt-6 sm:text-lg">
+          <p className="font-accent mt-5 max-w-md text-base leading-relaxed text-ink-muted sm:mt-6 sm:text-lg">
             {COPY.streakBody}
           </p>
         </Reveal>
@@ -124,7 +124,7 @@ export function Streak() {
                     Days
                   </span>
                 </p>
-                <p className="mt-1 text-xs uppercase tracking-[0.18em] text-ink-muted">
+                <p className="font-eyebrow mt-1 text-xs uppercase tracking-[0.18em] text-ink-muted">
                   Streak
                 </p>
               </div>
@@ -152,7 +152,7 @@ export function Streak() {
                       </span>
                     ) : null}
                   </div>
-                  <p className="mt-2 text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+                  <p className="font-eyebrow mt-2 text-[10px] uppercase tracking-[0.14em] text-ink-muted">
                     {day}
                   </p>
                 </div>
@@ -172,7 +172,7 @@ export function Streak() {
                   <p className="font-serif text-xl text-ink sm:text-2xl">
                     {stat.value}
                   </p>
-                  <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-ink-muted">
+                  <p className="font-eyebrow mt-1 text-[10px] uppercase tracking-[0.16em] text-ink-muted">
                     {stat.label}
                   </p>
                 </div>

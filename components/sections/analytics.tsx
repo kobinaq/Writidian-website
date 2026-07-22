@@ -123,7 +123,7 @@ export function Analytics() {
           <h2 className="font-serif text-[clamp(1.85rem,5vw,3.75rem)] leading-[1.08] tracking-tight text-ink">
             {COPY.analyticsTitle}
           </h2>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-muted sm:mt-6 sm:text-lg">
+          <p className="font-accent mt-5 max-w-xl text-base leading-relaxed text-ink-muted sm:mt-6 sm:text-lg">
             {COPY.analyticsBody}
           </p>
         </Reveal>
@@ -145,7 +145,7 @@ export function Analytics() {
               <p className="font-serif text-2xl text-ink sm:text-4xl">
                 {stat.value}
               </p>
-              <p className="mt-2 text-[9px] uppercase tracking-[0.16em] text-ink-muted sm:text-[11px]">
+              <p className="font-eyebrow mt-2 text-[9px] uppercase tracking-[0.16em] text-ink-muted sm:text-[11px]">
                 {stat.label}
               </p>
             </div>
@@ -155,7 +155,7 @@ export function Analytics() {
         <div className="mt-6 grid gap-6 lg:grid-cols-2">
           <Reveal y={36}>
             <div className="rounded-[1.5rem] border border-ink/10 bg-paper p-5 sm:p-8">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-gold sm:text-xs">
+              <p className="font-eyebrow text-[10px] uppercase tracking-[0.2em] text-gold sm:text-xs">
                 7-Day Output
               </p>
               <div
@@ -172,7 +172,7 @@ export function Analytics() {
                       className="w-full rounded-t-md bg-gold/80"
                       style={{ height: `${d.h}%` }}
                     />
-                    <span className="text-[9px] uppercase tracking-[0.12em] text-ink-muted sm:text-[10px]">
+                    <span className="font-eyebrow text-[9px] uppercase tracking-[0.12em] text-ink-muted sm:text-[10px]">
                       {d.day}
                     </span>
                   </div>
@@ -184,7 +184,7 @@ export function Analytics() {
           <Reveal delay={0.06} y={36}>
             <div className="rounded-[1.5rem] border border-ink/10 bg-paper p-5 sm:p-8">
               <div className="flex items-center justify-between">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-gold sm:text-xs">
+                <p className="font-eyebrow text-[10px] uppercase tracking-[0.2em] text-gold sm:text-xs">
                   Writing Rhythm
                 </p>
                 <p className="text-[10px] text-ink-muted sm:text-xs">2026</p>
@@ -201,7 +201,7 @@ export function Analytics() {
                   />
                 ))}
               </div>
-              <div className="mt-4 flex justify-between text-[9px] uppercase tracking-[0.14em] text-ink-muted sm:text-[10px]">
+              <div className="font-eyebrow mt-4 flex justify-between text-[9px] uppercase tracking-[0.14em] text-ink-muted sm:text-[10px]">
                 {MONTHS.map((m) => (
                   <span key={m}>{m}</span>
                 ))}

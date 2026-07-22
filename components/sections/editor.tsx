@@ -68,7 +68,7 @@ export function Editor() {
         <h2 className="max-w-2xl font-serif text-[clamp(1.85rem,6vw,4rem)] leading-[1.08] tracking-tight text-ink">
           {COPY.editorTitle}
         </h2>
-        <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-muted sm:mt-6 sm:text-lg">
+        <p className="font-accent mt-4 max-w-xl text-base leading-relaxed text-ink-muted sm:mt-6 sm:text-lg">
           {COPY.editorBody}
         </p>
 

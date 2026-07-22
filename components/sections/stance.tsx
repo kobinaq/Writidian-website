@@ -18,7 +18,7 @@ export function Stance() {
         <h2 className="font-serif text-[clamp(2.25rem,5vw,3.75rem)] leading-[1.1] tracking-tight">
           {COPY.stanceTitle}
         </h2>
-        <p className="mt-5 text-base leading-relaxed text-paper/70 sm:mt-8 sm:text-xl">
+        <p className="font-accent mt-5 text-base leading-relaxed text-paper/70 sm:mt-8 sm:text-xl">
           {COPY.stanceBody}
         </p>
       </Reveal>

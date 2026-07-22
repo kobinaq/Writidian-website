@@ -400,7 +400,7 @@ export function SanctuaryReveal() {
           ref={noiseLineRef}
           className="pointer-events-none absolute inset-x-0 top-[16%] z-30 px-6 text-center sm:top-[18%]"
         >
-          <p className="text-[10px] uppercase tracking-[0.3em] text-paper/50 sm:text-[11px]">
+          <p className="font-eyebrow text-[10px] uppercase tracking-[0.3em] text-paper/50 sm:text-[11px]">
             Every time you sit down to write
           </p>
           <p className="mx-auto mt-3 max-w-2xl font-serif text-2xl italic leading-snug text-paper/90 sm:text-4xl">
@@ -444,7 +444,7 @@ export function SanctuaryReveal() {
         >
           <div className="mx-auto flex max-w-md items-center gap-4">
             <span aria-hidden className="h-px flex-1 bg-gold-soft/40" />
-            <p className="whitespace-nowrap text-[10px] uppercase tracking-[0.3em] text-gold-soft sm:text-[11px]">
+            <p className="font-eyebrow whitespace-nowrap text-[10px] uppercase tracking-[0.3em] text-gold-soft sm:text-[11px]">
               Your writing sanctuary
             </p>
             <span aria-hidden className="h-px flex-1 bg-gold-soft/40" />
@@ -453,7 +453,7 @@ export function SanctuaryReveal() {
             In here, it is just you{" "}
             <span className="italic text-gold-soft">and the page.</span>
           </p>
-          <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-paper/65 sm:text-base">
+          <p className="font-accent mx-auto mt-3 max-w-md text-sm leading-relaxed text-paper/65 sm:text-base">
             Soundscapes for your ears, a prompt for your mind, and a door the
             noise cannot get through.
           </p>

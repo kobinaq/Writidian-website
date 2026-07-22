@@ -15,7 +15,7 @@ export function FinalCta() {
         <h2 className="font-serif text-[clamp(2rem,8vw,4.5rem)] leading-[1.05] tracking-tight text-ink">
           {COPY.finalCta}
         </h2>
-        <p className="mt-5 text-base text-ink-muted sm:mt-6 sm:text-xl">
+        <p className="font-accent mt-5 text-base text-ink-muted sm:mt-6 sm:text-xl">
           {COPY.finalSupport}
         </p>
         <div className="mt-8 flex justify-center sm:mt-12">

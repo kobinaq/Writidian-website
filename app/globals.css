@@ -23,6 +23,17 @@
   --font-sans: var(--font-source-sans);
 }
 
+/* Lora — eyebrows + nav. Handlee — subheads.
+   Defined as @utility so Tailwind v4 emits them into the stylesheet. */
+@utility font-eyebrow {
+  font-family: var(--font-lora), "Iowan Old Style", "Palatino Linotype", Palatino,
+    Georgia, serif;
+}
+
+@utility font-accent {
+  font-family: var(--font-handlee), "Segoe Print", "Comic Sans MS", cursive;
+}
+
 html {
   scroll-behavior: auto;
 }

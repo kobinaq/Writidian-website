@@ -124,13 +124,6 @@ export function Nav() {
   const ink = onDark ? "text-paper" : "text-ink";
   const mutedInk = onDark ? "text-paper/55" : "text-ink-muted";
   const hoverInk = onDark ? "hover:text-paper" : "hover:text-ink";
-  const barBg = onDark
-    ? scrolled
-      ? "bg-espresso/90 border-paper/10"
-      : "bg-espresso/55 border-paper/5"
-    : scrolled
-      ? "bg-paper/92 border-ink/10"
-      : "bg-paper/70 border-ink/5";
 
   return (
     <header
@@ -138,11 +131,9 @@ export function Nav() {
         hidden ? "-translate-y-[120%] opacity-0" : "translate-y-0 opacity-100"
       } ${ready ? "" : "translate-y-[-8px] opacity-0"}`}
     >
-      <div
-        className={`relative mx-auto max-w-6xl overflow-hidden rounded-md border backdrop-blur-md transition-[background-color,border-color,height] duration-300 ${barBg}`}
-      >
+      <div className="relative mx-auto max-w-6xl">
         <div
-          className={`flex items-center justify-between gap-3 px-3 transition-[height] duration-300 sm:px-5 ${
+          className={`flex items-center justify-between gap-3 px-1 transition-[height] duration-300 sm:px-2 ${
             scrolled ? "h-12 sm:h-[3.25rem]" : "h-14 sm:h-16"
           }`}
         >
@@ -171,7 +162,7 @@ export function Nav() {
                 <a
                   key={link.id}
                   href={link.href}
-                  className={`relative text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 ${
+                  className={`font-eyebrow relative text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 ${
                     isActive ? (onDark ? "text-gold-soft" : "text-gold") : mutedInk
                   } ${hoverInk}`}
                 >
@@ -210,13 +201,13 @@ export function Nav() {
               >
                 <SoundIcon muted={muted} />
               </span>
-              <span className="pointer-events-none absolute left-1/2 top-full z-10 mt-1.5 -translate-x-1/2 whitespace-nowrap rounded-sm border border-ink/10 bg-paper px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-ink opacity-0 shadow-sm transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
+              <span className="font-eyebrow pointer-events-none absolute left-1/2 top-full z-10 mt-1.5 -translate-x-1/2 whitespace-nowrap rounded-sm border border-ink/10 bg-paper px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-ink opacity-0 shadow-sm transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
                 {muted ? "Sound off" : "Sound on"}
               </span>
             </button>
 
             <Button className="!rounded-sm !px-3.5 !py-2 !text-[11px] uppercase tracking-[0.14em] sm:!px-4 sm:!text-xs">
-              Begin writing
+              Sign up
             </Button>
           </div>
         </div>

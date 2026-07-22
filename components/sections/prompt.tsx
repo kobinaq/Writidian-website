@@ -60,7 +60,7 @@ export function Prompt() {
           <h2 className="font-serif text-[clamp(1.85rem,6vw,4rem)] leading-[1.08] tracking-tight text-ink">
             {COPY.promptTitle}
           </h2>
-          <p className="mt-4 max-w-md text-base leading-relaxed text-ink-muted sm:mt-6 sm:text-lg">
+          <p className="font-accent mt-4 max-w-md text-base leading-relaxed text-ink-muted sm:mt-6 sm:text-lg">
             {COPY.promptBody}
           </p>
         </div>
@@ -73,7 +73,7 @@ export function Prompt() {
             aria-hidden
             className="pointer-events-none absolute -inset-8 -z-10 rounded-[2.5rem] bg-gold/10 blur-2xl"
           />
-          <p className="text-xs uppercase tracking-[0.28em] text-gold">
+          <p className="font-eyebrow text-xs uppercase tracking-[0.28em] text-gold">
             {COPY.samplePromptLabel}
           </p>
           <p className="mt-8 font-serif text-[clamp(1.35rem,2.8vw,2rem)] leading-relaxed text-ink">
