@@ -56,6 +56,193 @@ function createMaster(ctx: AudioContext, maxGain: number) {
 
 type Bus = ReturnType<typeof createMaster>;
 
+function createLoopingNoise(
+  ctx: AudioContext,
+  bus: Bus,
+  type: BiquadFilterType,
+  frequency: number,
+  q: number,
+  level: number,
+) {
+  const buffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+  const source = ctx.createBufferSource();
+  source.buffer = buffer;
+  source.loop = true;
+  const filter = ctx.createBiquadFilter();
+  filter.type = type;
+  filter.frequency.value = frequency;
+  filter.Q.value = q;
+  const gain = ctx.createGain();
+  gain.gain.value = level;
+  source.connect(filter);
+  filter.connect(gain);
+  gain.connect(bus.master);
+  source.start();
+  bus.onStop(() => source.stop());
+  return { filter, gain };
+}
+
+/** Bubbly Reflection: warm pad with small glassy bubbles. */
+export function createBubblyReflectionAmbience(ctx: AudioContext): AmbientHandle {
+  const bus = createMaster(ctx, 0.2);
+  const pad = ctx.createBiquadFilter();
+  pad.type = "lowpass";
+  pad.frequency.value = 520;
+  pad.connect(bus.master);
+  [196, 246.94, 293.66].forEach((frequency, index) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = frequency;
+    gain.gain.value = index === 0 ? 0.16 : 0.055;
+    osc.connect(gain);
+    gain.connect(pad);
+    osc.start();
+    bus.onStop(() => osc.stop());
+  });
+  let timer: number | null = null;
+  const bubble = () => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const now = ctx.currentTime;
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(420 + Math.random() * 260, now);
+    osc.frequency.exponentialRampToValueAtTime(900 + Math.random() * 300, now + 0.16);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.06, now + 0.025);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+    osc.connect(gain);
+    gain.connect(bus.master);
+    osc.start(now);
+    osc.stop(now + 0.24);
+    timer = window.setTimeout(bubble, 750 + Math.random() * 1200);
+  };
+  timer = window.setTimeout(bubble, 500);
+  bus.onStop(() => {
+    if (timer) window.clearTimeout(timer);
+  });
+  return bus;
+}
+
+/** Dusty Photo Frame: muted room tone with soft, worn harmonic movement. */
+export function createDustyPhotoFrameAmbience(ctx: AudioContext): AmbientHandle {
+  const bus = createMaster(ctx, 0.18);
+  createLoopingNoise(ctx, bus, "lowpass", 360, 0.35, 0.045);
+  [146.83, 220, 293.66].forEach((frequency, index) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "triangle";
+    osc.frequency.value = frequency;
+    gain.gain.value = 0.045 - index * 0.01;
+    osc.connect(gain);
+    gain.connect(bus.master);
+    osc.start();
+    bus.onStop(() => osc.stop());
+  });
+  return bus;
+}
+
+/** Amber Drift: slow, warm sustained tones with a soft tide-like motion. */
+export function createAmberDriftAmbience(ctx: AudioContext): AmbientHandle {
+  const bus = createMaster(ctx, 0.2);
+  const filter = ctx.createBiquadFilter();
+  filter.type = "lowpass";
+  filter.frequency.value = 430;
+  filter.connect(bus.master);
+  [110, 164.81, 220].forEach((frequency, index) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = frequency;
+    gain.gain.value = 0.12 - index * 0.025;
+    lfo.frequency.value = 0.055 + index * 0.012;
+    lfoGain.gain.value = 4 + index;
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc.frequency);
+    osc.connect(gain);
+    gain.connect(filter);
+    osc.start();
+    lfo.start();
+    bus.onStop(() => {
+      osc.stop();
+      lfo.stop();
+    });
+  });
+  createLoopingNoise(ctx, bus, "lowpass", 680, 0.25, 0.025);
+  return bus;
+}
+
+/** Basement Door Ajar: low pressure, distant air, and rare creaking movement. */
+export function createBasementDoorAjarAmbience(ctx: AudioContext): AmbientHandle {
+  const bus = createMaster(ctx, 0.16);
+  const low = ctx.createOscillator();
+  const lowGain = ctx.createGain();
+  low.type = "sine";
+  low.frequency.value = 55;
+  lowGain.gain.value = 0.18;
+  low.connect(lowGain);
+  lowGain.connect(bus.master);
+  low.start();
+  bus.onStop(() => low.stop());
+  createLoopingNoise(ctx, bus, "bandpass", 150, 0.7, 0.045);
+  let timer: number | null = null;
+  const creak = () => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const now = ctx.currentTime;
+    osc.type = "triangle";
+    osc.frequency.setValueAtTime(220, now);
+    osc.frequency.exponentialRampToValueAtTime(72, now + 0.9);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.035, now + 0.2);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.1);
+    osc.connect(gain);
+    gain.connect(bus.master);
+    osc.start(now);
+    osc.stop(now + 1.15);
+    timer = window.setTimeout(creak, 4200 + Math.random() * 5200);
+  };
+  timer = window.setTimeout(creak, 1800);
+  bus.onStop(() => {
+    if (timer) window.clearTimeout(timer);
+  });
+  return bus;
+}
+
+/** Light rain + birdsong: a natural, explicitly non-binaural outdoor bed. */
+export function createRainBirdsongAmbience(ctx: AudioContext): AmbientHandle {
+  const bus = createMaster(ctx, 0.2);
+  createLoopingNoise(ctx, bus, "bandpass", 820, 0.45, 0.09);
+  let timer: number | null = null;
+  const bird = () => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const now = ctx.currentTime;
+    const start = 1500 + Math.random() * 500;
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(start, now);
+    osc.frequency.exponentialRampToValueAtTime(start * 1.55, now + 0.18);
+    osc.frequency.exponentialRampToValueAtTime(start * 1.1, now + 0.34);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.exponentialRampToValueAtTime(0.045, now + 0.04);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+    osc.connect(gain);
+    gain.connect(bus.master);
+    osc.start(now);
+    osc.stop(now + 0.45);
+    timer = window.setTimeout(bird, 2600 + Math.random() * 4200);
+  };
+  timer = window.setTimeout(bird, 1000);
+  bus.onStop(() => {
+    if (timer) window.clearTimeout(timer);
+  });
+  return bus;
+}
+
 /** Soft, very calm writing-studio bed: airy sine pad + gentle breath noise */
 export function createCalmStudioAmbience(ctx: AudioContext): AmbientHandle {
   const bus = createMaster(ctx, 0.18);

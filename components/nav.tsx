@@ -6,10 +6,10 @@ import { SITE } from "@/lib/constants";
 import { useEffect, useRef, useState } from "react";
 
 const LINKS = [
-  { href: "#sanctuary", label: "Sanctuary", id: "sanctuary" },
-  { href: "#soundscapes", label: "Sound", id: "soundscapes" },
-  { href: "#prompt", label: "Prompt", id: "prompt" },
-  { href: "#editor", label: "Write", id: "editor" },
+  { href: "/#sanctuary", label: "Sanctuary", id: "sanctuary" },
+  { href: "/#soundscapes", label: "Sound", id: "soundscapes" },
+  { href: "/#prompt", label: "Prompt", id: "prompt" },
+  { href: "/#editor", label: "Write", id: "editor" },
 ] as const;
 
 function SoundIcon({ muted }: { muted: boolean }) {
@@ -139,7 +139,7 @@ export function Nav() {
         >
           {/* Wordmark */}
           <a
-            href="#top"
+            href="/"
             className={`group relative shrink-0 font-serif tracking-tight transition-colors duration-300 ${ink} ${
               scrolled ? "text-lg sm:text-xl" : "text-lg sm:text-2xl"
             }`}
