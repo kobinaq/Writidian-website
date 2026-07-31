@@ -2,8 +2,8 @@ export const ABOUT = {
   title: "About Writidian",
   coined: "Coined from two words that mean a lot to us:",
   equation: [
-    { word: "Write", note: null },
-    { word: "Quotidian", note: "(every day)" },
+    { word: "Write", note: null, emphasis: false },
+    { word: "Quotidian", note: "(every day)", emphasis: false },
     { word: "Writidian", note: "(Write every day)", emphasis: true },
   ],
   paragraphs: [
