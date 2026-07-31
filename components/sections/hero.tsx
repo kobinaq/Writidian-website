@@ -8,7 +8,7 @@ import { useMemo, useRef } from "react";
 
 registerGsap();
 
-const GOLD_WORDS = new Set(["craft"]);
+const GOLD_WORDS = new Set(["human"]);
 
 function splitWords(text: string) {
   return text.split(" ").map((word, i) => ({
@@ -63,14 +63,16 @@ function IpadMockup() {
 
             <video
               className="absolute inset-0 z-10 h-full w-full object-cover"
-              src="/videos/herodemo.mp4"
               autoPlay
               muted
               loop
               playsInline
               preload="auto"
               aria-label="Writidian product demo"
-            />
+            >
+              <source src="/videos/herodemo.webm" type="video/webm" />
+              <source src="/videos/herodemo.mp4" type="video/mp4" />
+            </video>
 
             {/* Front camera — top center in portrait */}
             <div
@@ -178,8 +180,8 @@ export function Hero() {
       <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 px-6 pb-20 pt-28 sm:gap-14 sm:px-10 sm:pb-24 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-16 lg:pt-32 xl:gap-20">
         <div className="flex max-w-xl flex-col items-start text-left [perspective:900px]">
           <div data-hero className="flex w-full items-center gap-4">
-            <p className="font-eyebrow whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.32em] text-gold">
-              A writing sanctuary
+            <p className="font-eyebrow text-[11px] font-medium uppercase tracking-[0.32em] text-gold sm:whitespace-nowrap">
+              {COPY.heroEyebrow}
             </p>
             <span
               ref={ruleRef}

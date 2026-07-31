@@ -3,7 +3,7 @@
 import { BrandLogo, type BrandKey } from "@/components/brand-logos";
 import { useHeroSanctuaryAudio } from "@/hooks/use-hero-sanctuary-audio";
 import { useIsMobile } from "@/hooks/use-is-mobile";
-import { SOCIAL_CLUTTER } from "@/lib/constants";
+import { COPY, SOCIAL_CLUTTER } from "@/lib/constants";
 import { gsap, registerGsap, ScrollTrigger } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import { motion } from "motion/react";
@@ -403,7 +403,7 @@ export function SanctuaryReveal() {
           <p className="font-eyebrow text-[10px] uppercase tracking-[0.3em] text-paper/50 sm:text-[11px]">
             Every time you sit down to write
           </p>
-          <p className="mx-auto mt-3 max-w-2xl font-serif text-2xl italic leading-snug text-paper/90 sm:text-4xl">
+          <p className="mx-auto mt-3 max-w-2xl font-serif text-[29px] italic leading-snug text-paper/90 sm:text-[41px]">
             The world will not stop talking.
           </p>
         </div>
@@ -450,12 +450,11 @@ export function SanctuaryReveal() {
             <span aria-hidden className="h-px flex-1 bg-gold-soft/40" />
           </div>
           <p className="mx-auto mt-4 max-w-2xl font-serif text-2xl leading-snug text-paper sm:mt-5 sm:text-4xl">
-            In here, it is just you{" "}
+            In here, it&rsquo;s just you, your thoughts{" "}
             <span className="italic text-gold-soft">and the page.</span>
           </p>
-          <p className="font-accent mx-auto mt-3 max-w-md text-sm leading-relaxed text-paper/65 sm:text-base">
-            Soundscapes for your ears, a prompt for your mind, and a door the
-            noise cannot get through.
+          <p className="font-accent mx-auto mt-3 max-w-lg text-sm leading-relaxed text-paper/65 sm:text-base">
+            {COPY.sanctuaryBody}
           </p>
         </div>
 

@@ -6,6 +6,12 @@ import { gsap, registerGsap, ScrollTrigger } from "@/lib/gsap";
 
 registerGsap();
 
+let lenisInstance: Lenis | null = null;
+
+export function getLenis() {
+  return lenisInstance;
+}
+
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const reduced = window.matchMedia(
@@ -20,6 +26,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       touchMultiplier: 1.1,
     });
 
+    lenisInstance = lenis;
     lenis.on("scroll", ScrollTrigger.update);
 
     const ticker = (time: number) => {
@@ -37,6 +44,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       window.removeEventListener("resize", onResize);
       gsap.ticker.remove(ticker);
       lenis.destroy();
+      lenisInstance = null;
     };
   }, []);
 

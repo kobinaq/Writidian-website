@@ -3,13 +3,20 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useSound } from "@/components/sound-context";
 import {
-  createCoastAmbience,
-  createForestNightAmbience,
-  createNightDeskAmbience,
+  createAmberDriftAmbience,
+  createBasementDoorAjarAmbience,
+  createBubblyReflectionAmbience,
+  createDustyPhotoFrameAmbience,
+  createRainBirdsongAmbience,
   type AmbientHandle,
 } from "@/lib/ambient-audio";
 
-export type SoundscapeSceneId = "forest" | "coast" | "night";
+export type SoundscapeSceneId =
+  | "journaling"
+  | "literary-fiction"
+  | "romance"
+  | "horror"
+  | "non-binaural";
 
 export function useSoundscapeAudio() {
   const { muted, unlockAudio } = useSound();
@@ -42,14 +49,20 @@ export function useSoundscapeAudio() {
   const ensureBeds = useCallback(async () => {
     const ctx = await unlockAudio();
     if (!ctx) return null;
-    if (!bedsRef.current.forest) {
-      bedsRef.current.forest = createForestNightAmbience(ctx);
+    if (!bedsRef.current.journaling) {
+      bedsRef.current.journaling = createBubblyReflectionAmbience(ctx);
     }
-    if (!bedsRef.current.coast) {
-      bedsRef.current.coast = createCoastAmbience(ctx);
+    if (!bedsRef.current["literary-fiction"]) {
+      bedsRef.current["literary-fiction"] = createDustyPhotoFrameAmbience(ctx);
     }
-    if (!bedsRef.current.night) {
-      bedsRef.current.night = createNightDeskAmbience(ctx);
+    if (!bedsRef.current.romance) {
+      bedsRef.current.romance = createAmberDriftAmbience(ctx);
+    }
+    if (!bedsRef.current.horror) {
+      bedsRef.current.horror = createBasementDoorAjarAmbience(ctx);
+    }
+    if (!bedsRef.current["non-binaural"]) {
+      bedsRef.current["non-binaural"] = createRainBirdsongAmbience(ctx);
     }
     await Promise.all(
       Object.values(bedsRef.current).map((b) => b?.resume()),
@@ -66,7 +79,13 @@ export function useSoundscapeAudio() {
       if (!beds) return;
       activeRef.current = scene;
       inSectionRef.current = scene !== null;
-      (["forest", "coast", "night"] as SoundscapeSceneId[]).forEach((id) => {
+      ([
+        "journaling",
+        "literary-fiction",
+        "romance",
+        "horror",
+        "non-binaural",
+      ] as SoundscapeSceneId[]).forEach((id) => {
         const target =
           !mutedRef.current && scene === id && inSectionRef.current ? 1 : 0;
         beds[id]?.setTargetVolume(target, 0.55);

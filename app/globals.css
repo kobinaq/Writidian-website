@@ -110,6 +110,26 @@ body {
   animation: cuePulse 1.6s ease-in-out infinite;
 }
 
+.problem-character {
+  opacity: 0.88;
+  transform-origin: center bottom;
+  will-change: transform, opacity;
+}
+
+.soundscape-photo-layer {
+  will-change: transform;
+}
+
+.soundscape-photo-foreground {
+  will-change: transform;
+}
+
+@media (max-width: 639px) {
+  .problem-character {
+    opacity: 0.45;
+  }
+}
+
 .hero-ruled {
   background-image: repeating-linear-gradient(
     to bottom,
@@ -135,5 +155,9 @@ body {
   .marquee-track,
   .cue-line {
     animation: none;
+  }
+
+  .problem-character {
+    opacity: 0.36;
   }
 }
