@@ -38,7 +38,6 @@ export function Problem() {
         pin.querySelectorAll("path[data-flame]"),
       );
       const handset = pin.querySelector<HTMLElement>("[data-ring-shake]");
-      const cord = pin.querySelector<HTMLElement>("[data-ring-cord]");
 
       if (reduced) {
         gsap.set(spans, { opacity: 1, y: 0 });
@@ -51,7 +50,7 @@ export function Problem() {
       gsap.set(spans, { opacity: 0.14, y: 18 });
       gsap.set(followUp, { opacity: 0, y: 20 });
       gsap.set([leftCharacter, rightCharacter], { autoAlpha: 0 });
-      gsap.set(flames, { opacity: 0.15, transformOrigin: "50% 100%" });
+      gsap.set(flames, { opacity: 0.35, transformOrigin: "50% 100%" });
 
       const reveal = gsap.timeline({
         scrollTrigger: {
@@ -102,7 +101,7 @@ export function Problem() {
         .to(leftCharacter, { autoAlpha: 1, duration: 0.2 }, 0)
         .to(rightCharacter, { autoAlpha: 1, duration: 0.2 }, 0.14);
 
-      // Idle — phone rings (handset + soft cord sway); candle flames alternate.
+      // Idle — phone handset rings; single candle flame flickers.
       if (handset) {
         const ringTl = gsap.timeline({ repeat: -1 });
         ringTl
@@ -152,30 +151,18 @@ export function Problem() {
           .to({}, { duration: 0.75 });
       }
 
-      if (cord) {
-        gsap.to(cord, {
-          rotation: 2.5,
-          x: 2,
-          transformOrigin: "30% 40%",
-          duration: 0.14,
+      if (flames[0]) {
+        gsap.to(flames[0], {
+          opacity: 0.95,
+          scaleY: 1.08,
+          scaleX: 1.04,
+          skewX: 3,
+          duration: 0.22,
           ease: "sine.inOut",
           repeat: -1,
           yoyo: true,
-          delay: 0.04,
         });
       }
-
-      flames.forEach((flame, i) => {
-        gsap.to(flame, {
-          opacity: 0.95,
-          scaleY: 1.06,
-          duration: 0.45 + i * 0.08,
-          ease: "sine.inOut",
-          repeat: -1,
-          yoyo: true,
-          delay: i * 0.28,
-        });
-      });
     },
     { dependencies: [words.length] },
   );
@@ -239,19 +226,6 @@ function ProblemCharacters() {
             className="object-contain"
           />
           <div
-            data-ring-cord
-            className="absolute inset-0 will-change-transform"
-          >
-            <Image
-              src="/images/problem-phone-cord.png"
-              alt=""
-              fill
-              unoptimized
-              sizes="200px"
-              className="object-contain object-[center_55%]"
-            />
-          </div>
-          <div
             data-ring-shake
             className="absolute inset-0 will-change-transform"
           >
@@ -261,7 +235,7 @@ function ProblemCharacters() {
               fill
               unoptimized
               sizes="200px"
-              className="object-contain object-[center_28%] scale-[0.72]"
+              className="object-contain object-[center_5%] scale-[0.78] -translate-y-[22%]"
             />
           </div>
         </div>
@@ -289,24 +263,12 @@ function ProblemCharacters() {
             strokeLinecap="round"
             strokeLinejoin="round"
           >
-            {/* Three curled flame strokes — fade alternately above the wick */}
+            {/* Single flame curl — flickers above the wick */}
             <path
               data-flame="1"
               strokeWidth="1.8"
               opacity="0.9"
               d="M100 48c-7-12-5-26 0-34 4 9 6 20 0 34Z"
-            />
-            <path
-              data-flame="2"
-              strokeWidth="1.5"
-              opacity="0.55"
-              d="M91 52c-5-14 0-28 5-32 1 10-1 20-5 32Z"
-            />
-            <path
-              data-flame="3"
-              strokeWidth="1.5"
-              opacity="0.55"
-              d="M109 52c5-14 0-28-5-32-1 10 1 20 5 32Z"
             />
           </svg>
         </div>
