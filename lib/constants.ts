@@ -46,7 +46,7 @@ export const FOOTER_LINKS = {
 
 export const COPY = {
   heroEyebrow: "A distraction-free writing haven",
-  heroHeadline: "To grow your inner human writer",
+  heroHeadline: "to grow your inner human writer",
   heroSupport:
     "Experience a supportive digital environment for anyone who wants to write.",
   sanctuaryHeadline: "In here, it's just you, your thoughts and the page.",

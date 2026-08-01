@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { fraunces, handlee, lora, sourceSans } from "@/app/fonts";
+import {
+  fraunces,
+  handlee,
+  lora,
+  merriweather,
+  sourceSans,
+} from "@/app/fonts";
 import { SoundProvider } from "@/components/sound-context";
 import { SITE } from "@/lib/constants";
 import "./globals.css";
@@ -28,7 +34,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${sourceSans.variable} ${lora.variable} ${handlee.variable} h-full antialiased`}
+      className={`${fraunces.variable} ${sourceSans.variable} ${lora.variable} ${handlee.variable} ${merriweather.variable} h-full antialiased`}
     >
       <body className="min-h-full overflow-x-hidden bg-paper font-sans text-ink">
         <SoundProvider>

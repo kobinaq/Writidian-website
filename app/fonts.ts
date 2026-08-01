@@ -1,4 +1,10 @@
-import { Fraunces, Handlee, Lora, Source_Sans_3 } from "next/font/google";
+import {
+  Fraunces,
+  Handlee,
+  Lora,
+  Merriweather,
+  Source_Sans_3,
+} from "next/font/google";
 
 export const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -21,6 +27,14 @@ export const lora = Lora({
 export const handlee = Handlee({
   variable: "--font-handlee",
   weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+/** App daily-prompt body face (matches app.writidian.com). */
+export const merriweather = Merriweather({
+  variable: "--font-merriweather",
+  weight: ["400", "700"],
   subsets: ["latin"],
   display: "swap",
 });

@@ -71,10 +71,10 @@ function getReducedMotionServerSnapshot() {
 }
 
 function cellTone(level: number) {
-  if (level === 0) return "bg-[#F9F8F4]/8";
-  if (level === 1) return "bg-[#C6A87C]/30";
-  if (level === 2) return "bg-[#C6A87C]/60";
-  return "bg-[#C6A87C]";
+  if (level === 0) return "bg-ink/8";
+  if (level === 1) return "bg-gold/30";
+  if (level === 2) return "bg-gold/60";
+  return "bg-gold";
 }
 
 function compassPoint(
@@ -582,20 +582,20 @@ export function Stats() {
             {STAT_PANELS.map((panel) => (
               <div
                 key={panel.id}
-                className="rounded-[1.25rem] border border-[#C6A87C]/20 bg-[#120F09] p-5"
+                className="rounded-[1.25rem] border border-transparent bg-transparent p-5"
               >
-                <p className="text-[10px] uppercase tracking-[0.18em] text-[#C6A87C]">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-gold">
                   {panel.label}
                 </p>
-                <p className="mt-3 font-serif text-3xl text-[#F9F8F4]">
+                <p className="mt-3 font-serif text-3xl text-ink">
                   {panel.value}
                   {panel.unit ? (
-                    <span className="ml-1 text-base text-[#C6A87C]">
+                    <span className="ml-1 text-base text-gold">
                       {panel.unit}
                     </span>
                   ) : null}
                 </p>
-                <p className="mt-2 text-sm text-[#A0A0A0]">{panel.caption}</p>
+                <p className="mt-2 text-sm text-ink-muted">{panel.caption}</p>
               </div>
             ))}
           </div>
@@ -608,13 +608,13 @@ export function Stats() {
     <section
       id="stats"
       ref={rootRef}
-      className="relative h-[520vh] bg-surface/50 md:h-[620vh]"
+      className="relative h-[520vh] scroll-mt-24 bg-surface/50 md:h-[620vh]"
     >
       <div
         ref={pinRef}
         className="relative flex h-[100dvh] flex-col overflow-hidden"
       >
-        <div className="mx-auto grid h-full w-full max-w-6xl grid-cols-1 items-center gap-6 px-5 py-20 sm:px-8 lg:grid-cols-[minmax(0,0.95fr)_auto_minmax(0,1.1fr)] lg:gap-8 lg:py-16">
+        <div className="mx-auto grid h-full w-full max-w-6xl grid-cols-1 items-center gap-6 px-5 pb-16 pt-24 sm:px-8 sm:pt-28 lg:grid-cols-[minmax(0,0.95fr)_auto_minmax(0,1.1fr)] lg:gap-8 lg:pb-16 lg:pt-28">
           {/* Copy */}
           <div className="relative z-10 shrink-0">
             <h2
@@ -670,8 +670,8 @@ export function Stats() {
                 onClick={() => jumpToPanel(index)}
                 className="group relative flex items-center justify-center"
               >
-                <span className="block h-2 w-2 rounded-full bg-[#C6A87C]/35 transition-all duration-300 group-hover:bg-[#C6A87C]/7 group-data-[active=true]:h-3.5 group-data-[active=true]:w-3.5 group-data-[active=true]:bg-[#C6A87C] group-data-[active=true]:shadow-[0_0_12px_rgba(198,168,124,0.55)]" />
-                <span className="pointer-events-none absolute left-5 whitespace-nowrap rounded-md bg-[#120F09] px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[#F9F8F4] opacity-0 transition-opacity group-hover:opacity-100">
+                <span className="block h-2 w-2 rounded-full bg-gold/35 transition-all duration-300 group-hover:bg-gold/70 group-data-[active=true]:h-3.5 group-data-[active=true]:w-3.5 group-data-[active=true]:bg-gold group-data-[active=true]:shadow-[0_0_12px_rgba(163,138,94,0.35)]" />
+                <span className="pointer-events-none absolute left-5 whitespace-nowrap rounded-md bg-ink px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-paper opacity-0 transition-opacity group-hover:opacity-100">
                   {panel.label}
                 </span>
               </button>
@@ -680,12 +680,12 @@ export function Stats() {
 
           {/* App frame */}
           <div className="relative z-10 flex min-h-0 w-full flex-1 items-center justify-center lg:flex-none">
-            <div className="relative w-full max-w-md overflow-hidden rounded-[1.5rem] border border-[#C6A87C]/20 bg-[#120F09] p-4 shadow-[0_30px_60px_-40px_rgba(14,12,9,0.55)] sm:p-6 lg:max-w-lg">
+            <div className="relative w-full max-w-md overflow-hidden rounded-[1.5rem] border border-transparent bg-transparent p-4 sm:p-6 lg:max-w-lg">
               <div className="mb-4 flex items-center justify-between sm:mb-5">
-                <p className="font-serif text-lg text-[#F9F8F4] sm:text-xl">
+                <p className="font-serif text-lg text-ink sm:text-xl">
                   Your Stats
                 </p>
-                <span className="rounded-full border border-[#C6A87C]/45 px-2.5 py-1 text-[9px] font-medium uppercase tracking-[0.14em] text-[#C6A87C]">
+                <span className="rounded-full border border-gold/45 px-2.5 py-1 text-[9px] font-medium uppercase tracking-[0.14em] text-gold">
                   Persona
                 </span>
               </div>
@@ -704,7 +704,7 @@ export function Stats() {
                     data-active={index === 0 ? "true" : "false"}
                     aria-label={`Go to ${panel.label}`}
                     onClick={() => jumpToPanel(index)}
-                    className="h-2 w-2 rounded-full bg-[#C6A87C]/35 transition-all duration-300 data-[active=true]:w-6 data-[active=true]:bg-[#C6A87C]"
+                    className="h-2 w-2 rounded-full bg-gold/35 transition-all duration-300 data-[active=true]:w-6 data-[active=true]:bg-gold"
                   />
                 ))}
               </div>
@@ -719,10 +719,10 @@ export function Stats() {
                   data-active="true"
                   className="absolute inset-0 flex flex-col opacity-0 transition-opacity duration-300 data-[active=true]:opacity-100"
                 >
-                  <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-[#C6A87C]/15 bg-[#1A160E] p-6">
+                  <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-transparent bg-transparent p-6">
                     <div
                       data-flame
-                      className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-[#C6A87C]/40 bg-[#120F09] shadow-[0_0_28px_rgba(224,122,58,0.35)]"
+                      className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-gold/40 bg-transparent shadow-[0_0_28px_rgba(163,138,94,0.3)]"
                       aria-hidden
                     >
                       <svg
@@ -730,7 +730,7 @@ export function Stats() {
                         height="28"
                         viewBox="0 0 24 24"
                         fill="none"
-                        className="text-[#e07a3a]"
+                        className="text-gold"
                       >
                         <path
                           d="M12 2s5 5.2 5 10a5 5 0 1 1-10 0c0-2.4 1.4-4.8 3-6.5C10.8 7.2 12 9 12 9s.7-1.6 1.6-2.8C15 4.4 12 2 12 2Z"
@@ -738,10 +738,10 @@ export function Stats() {
                         />
                       </svg>
                     </div>
-                    <p className="font-serif text-5xl text-[#F9F8F4] sm:text-6xl">
+                    <p className="font-serif text-5xl text-ink sm:text-6xl">
                       <span data-count>0</span>
                     </p>
-                    <p className="mt-1 text-xs uppercase tracking-[0.18em] text-[#C6A87C]">
+                    <p className="mt-1 text-xs uppercase tracking-[0.18em] text-gold">
                       Days Streak
                     </p>
                     <div className="mt-8 flex gap-2" aria-hidden>
@@ -751,12 +751,12 @@ export function Stats() {
                           key={i}
                           data-day-dot
                           className={`h-3 w-3 rounded-full sm:h-3.5 sm:w-3.5 ${
-                            active ? "bg-[#e07a3a]" : "bg-[#F9F8F4]/15"
+                            active ? "bg-gold" : "bg-ink/15"
                           }`}
                         />
                       ))}
                     </div>
-                    <div className="mt-3 flex w-full justify-between px-1 text-[9px] uppercase tracking-[0.12em] text-[#A0A0A0]">
+                    <div className="mt-3 flex w-full justify-between px-1 text-[9px] uppercase tracking-[0.12em] text-ink-muted">
                       {["M", "T", "W", "T", "F", "S", "S"].map((d, i) => (
                         <span key={`${d}-${i}`}>{d}</span>
                       ))}
@@ -770,11 +770,11 @@ export function Stats() {
                   data-active="false"
                   className="absolute inset-0 flex flex-col opacity-0 transition-opacity duration-300 data-[active=true]:opacity-100"
                 >
-                  <div className="flex flex-1 flex-col rounded-2xl border border-[#C6A87C]/15 bg-[#1A160E] p-5 sm:p-6">
-                    <p className="text-center font-serif text-5xl text-[#F9F8F4] sm:text-6xl">
+                  <div className="flex flex-1 flex-col rounded-2xl border border-transparent bg-transparent p-5 sm:p-6">
+                    <p className="text-center font-serif text-5xl text-ink sm:text-6xl">
                       <span data-count>0</span>
                     </p>
-                    <p className="mt-1 text-center text-xs uppercase tracking-[0.18em] text-[#C6A87C]">
+                    <p className="mt-1 text-center text-xs uppercase tracking-[0.18em] text-gold">
                       Words Flowed
                     </p>
                     <div
@@ -788,10 +788,10 @@ export function Stats() {
                         >
                           <div
                             data-bar
-                            className="w-full rounded-t-md bg-[#C6A87C]/85 transition-[filter,transform] duration-200 hover:brightness-110 hover:-translate-y-0.5"
+                            className="w-full rounded-t-md bg-gold/85 transition-[filter,transform] duration-200 hover:brightness-110 hover:-translate-y-0.5"
                             style={{ height: `${d.h}%` }}
                           />
-                          <span className="text-[9px] uppercase tracking-[0.1em] text-[#A0A0A0]">
+                          <span className="text-[9px] uppercase tracking-[0.1em] text-ink-muted">
                             {d.day}
                           </span>
                         </div>
@@ -806,7 +806,7 @@ export function Stats() {
                   data-active="false"
                   className="absolute inset-0 flex flex-col opacity-0 transition-opacity duration-300 data-[active=true]:opacity-100"
                 >
-                  <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-[#C6A87C]/15 bg-[#1A160E] p-6">
+                  <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-transparent bg-transparent p-6">
                     <div className="relative flex h-44 w-44 items-center justify-center sm:h-52 sm:w-52">
                       <svg
                         viewBox="0 0 100 100"
@@ -818,7 +818,7 @@ export function Stats() {
                           cy="50"
                           r="42"
                           fill="none"
-                          stroke="rgba(249,248,244,0.08)"
+                          stroke="color-mix(in srgb, var(--ink) 10%, transparent)"
                           strokeWidth="6"
                         />
                         <circle
@@ -827,22 +827,22 @@ export function Stats() {
                           cy="50"
                           r="42"
                           fill="none"
-                          stroke="#C6A87C"
+                          stroke="var(--gold)"
                           strokeWidth="6"
                           strokeLinecap="round"
                         />
                       </svg>
                       <div className="relative z-10 text-center">
-                        <p className="font-serif text-4xl text-[#F9F8F4] sm:text-5xl">
+                        <p className="font-serif text-4xl text-ink sm:text-5xl">
                           <span data-count>0</span>
                         </p>
-                        <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-[#C6A87C]">
+                        <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-gold">
                           hours
                         </p>
                       </div>
                     </div>
-                    <p className="mt-6 text-sm text-[#A0A0A0]">
-                      <span data-sessions className="text-[#F9F8F4]">
+                    <p className="mt-6 text-sm text-ink-muted">
+                      <span data-sessions className="text-ink">
                         0
                       </span>{" "}
                       focused sessions
@@ -856,7 +856,7 @@ export function Stats() {
                   data-active="false"
                   className="absolute inset-0 flex flex-col opacity-0 transition-opacity duration-300 data-[active=true]:opacity-100"
                 >
-                  <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-[#C6A87C]/15 bg-[#1A160E] p-4 sm:p-6">
+                  <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-transparent bg-transparent p-4 sm:p-6">
                     <div className="relative h-56 w-56 sm:h-64 sm:w-64">
                       <svg
                         viewBox="0 0 200 200"
@@ -871,7 +871,7 @@ export function Stats() {
                             cy="100"
                             r={38 + scale * 48}
                             fill="none"
-                            stroke="rgba(198,168,124,0.22)"
+                            stroke="color-mix(in srgb, var(--gold) 22%, transparent)"
                             strokeWidth="1"
                           />
                         ))}
@@ -885,7 +885,7 @@ export function Stats() {
                               y1="100"
                               x2={end.x}
                               y2={end.y}
-                              stroke="rgba(198,168,124,0.2)"
+                              stroke="color-mix(in srgb, var(--gold) 20%, transparent)"
                               strokeWidth="1"
                             />
                           );
@@ -893,8 +893,8 @@ export function Stats() {
                         <polygon
                           data-radar
                           points={radarPoints}
-                          fill="rgba(198,168,124,0.35)"
-                          stroke="#C6A87C"
+                          fill="color-mix(in srgb, var(--gold) 35%, transparent)"
+                          stroke="var(--gold)"
                           strokeWidth="2"
                         />
                       </svg>
@@ -904,7 +904,7 @@ export function Stats() {
                           <span
                             key={axis.label}
                             data-axis-label
-                            className="absolute -translate-x-1/2 -translate-y-1/2 text-[9px] uppercase tracking-[0.1em] text-[#C6A87C] sm:text-[10px]"
+                            className="absolute -translate-x-1/2 -translate-y-1/2 text-[9px] uppercase tracking-[0.1em] text-gold sm:text-[10px]"
                             style={{
                               left: `${(pt.x / 200) * 100}%`,
                               top: `${(pt.y / 200) * 100}%`,
@@ -915,7 +915,7 @@ export function Stats() {
                         );
                       })}
                     </div>
-                    <p className="mt-2 font-serif text-xl text-[#F9F8F4]">
+                    <p className="mt-2 font-serif text-xl text-ink">
                       Fantasy · 42%
                     </p>
                   </div>
@@ -927,23 +927,23 @@ export function Stats() {
                   data-active="false"
                   className="absolute inset-0 flex flex-col opacity-0 transition-opacity duration-300 data-[active=true]:opacity-100"
                 >
-                  <div className="flex flex-1 flex-col rounded-2xl border border-[#C6A87C]/15 bg-[#1A160E] p-5 sm:p-6">
-                    <p className="text-[10px] uppercase tracking-[0.18em] text-[#C6A87C]">
+                  <div className="flex flex-1 flex-col rounded-2xl border border-transparent bg-transparent p-5 sm:p-6">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-gold">
                       Resonance
                     </p>
                     <div className="mt-5 flex-1 space-y-3.5" aria-hidden>
                       {resonanceBars.map((bar) => (
                         <div key={bar.label}>
                           <div className="mb-1.5 flex items-center justify-between text-[11px]">
-                            <span className="text-[#F9F8F4]">{bar.label}</span>
-                            <span className="text-[#A0A0A0]">
+                            <span className="text-ink">{bar.label}</span>
+                            <span className="text-ink-muted">
                               {Math.round(bar.value * 100)}%
                             </span>
                           </div>
-                          <div className="h-2 overflow-hidden rounded-full bg-[#F9F8F4]/8">
+                          <div className="h-2 overflow-hidden rounded-full bg-ink/8">
                             <div
                               data-res-bar
-                              className="h-full rounded-full bg-[#C6A87C] transition-[filter] duration-200 hover:brightness-110"
+                              className="h-full rounded-full bg-gold transition-[filter] duration-200 hover:brightness-110"
                               style={{ width: `${bar.value * 100}%` }}
                             />
                           </div>
@@ -952,7 +952,7 @@ export function Stats() {
                     </div>
                     <svg
                       viewBox="0 0 200 36"
-                      className="mt-5 h-8 w-full text-[#C6A87C]"
+                      className="mt-5 h-8 w-full text-gold"
                       aria-hidden
                     >
                       <path
@@ -973,12 +973,12 @@ export function Stats() {
                   data-active="false"
                   className="absolute inset-0 flex flex-col opacity-0 transition-opacity duration-300 data-[active=true]:opacity-100"
                 >
-                  <div className="flex flex-1 flex-col rounded-2xl border border-[#C6A87C]/15 bg-[#1A160E] p-5 sm:p-6">
+                  <div className="flex flex-1 flex-col rounded-2xl border border-transparent bg-transparent p-5 sm:p-6">
                     <div className="flex items-center justify-between">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-[#C6A87C]">
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-gold">
                         Writing Rhythm
                       </p>
-                      <p className="text-[10px] text-[#A0A0A0]">2026</p>
+                      <p className="text-[10px] text-ink-muted">2026</p>
                     </div>
                     <div
                       className="mt-6 grid flex-1 grid-cols-12 content-start gap-1.5 sm:gap-2"
@@ -992,18 +992,18 @@ export function Stats() {
                         />
                       ))}
                     </div>
-                    <div className="mt-3 flex justify-between text-[9px] uppercase tracking-[0.12em] text-[#A0A0A0]">
+                    <div className="mt-3 flex justify-between text-[9px] uppercase tracking-[0.12em] text-ink-muted">
                       {"months" in RHYTHM &&
                         RHYTHM.months.map((m, i) => (
                           <span key={`${m}-${i}`}>{m}</span>
                         ))}
                     </div>
-                    <div className="mt-3 flex items-center justify-end gap-1.5 text-[10px] text-[#A0A0A0]">
+                    <div className="mt-3 flex items-center justify-end gap-1.5 text-[10px] text-ink-muted">
                       <span>Less</span>
-                      <span className="h-2.5 w-2.5 rounded-[2px] bg-[#F9F8F4]/8" />
-                      <span className="h-2.5 w-2.5 rounded-[2px] bg-[#C6A87C]/30" />
-                      <span className="h-2.5 w-2.5 rounded-[2px] bg-[#C6A87C]/60" />
-                      <span className="h-2.5 w-2.5 rounded-[2px] bg-[#C6A87C]" />
+                      <span className="h-2.5 w-2.5 rounded-[2px] bg-ink/8" />
+                      <span className="h-2.5 w-2.5 rounded-[2px] bg-gold/30" />
+                      <span className="h-2.5 w-2.5 rounded-[2px] bg-gold/60" />
+                      <span className="h-2.5 w-2.5 rounded-[2px] bg-gold" />
                       <span>More</span>
                     </div>
                   </div>
