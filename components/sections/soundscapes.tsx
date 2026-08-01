@@ -223,6 +223,7 @@ function PhotoSceneArtwork({
         alt=""
         fill
         priority={priority}
+        unoptimized
         sizes="100vw"
         className="soundscape-photo-foreground object-cover blur-[1.25px]"
         data-scene-foreground
