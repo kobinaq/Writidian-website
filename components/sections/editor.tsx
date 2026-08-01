@@ -63,7 +63,7 @@ export function Editor() {
     <section
       id="editor"
       ref={rootRef}
-      className="bg-paper px-5 py-20 sm:px-8 sm:py-48"
+      className="scroll-mt-24 bg-paper px-5 py-20 sm:px-8 sm:py-48"
     >
       <div className="mx-auto max-w-4xl">
         <h2 className="mx-auto max-w-2xl text-center font-serif text-[clamp(1.75rem,5vw,3.4rem)] leading-[1.1] tracking-tight text-ink">
@@ -130,7 +130,7 @@ export function Editor() {
 
           <div className="px-4 sm:px-6">
             <p className="font-serif text-lg font-semibold text-[#eaeaea]/70">
-              Untitled Draft...
+              I had a dream
             </p>
             <div className="mt-3 border-t border-[#F9F8F4]/10" />
           </div>

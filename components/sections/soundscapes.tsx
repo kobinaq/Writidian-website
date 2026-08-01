@@ -131,8 +131,15 @@ export function Soundscapes() {
   );
 
   return (
-    <section id="soundscapes" ref={rootRef} className="relative h-[250vh] bg-paper md:h-[320vh]">
-      <div ref={pinRef} className="relative flex h-[100dvh] flex-col overflow-hidden">
+    <section
+      id="soundscapes"
+      ref={rootRef}
+      className="relative h-[250vh] scroll-mt-24 bg-paper md:h-[320vh]"
+    >
+      <div
+        ref={pinRef}
+        className="relative flex h-[100dvh] flex-col overflow-hidden pt-20 sm:pt-24"
+      >
         <div ref={scenesRef} className="absolute inset-0 z-0 overflow-hidden bg-espresso">
           {SOUNDSCAPE_SCENES.map((scene, index) => (
             <div key={scene.id} data-scene className="absolute inset-0 will-change-transform" style={{ zIndex: index + 1 }}>
@@ -141,33 +148,37 @@ export function Soundscapes() {
           ))}
         </div>
 
-        <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col justify-center gap-5 px-5 py-16 sm:gap-8 sm:px-8 sm:py-20 lg:grid lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.15fr)] lg:items-center lg:gap-14 lg:py-16">
-          <div className="shrink-0">
-            <h2 className="font-serif text-[clamp(1.85rem,6vw,3.75rem)] leading-[1.08] tracking-tight text-paper">
-              {COPY.soundscapesTitle}
-            </h2>
-            <p className="font-accent mt-3 max-w-md text-sm leading-relaxed text-paper/80 sm:mt-6 sm:text-lg">
-              {COPY.soundscapesBody}
-            </p>
-            <ul className="font-accent mt-4 hidden max-w-md space-y-2.5 text-sm leading-relaxed text-paper/75 md:block">
-              {COPY.soundscapeBullets.map((bullet) => (
-                <li key={bullet} className="flex gap-3">
-                  <span
-                    aria-hidden
-                    className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-gold"
-                  />
-                  {bullet}
-                </li>
-              ))}
-            </ul>
-          </div>
+        {/* Scene caption — bottom left */}
+        <div className="absolute bottom-20 left-5 z-10 max-w-sm sm:bottom-24 sm:left-8 lg:left-14">
+          <p
+            ref={titleRef}
+            className="font-eyebrow text-[10px] uppercase tracking-[0.22em] text-gold sm:text-xs"
+          />
+          <p
+            ref={captionRef}
+            className="mt-1.5 font-serif text-xl leading-snug text-paper sm:mt-2 sm:text-3xl"
+          />
+        </div>
 
-          <div className="flex min-h-0 w-full flex-1 flex-col lg:flex-none">
-            <div className="absolute bottom-16 left-5 z-10 max-w-xl sm:bottom-20 sm:left-8 lg:left-14">
-              <p ref={titleRef} className="font-eyebrow text-[10px] uppercase tracking-[0.22em] text-gold sm:text-xs" />
-              <p ref={captionRef} className="mt-1.5 font-serif text-xl leading-snug text-paper sm:mt-2 sm:text-3xl" />
-            </div>
-          </div>
+        {/* Title + body — bottom right so copy isn't stacked on one side */}
+        <div className="absolute bottom-20 right-5 z-10 max-w-md text-right sm:bottom-24 sm:right-8 lg:right-14">
+          <h2 className="font-serif text-[clamp(1.5rem,4.2vw,2.75rem)] leading-[1.1] tracking-tight text-paper">
+            {COPY.soundscapesTitle}
+          </h2>
+          <p className="font-accent mt-3 text-sm leading-relaxed text-paper/80 sm:mt-4 sm:text-base">
+            {COPY.soundscapesBody}
+          </p>
+          <ul className="font-accent mt-3 hidden space-y-2 text-left text-sm leading-relaxed text-paper/75 md:block">
+            {COPY.soundscapeBullets.map((bullet) => (
+              <li key={bullet} className="flex justify-end gap-3">
+                <span className="text-right">{bullet}</span>
+                <span
+                  aria-hidden
+                  className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-gold"
+                />
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div className="absolute bottom-0 z-20 w-full overflow-hidden border-t border-white/15 bg-espresso/25 py-3 text-paper backdrop-blur-[2px] sm:py-4">
@@ -212,6 +223,7 @@ function PhotoSceneArtwork({
         alt=""
         fill
         priority={priority}
+        unoptimized
         sizes="100vw"
         className="soundscape-photo-foreground object-cover blur-[1.25px]"
         data-scene-foreground

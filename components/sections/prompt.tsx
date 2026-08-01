@@ -191,7 +191,7 @@ export function Prompt() {
     <section
       id="prompt"
       ref={rootRef}
-      className="relative overflow-hidden bg-surface/60 px-5 py-20 sm:px-8 sm:py-48"
+      className="relative scroll-mt-24 overflow-hidden bg-surface/60 px-5 py-20 sm:px-8 sm:py-48"
     >
       <div className="mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-2 lg:gap-20">
         <div
@@ -210,7 +210,7 @@ export function Prompt() {
             <p className="font-eyebrow text-xs uppercase tracking-[0.28em]">
               {SAMPLE_PROMPTS[0].label}
             </p>
-            <p className="mt-8 font-serif text-[clamp(1.35rem,2.8vw,2rem)] leading-relaxed">
+            <p className="font-prompt mt-8 text-[clamp(1.05rem,2.1vw,1.5rem)] leading-relaxed">
               {
                 SAMPLE_PROMPTS.reduce((a, b) =>
                   a.text.length >= b.text.length ? a : b,
@@ -235,7 +235,7 @@ export function Prompt() {
               <p className="font-eyebrow text-xs uppercase tracking-[0.28em] text-gold">
                 {prompt.label}
               </p>
-              <p className="mt-8 font-serif text-[clamp(1.35rem,2.8vw,2rem)] leading-relaxed text-ink">
+              <p className="font-prompt mt-8 text-[clamp(1.05rem,2.1vw,1.5rem)] leading-relaxed text-ink">
                 {prompt.text}
               </p>
               <div className="mt-8 inline-flex rounded-full border border-gold px-6 py-2.5 text-sm tracking-wide text-gold sm:mt-12 sm:px-7 sm:py-3">

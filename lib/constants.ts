@@ -46,7 +46,7 @@ export const FOOTER_LINKS = {
 
 export const COPY = {
   heroEyebrow: "A distraction-free writing haven",
-  heroHeadline: "To grow your inner human writer",
+  heroHeadline: "to grow your inner human writer",
   heroSupport:
     "Experience a supportive digital environment for anyone who wants to write.",
   sanctuaryHeadline: "In here, it's just you, your thoughts and the page.",
@@ -424,21 +424,21 @@ export const SOUNDSCAPE_SCENES = [
     title: "Dusty Photo Frame",
     category: "Literary fiction",
     image: "/images/soundscape-literary-environment.png",
-    foreground: "/images/soundscape-literary-foreground.png",
+    foreground: "/images/soundscape-literary-foreground.png?v=20260801",
   },
   {
     id: "romance",
     title: "Amber Drift",
     category: "Romance",
     image: "/images/soundscape-romance-environment.png",
-    foreground: "/images/soundscape-romance-foreground.png",
+    foreground: "/images/soundscape-romance-foreground.png?v=20260801",
   },
   {
     id: "horror",
     title: "Basement Door Ajar",
     category: "Horror",
     image: "/images/soundscape-horror.png",
-    foreground: "/images/soundscape-horror-foreground.png",
+    foreground: "/images/soundscape-horror-foreground.png?v=20260801",
   },
   {
     id: "non-binaural",

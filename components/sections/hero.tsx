@@ -18,7 +18,7 @@ function splitWords(text: string) {
   }));
 }
 
-/** Portrait iPad Pro–style device. */
+/** Portrait iPad Pro–style device — thin bezel, modest corner radius. */
 function IpadMockup() {
   return (
     <div className="relative aspect-[3/4] w-[min(72vw,19.5rem)] sm:w-[min(58vw,22rem)] lg:w-[min(28vw,23rem)] xl:w-[24rem] [perspective:1200px]">
@@ -28,7 +28,7 @@ function IpadMockup() {
       />
 
       <div
-        className="relative h-full w-full rounded-[1.85rem] p-[0.55rem] sm:rounded-[2.1rem] sm:p-[0.62rem]"
+        className="relative h-full w-full rounded-[1.15rem] p-[0.3rem] sm:rounded-[1.35rem] sm:p-[0.36rem]"
         style={{
           background:
             "linear-gradient(145deg, #5c5a58 0%, #2a2826 18%, #1a1918 45%, #3d3b39 72%, #6e6c69 100%)",
@@ -37,21 +37,21 @@ function IpadMockup() {
         }}
       >
         <div
-          className="relative h-full w-full overflow-hidden rounded-[1.4rem] p-[0.36rem] sm:rounded-[1.65rem] sm:p-[0.42rem]"
+          className="relative h-full w-full overflow-hidden rounded-[0.95rem] p-[0.18rem] sm:rounded-[1.1rem] sm:p-[0.22rem]"
           style={{
             background:
               "linear-gradient(160deg, #0c0b0a 0%, #1f1d1b 40%, #121110 100%)",
             boxShadow: "0 0 0 1px rgba(255,255,255,0.06) inset",
           }}
         >
-          <div className="relative h-full w-full overflow-hidden rounded-[1.1rem] bg-[#f7f4ee] sm:rounded-[1.3rem]">
+          <div className="relative h-full w-full overflow-hidden rounded-[0.82rem] bg-[#f7f4ee] sm:rounded-[0.95rem]">
             <div
               aria-hidden
               className="absolute inset-0 bg-[linear-gradient(160deg,#f7f4ee_0%,#efebe3_55%,#e8e2d6_100%)]"
             />
             <div
               aria-hidden
-              className="absolute inset-0 flex flex-col px-5 pb-5 pt-10 sm:px-6 sm:pt-11"
+              className="absolute inset-0 flex flex-col px-5 pb-5 pt-6 sm:px-6 sm:pt-7"
             >
               <p className="font-eyebrow text-[10px] uppercase tracking-[0.22em] text-ink-muted">
                 Daily prompt
@@ -74,17 +74,9 @@ function IpadMockup() {
               <source src="/videos/herodemo.mp4" type="video/mp4" />
             </video>
 
-            {/* Front camera — top center in portrait */}
             <div
               aria-hidden
-              className="absolute left-1/2 top-3 z-20 -translate-x-1/2 sm:top-3.5"
-            >
-              <span className="block h-[7px] w-[7px] rounded-full bg-[#1a1918] shadow-[0_0_0_1.5px_#2e2c2a] sm:h-2 sm:w-2" />
-            </div>
-
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 z-30 rounded-[1.1rem] sm:rounded-[1.3rem]"
+              className="pointer-events-none absolute inset-0 z-30 rounded-[0.82rem] sm:rounded-[0.95rem]"
               style={{
                 background:
                   "linear-gradient(125deg, rgba(255,255,255,0.18) 0%, transparent 28%, transparent 62%, rgba(255,255,255,0.06) 100%)",
@@ -180,7 +172,7 @@ export function Hero() {
       <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 px-6 pb-20 pt-28 sm:gap-14 sm:px-10 sm:pb-24 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-16 lg:pt-32 xl:gap-20">
         <div className="flex max-w-xl flex-col items-start text-left [perspective:900px]">
           <div data-hero className="flex w-full items-center gap-4">
-            <p className="font-eyebrow text-[11px] font-medium uppercase tracking-[0.32em] text-gold sm:whitespace-nowrap">
+            <p className="font-eyebrow text-[13px] font-medium uppercase tracking-[0.24em] text-gold sm:text-[15px] sm:whitespace-nowrap">
               {COPY.heroEyebrow}
             </p>
             <span
