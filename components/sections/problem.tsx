@@ -3,6 +3,7 @@
 import { COPY } from "@/lib/constants";
 import { gsap, registerGsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
+import Image from "next/image";
 import { useMemo, useRef } from "react";
 
 registerGsap();
@@ -33,29 +34,24 @@ export function Problem() {
       const followUp = gsap.utils.toArray<HTMLElement>(
         pin.querySelectorAll("[data-follow-up]"),
       );
-      const scribblePaths = gsap.utils.toArray<SVGPathElement>(
-        pin.querySelectorAll("[data-scribble-path]"),
+      const flames = gsap.utils.toArray<SVGPathElement>(
+        pin.querySelectorAll("path[data-flame]"),
       );
+      const handset = pin.querySelector<HTMLElement>("[data-ring-shake]");
+      const cord = pin.querySelector<HTMLElement>("[data-ring-cord]");
 
       if (reduced) {
         gsap.set(spans, { opacity: 1, y: 0 });
         gsap.set([leftCharacter, rightCharacter], { opacity: 1 });
         gsap.set(followUp, { opacity: 1, y: 0 });
-        gsap.set(scribblePaths, { strokeDashoffset: 0 });
+        gsap.set(flames, { opacity: 0.85 });
         return;
       }
 
       gsap.set(spans, { opacity: 0.14, y: 18 });
       gsap.set(followUp, { opacity: 0, y: 20 });
       gsap.set([leftCharacter, rightCharacter], { autoAlpha: 0 });
-
-      scribblePaths.forEach((path) => {
-        const length = path.getTotalLength();
-        gsap.set(path, {
-          strokeDasharray: length,
-          strokeDashoffset: length,
-        });
-      });
+      gsap.set(flames, { opacity: 0.15, transformOrigin: "50% 100%" });
 
       const reveal = gsap.timeline({
         scrollTrigger: {
@@ -103,52 +99,83 @@ export function Problem() {
       });
 
       story
-        .to(leftCharacter, { autoAlpha: 1, duration: 0.15 }, 0)
-        .to(
-          scribblePaths.filter((_, i) => i < 3),
-          { strokeDashoffset: 0, duration: 0.55, ease: "none", stagger: 0.08 },
-          0.05,
-        )
-        .to(rightCharacter, { autoAlpha: 1, duration: 0.15 }, 0.12)
-        .to(
-          scribblePaths.filter((_, i) => i >= 3),
-          { strokeDashoffset: 0, duration: 0.5, ease: "none", stagger: 0.06 },
-          0.18,
-        );
+        .to(leftCharacter, { autoAlpha: 1, duration: 0.2 }, 0)
+        .to(rightCharacter, { autoAlpha: 1, duration: 0.2 }, 0.14);
 
-      // Idle motion — candle flame flickers; phone shakes as it rings.
-      const flame = pin.querySelector<SVGPathElement>("[data-flame]");
-      const ringShake = gsap.utils.toArray<SVGGElement | SVGPathElement>(
-        pin.querySelectorAll("[data-ring-shake]"),
-      );
+      // Idle — phone rings (handset + soft cord sway); candle flames alternate.
+      if (handset) {
+        const ringTl = gsap.timeline({ repeat: -1 });
+        ringTl
+          .set(handset, { rotation: 0, x: 0, transformOrigin: "50% 80%" })
+          .to(handset, {
+            rotation: -4,
+            x: -3,
+            duration: 0.07,
+            ease: "sine.inOut",
+          })
+          .to(handset, {
+            rotation: 4,
+            x: 3,
+            duration: 0.07,
+            ease: "sine.inOut",
+          })
+          .to(handset, {
+            rotation: -4,
+            x: -3,
+            duration: 0.07,
+            ease: "sine.inOut",
+          })
+          .to(handset, {
+            rotation: 4,
+            x: 3,
+            duration: 0.07,
+            ease: "sine.inOut",
+          })
+          .to(handset, {
+            rotation: -3,
+            x: -2,
+            duration: 0.07,
+            ease: "sine.inOut",
+          })
+          .to(handset, {
+            rotation: 3,
+            x: 2,
+            duration: 0.07,
+            ease: "sine.inOut",
+          })
+          .to(handset, {
+            rotation: 0,
+            x: 0,
+            duration: 0.1,
+            ease: "sine.inOut",
+          })
+          .to({}, { duration: 0.75 });
+      }
 
-      if (flame) {
-        gsap.set(flame, { transformOrigin: "50% 100%" });
-        gsap.to(flame, {
-          scaleY: 0.92,
-          scaleX: 1.08,
-          skewX: 4,
-          transformOrigin: "50% 100%",
-          duration: 0.16,
+      if (cord) {
+        gsap.to(cord, {
+          rotation: 2.5,
+          x: 2,
+          transformOrigin: "30% 40%",
+          duration: 0.14,
           ease: "sine.inOut",
           repeat: -1,
           yoyo: true,
+          delay: 0.04,
         });
       }
 
-      if (ringShake.length) {
-        const ringTl = gsap.timeline({ repeat: -1 });
-        ringTl
-          .set(ringShake, { rotation: 0, x: 0, transformOrigin: "50% 50%" })
-          .to(ringShake, { rotation: -3.5, x: -2.5, duration: 0.07, ease: "sine.inOut" })
-          .to(ringShake, { rotation: 3.5, x: 2.5, duration: 0.07, ease: "sine.inOut" })
-          .to(ringShake, { rotation: -3.5, x: -2.5, duration: 0.07, ease: "sine.inOut" })
-          .to(ringShake, { rotation: 3.5, x: 2.5, duration: 0.07, ease: "sine.inOut" })
-          .to(ringShake, { rotation: -3.5, x: -2.5, duration: 0.07, ease: "sine.inOut" })
-          .to(ringShake, { rotation: 3.5, x: 2.5, duration: 0.07, ease: "sine.inOut" })
-          .to(ringShake, { rotation: 0, x: 0, duration: 0.1, ease: "sine.inOut" })
-          .to({}, { duration: 0.7 }); // pause between rings
-      }
+      flames.forEach((flame, i) => {
+        gsap.to(flame, {
+          opacity: 0.95,
+          scaleY: 1.06,
+          duration: 0.45 + i * 0.08,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+          delay: i * 0.28,
+        });
+      });
     },
     { dependencies: [words.length] },
   );
@@ -197,123 +224,92 @@ export function Problem() {
 function ProblemCharacters() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
-      {/* Top-left — rotary phone tangled in its cord = noise / "The world will not stop talking" */}
+      {/* Top-left — rotary phone (noise) */}
       <div
         data-character="overloaded"
-        className="problem-character absolute left-[0.5vw] top-[2vh] w-[clamp(120px,14vw,200px)] opacity-80"
+        className="problem-character absolute left-[0.5vw] top-[2vh] w-[clamp(120px,14vw,200px)] opacity-85"
       >
-        <svg
-          viewBox="0 0 220 220"
-          className="h-auto w-full text-paper"
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {/* Tangled cord — chaos loop */}
-          <g data-ring-shake>
-            <path
-              data-scribble-path
-              strokeWidth="1.6"
-              opacity="0.5"
-              d="M104 92c-18 18-34 12-40-2-6-16 8-34 26-28 16 6 14 28-4 32-16 4-30-8-24-24 8-18 32-16 40 2 6 16-8 30-26 26"
-            />
-            <path
-              data-scribble-path
-              strokeWidth="1.4"
-              opacity="0.42"
-              d="M96 100c22 10 44-6 44-28 0-16-14-28-30-26-14 2-24 16-20 30 4 12 18 18 28 12 10-6 12-20 4-28-8-10-24-10-32 0"
-            />
-          </g>
-          {/* Phone base */}
-          <path
-            data-scribble-path
-            strokeWidth="2"
-            opacity="0.85"
-            d="M64 150c4-14 14-22 28-22h36c14 0 24 8 28 22l6 20c2 8-4 14-12 14H70c-8 0-14-6-12-14l6-20Z"
+        <div className="relative aspect-square w-full">
+          <Image
+            src="/images/problem-phone-stand.png"
+            alt=""
+            fill
+            unoptimized
+            sizes="200px"
+            className="object-contain"
           />
-          {/* Dial ring */}
-          <path
-            data-scribble-path
-            strokeWidth="1.7"
-            opacity="0.8"
-            d="M110 168a16 16 0 1 0 0.01 0"
-          />
-          {/* Handset resting on top — shakes with the ring */}
-          <path
-            data-scribble-path
+          <div
+            data-ring-cord
+            className="absolute inset-0 will-change-transform"
+          >
+            <Image
+              src="/images/problem-phone-cord.png"
+              alt=""
+              fill
+              unoptimized
+              sizes="200px"
+              className="object-contain object-[center_55%]"
+            />
+          </div>
+          <div
             data-ring-shake
-            strokeWidth="2"
-            opacity="0.9"
-            d="M62 118c6-10 18-14 30-12l44 6c12 2 20 10 22 20 1 8-5 14-13 14h-14c-6 0-11-4-13-10l-6-16-38-4-8 12c-3 5-8 8-14 8h-8c-8 0-13-6-12-14l4-14Z"
-          />
-          {/* Cord drops into tangle */}
-          <path
-            data-scribble-path
-            strokeWidth="1.5"
-            opacity="0.6"
-            d="M148 132c14 8 22 20 20 34-2 16-18 24-32 18-12-6-16-20-8-30 8-10 22-10 30 0"
-          />
-        </svg>
+            className="absolute inset-0 will-change-transform"
+          >
+            <Image
+              src="/images/problem-phone-handset.png"
+              alt=""
+              fill
+              unoptimized
+              sizes="200px"
+              className="object-contain object-[center_28%] scale-[0.72]"
+            />
+          </div>
+        </div>
       </div>
 
-      {/* Bottom-right — single candle, one clean flame = focus / "Writidian's purpose" */}
+      {/* Bottom-right — candle + SVG flame curls (focus) */}
       <div
         data-character="focused"
-        className="problem-character absolute bottom-[2vh] right-[0.5vw] w-[clamp(120px,14vw,200px)] opacity-80"
+        className="problem-character absolute bottom-[2vh] right-[0.5vw] w-[clamp(120px,14vw,200px)] opacity-85"
       >
-        <svg
-          viewBox="0 0 200 220"
-          className="h-auto w-full text-paper"
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {/* Candle body */}
-          <path
-            data-scribble-path
-            strokeWidth="2"
-            opacity="0.9"
-            d="M78 96h44v84c0 12-10 20-22 20s-22-8-22-20V96Z"
+        <div className="relative aspect-square w-full">
+          <Image
+            src="/images/problem-candle-body.png"
+            alt=""
+            fill
+            unoptimized
+            sizes="200px"
+            className="object-contain"
           />
-          {/* Wax drip */}
-          <path
-            data-scribble-path
-            strokeWidth="1.5"
-            opacity="0.6"
-            d="M78 96c4 10 12 14 20 10 8-4 18-2 24-10"
-          />
-          {/* Wick */}
-          <path
-            data-scribble-path
-            strokeWidth="1.6"
-            opacity="0.8"
-            d="M100 96v-14"
-          />
-          {/* Flame — single clean teardrop */}
-          <path
-            data-scribble-path
-            data-flame
-            strokeWidth="2"
-            opacity="0.95"
-            d="M100 82c-8-14-4-30 0-38 4 8 8 24 0 38Z"
-          />
-          {/* Halo — one soft ring of light */}
-          <path
-            data-scribble-path
-            strokeWidth="1.2"
-            opacity="0.35"
-            d="M100 58a34 30 0 1 0 0.01 0"
-          />
-          {/* Saucer */}
-          <path
-            data-scribble-path
-            strokeWidth="1.7"
-            opacity="0.7"
-            d="M58 200h84"
-          />
-        </svg>
+          <svg
+            viewBox="0 0 200 220"
+            className="pointer-events-none absolute inset-0 h-full w-full text-paper"
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            {/* Three curled flame strokes — fade alternately above the wick */}
+            <path
+              data-flame="1"
+              strokeWidth="1.8"
+              opacity="0.9"
+              d="M100 48c-7-12-5-26 0-34 4 9 6 20 0 34Z"
+            />
+            <path
+              data-flame="2"
+              strokeWidth="1.5"
+              opacity="0.55"
+              d="M91 52c-5-14 0-28 5-32 1 10-1 20-5 32Z"
+            />
+            <path
+              data-flame="3"
+              strokeWidth="1.5"
+              opacity="0.55"
+              d="M109 52c5-14 0-28-5-32-1 10 1 20 5 32Z"
+            />
+          </svg>
+        </div>
       </div>
     </div>
   );
