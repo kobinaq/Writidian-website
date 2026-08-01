@@ -115,6 +115,40 @@ export function Problem() {
           { strokeDashoffset: 0, duration: 0.5, ease: "none", stagger: 0.06 },
           0.18,
         );
+
+      // Idle motion — candle flame flickers; phone shakes as it rings.
+      const flame = pin.querySelector<SVGPathElement>("[data-flame]");
+      const ringShake = gsap.utils.toArray<SVGGElement | SVGPathElement>(
+        pin.querySelectorAll("[data-ring-shake]"),
+      );
+
+      if (flame) {
+        gsap.set(flame, { transformOrigin: "50% 100%" });
+        gsap.to(flame, {
+          scaleY: 0.92,
+          scaleX: 1.08,
+          skewX: 4,
+          transformOrigin: "50% 100%",
+          duration: 0.16,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        });
+      }
+
+      if (ringShake.length) {
+        const ringTl = gsap.timeline({ repeat: -1 });
+        ringTl
+          .set(ringShake, { rotation: 0, x: 0, transformOrigin: "50% 50%" })
+          .to(ringShake, { rotation: -3.5, x: -2.5, duration: 0.07, ease: "sine.inOut" })
+          .to(ringShake, { rotation: 3.5, x: 2.5, duration: 0.07, ease: "sine.inOut" })
+          .to(ringShake, { rotation: -3.5, x: -2.5, duration: 0.07, ease: "sine.inOut" })
+          .to(ringShake, { rotation: 3.5, x: 2.5, duration: 0.07, ease: "sine.inOut" })
+          .to(ringShake, { rotation: -3.5, x: -2.5, duration: 0.07, ease: "sine.inOut" })
+          .to(ringShake, { rotation: 3.5, x: 2.5, duration: 0.07, ease: "sine.inOut" })
+          .to(ringShake, { rotation: 0, x: 0, duration: 0.1, ease: "sine.inOut" })
+          .to({}, { duration: 0.7 }); // pause between rings
+      }
     },
     { dependencies: [words.length] },
   );
@@ -163,80 +197,121 @@ export function Problem() {
 function ProblemCharacters() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
-      {/* Top-left — tangled noise scribble */}
+      {/* Top-left — rotary phone tangled in its cord = noise / "The world will not stop talking" */}
       <div
         data-character="overloaded"
-        className="problem-character absolute left-[2vw] top-[14vh] w-[min(38vw,220px)] sm:left-[4vw] lg:left-[8vw]"
+        className="problem-character absolute left-[0.5vw] top-[2vh] w-[clamp(120px,14vw,200px)] opacity-80"
       >
         <svg
-          viewBox="0 0 200 200"
+          viewBox="0 0 220 220"
           className="h-auto w-full text-paper"
           fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
+          {/* Tangled cord — chaos loop */}
+          <g data-ring-shake>
+            <path
+              data-scribble-path
+              strokeWidth="1.6"
+              opacity="0.5"
+              d="M104 92c-18 18-34 12-40-2-6-16 8-34 26-28 16 6 14 28-4 32-16 4-30-8-24-24 8-18 32-16 40 2 6 16-8 30-26 26"
+            />
+            <path
+              data-scribble-path
+              strokeWidth="1.4"
+              opacity="0.42"
+              d="M96 100c22 10 44-6 44-28 0-16-14-28-30-26-14 2-24 16-20 30 4 12 18 18 28 12 10-6 12-20 4-28-8-10-24-10-32 0"
+            />
+          </g>
+          {/* Phone base */}
           <path
             data-scribble-path
-            d="M28 42c38-22 72 18 48 46-22 26-8 48 24 38 34-10 52 22 28 44-20 18-58 8-72-14"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity="0.55"
+            strokeWidth="2"
+            opacity="0.85"
+            d="M64 150c4-14 14-22 28-22h36c14 0 24 8 28 22l6 20c2 8-4 14-12 14H70c-8 0-14-6-12-14l6-20Z"
           />
+          {/* Dial ring */}
           <path
             data-scribble-path
-            d="M56 28c22 34-8 58-34 42 40 36 86 12 94-22 8-36-18-52-42-28-16 16 6 48 34 40"
-            stroke="currentColor"
-            strokeWidth="1.35"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity="0.4"
+            strokeWidth="1.7"
+            opacity="0.8"
+            d="M110 168a16 16 0 1 0 0.01 0"
           />
+          {/* Handset resting on top — shakes with the ring */}
           <path
             data-scribble-path
-            d="M118 54c-8 28 18 46 40 28 24-20 8-58-22-48-26 8-18 42 12 36 18-4 26 18 8 28"
-            stroke="currentColor"
-            strokeWidth="1.2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity="0.32"
+            data-ring-shake
+            strokeWidth="2"
+            opacity="0.9"
+            d="M62 118c6-10 18-14 30-12l44 6c12 2 20 10 22 20 1 8-5 14-13 14h-14c-6 0-11-4-13-10l-6-16-38-4-8 12c-3 5-8 8-14 8h-8c-8 0-13-6-12-14l4-14Z"
+          />
+          {/* Cord drops into tangle */}
+          <path
+            data-scribble-path
+            strokeWidth="1.5"
+            opacity="0.6"
+            d="M148 132c14 8 22 20 20 34-2 16-18 24-32 18-12-6-16-20-8-30 8-10 22-10 30 0"
           />
         </svg>
       </div>
 
-      {/* Bottom-right — clean continuous line */}
+      {/* Bottom-right — single candle, one clean flame = focus / "Writidian's purpose" */}
       <div
         data-character="focused"
-        className="problem-character absolute bottom-[8vh] right-[2vw] w-[min(36vw,200px)] sm:right-[4vw] lg:right-[8vw]"
+        className="problem-character absolute bottom-[2vh] right-[0.5vw] w-[clamp(120px,14vw,200px)] opacity-80"
       >
         <svg
-          viewBox="0 0 200 160"
+          viewBox="0 0 200 220"
           className="h-auto w-full text-paper"
           fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
+          {/* Candle body */}
           <path
             data-scribble-path
-            d="M18 118c28-52 62-78 96-78 34 0 58 28 58 58 0 36-28 52-56 42"
-            stroke="currentColor"
+            strokeWidth="2"
+            opacity="0.9"
+            d="M78 96h44v84c0 12-10 20-22 20s-22-8-22-20V96Z"
+          />
+          {/* Wax drip */}
+          <path
+            data-scribble-path
             strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            opacity="0.55"
+            opacity="0.6"
+            d="M78 96c4 10 12 14 20 10 8-4 18-2 24-10"
           />
+          {/* Wick */}
           <path
             data-scribble-path
-            d="M42 132h108"
-            stroke="currentColor"
+            strokeWidth="1.6"
+            opacity="0.8"
+            d="M100 96v-14"
+          />
+          {/* Flame — single clean teardrop */}
+          <path
+            data-scribble-path
+            data-flame
+            strokeWidth="2"
+            opacity="0.95"
+            d="M100 82c-8-14-4-30 0-38 4 8 8 24 0 38Z"
+          />
+          {/* Halo — one soft ring of light */}
+          <path
+            data-scribble-path
             strokeWidth="1.2"
-            strokeLinecap="round"
             opacity="0.35"
+            d="M100 58a34 30 0 1 0 0.01 0"
           />
+          {/* Saucer */}
           <path
             data-scribble-path
-            d="M148 96c8 6 14 16 12 28"
-            stroke="currentColor"
-            strokeWidth="1.35"
-            strokeLinecap="round"
-            opacity="0.45"
+            strokeWidth="1.7"
+            opacity="0.7"
+            d="M58 200h84"
           />
         </svg>
       </div>
