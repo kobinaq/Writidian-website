@@ -107,7 +107,6 @@ function IpadMockup() {
 export function Hero() {
   const rootRef = useRef<HTMLElement>(null);
   const tabletRef = useRef<HTMLDivElement>(null);
-  const ruleRef = useRef<HTMLSpanElement>(null);
 
   const headlineWords = useMemo(() => splitWords(COPY.heroHeadline), []);
 
@@ -126,25 +125,19 @@ export function Hero() {
         root.querySelectorAll("[data-hero]"),
       );
       const tablet = tabletRef.current;
-      const rule = ruleRef.current;
 
       if (reduced) {
         gsap.set([...words, ...rest], { opacity: 1, y: 0 });
         if (tablet) gsap.set(tablet, { opacity: 1, y: 0 });
-        if (rule) gsap.set(rule, { scaleX: 1 });
         return;
       }
 
       gsap.set(words, { opacity: 0, y: 26, rotateX: 24 });
       gsap.set(rest, { opacity: 0, y: 16 });
       if (tablet) gsap.set(tablet, { opacity: 0, y: 36 });
-      if (rule) gsap.set(rule, { scaleX: 0, transformOrigin: "left center" });
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-      if (rule) {
-        tl.to(rule, { scaleX: 1, duration: 0.9, ease: "power2.inOut" }, 0.35);
-      }
       if (tablet) {
         tl.to(tablet, { opacity: 1, y: 0, duration: 1.1 }, 0.45);
       }
@@ -169,18 +162,14 @@ export function Hero() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_50%_at_78%_45%,rgba(163,138,94,0.11),transparent_62%),linear-gradient(180deg,var(--paper)_0%,var(--surface)_100%)]"
       />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 px-6 pb-20 pt-28 sm:gap-14 sm:px-10 sm:pb-24 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-16 lg:pt-32 xl:gap-20">
+      <div className="relative z-10 mx-auto grid w-full max-w-6xl items-center gap-12 px-6 pb-20 pt-10 sm:gap-14 sm:px-10 sm:pb-24 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-16 lg:pt-12 xl:gap-20">
         <div className="flex max-w-xl flex-col items-start text-left [perspective:900px]">
-          <div data-hero className="flex w-full items-center gap-4">
-            <p className="font-eyebrow text-[13px] font-medium uppercase tracking-[0.24em] text-gold sm:text-[15px] sm:whitespace-nowrap">
-              {COPY.heroEyebrow}
-            </p>
-            <span
-              ref={ruleRef}
-              aria-hidden
-              className="block h-px w-full max-w-[9rem] bg-gold/50"
-            />
-          </div>
+          <p
+            data-hero
+            className="font-eyebrow text-[13px] font-medium uppercase tracking-[0.24em] text-gold sm:text-[15px] sm:whitespace-nowrap"
+          >
+            {COPY.heroEyebrow}
+          </p>
 
           <h1
             className="mt-7 font-serif text-[clamp(2.6rem,7.5vw,4.9rem)] leading-[1.04] tracking-tight text-ink sm:mt-9"

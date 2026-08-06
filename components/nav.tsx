@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useSound } from "@/components/sound-context";
 import { SITE } from "@/lib/constants";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const LINKS = [
   { href: "/#sanctuary", label: "Sanctuary", id: "sanctuary" },
@@ -53,13 +53,7 @@ function SoundIcon({ muted }: { muted: boolean }) {
 
 export function Nav() {
   const { muted, toggleMuted, setMuted, unlockAudio } = useSound();
-  const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
-  const [onDark, setOnDark] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [active, setActive] = useState<string | null>(null);
-  const [ready, setReady] = useState(false);
-  const lastY = useRef(0);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -67,47 +61,11 @@ export function Nav() {
   }, [setMuted]);
 
   useEffect(() => {
-    const reduce = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    if (reduce) {
-      setReady(true);
-      return;
-    }
-    const id = window.setTimeout(() => setReady(true), 40);
-    return () => window.clearTimeout(id);
-  }, []);
-
-  useEffect(() => {
-    const sanctuary = document.getElementById("sanctuary");
     const sections = LINKS.map((l) => document.getElementById(l.id)).filter(
       (el): el is HTMLElement => Boolean(el),
     );
 
     const onScroll = () => {
-      const y = window.scrollY;
-      const max =
-        document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(max > 0 ? Math.min(1, Math.max(0, y / max)) : 0);
-      setScrolled(y > 20);
-
-      // Hide on scroll down, reveal on scroll up (after leaving the top)
-      if (y < 48) {
-        setHidden(false);
-      } else if (y > lastY.current + 6) {
-        setHidden(true);
-      } else if (y < lastY.current - 6) {
-        setHidden(false);
-      }
-      lastY.current = y;
-
-      // Dark surface while the sanctuary pin fills the viewport
-      if (sanctuary) {
-        const r = sanctuary.getBoundingClientRect();
-        setOnDark(r.top <= 56 && r.bottom > window.innerHeight * 0.45);
-      }
-
-      // Active reading-list item
       let current: string | null = null;
       for (const el of sections) {
         const r = el.getBoundingClientRect();
@@ -121,34 +79,14 @@ export function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const ink = onDark ? "text-paper" : "text-ink";
-  const mutedInk = onDark ? "text-paper/55" : "text-ink-muted";
-  const hoverInk = onDark ? "hover:text-paper" : "hover:text-ink";
-
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 px-3 transition-[transform,opacity,padding] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] sm:px-5 ${
-        scrolled ? "pt-2 sm:pt-2.5" : "pt-3 sm:pt-4"
-      } ${
-        hidden ? "-translate-y-[120%] opacity-0" : "translate-y-0 opacity-100"
-      } ${ready ? "" : "translate-y-[-8px] opacity-0"}`}
-    >
-      <div
-        className={`relative mx-auto max-w-6xl rounded-sm transition-[backdrop-filter] duration-300 ${
-          scrolled ? "backdrop-blur-[2px]" : ""
-        }`}
-      >
-        <div
-          className={`flex items-center justify-between gap-3 px-1 transition-[height] duration-300 sm:px-2 ${
-            scrolled ? "h-11 sm:h-12" : "h-14 sm:h-16"
-          }`}
-        >
+    <header className="relative z-50 px-3 pt-3 sm:px-5 sm:pt-4">
+      <div className="relative mx-auto max-w-6xl rounded-sm">
+        <div className="flex h-14 items-center justify-between gap-3 px-1 sm:h-16 sm:px-2">
           {/* Wordmark */}
           <a
             href="/"
-            className={`group relative shrink-0 font-serif tracking-tight transition-[color,font-size] duration-300 ${ink} ${
-              scrolled ? "text-base sm:text-lg" : "text-lg sm:text-2xl"
-            }`}
+            className="group relative shrink-0 font-serif text-lg tracking-tight text-ink sm:text-2xl"
           >
             {SITE.name}
             <span
@@ -169,12 +107,8 @@ export function Nav() {
                   key={link.id}
                   href={link.href}
                   className={`font-eyebrow group/link relative flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 ${
-                    isActive
-                      ? onDark
-                        ? "text-gold-soft"
-                        : "text-gold"
-                      : mutedInk
-                  } ${hoverInk}`}
+                    isActive ? "text-gold" : "text-ink-muted hover:text-ink"
+                  }`}
                 >
                   <span
                     aria-hidden
@@ -206,9 +140,11 @@ export function Nav() {
               }}
               aria-pressed={muted}
               aria-label={muted ? "Unmute sound" : "Mute sound"}
-              className={`group relative flex h-10 w-10 items-center justify-center transition-colors duration-300 ${mutedInk} ${hoverInk} ${
-                !muted && onDark ? "text-gold-soft" : ""
-              } ${!muted && !onDark ? "text-gold" : ""}`}
+              className={`group relative flex h-10 w-10 items-center justify-center transition-colors duration-300 ${
+                muted
+                  ? "text-ink-muted hover:text-ink"
+                  : "text-gold hover:text-ink"
+              }`}
             >
               <span
                 className={`flex h-8 w-8 items-center justify-center rounded-sm transition-shadow ${
@@ -225,29 +161,12 @@ export function Nav() {
             </button>
 
             <Button
-              variant={onDark ? "inverse" : "primary"}
-              className={`!rounded-sm !px-3.5 !py-2 !text-[11px] uppercase tracking-[0.14em] sm:!px-4 sm:!text-xs ${
-                onDark
-                  ? "!border-paper/35 !bg-transparent !text-paper hover:!bg-paper/10"
-                  : ""
-              }`}
+              variant="primary"
+              className="!rounded-sm !px-3.5 !py-2 !text-[11px] uppercase tracking-[0.14em] sm:!px-4 sm:!text-xs"
             >
               Sign up
             </Button>
           </div>
-        </div>
-
-        {/* Reading progress hairline — only after leaving the top */}
-        <div
-          aria-hidden
-          className={`absolute inset-x-0 bottom-0 h-px transition-opacity duration-300 ${
-            scrolled ? "opacity-100" : "opacity-0"
-          } ${onDark ? "bg-paper/10" : "bg-ink/8"}`}
-        >
-          <div
-            className="h-full origin-left bg-gold transition-[transform] duration-150 ease-out"
-            style={{ transform: `scaleX(${progress})` }}
-          />
         </div>
       </div>
     </header>
