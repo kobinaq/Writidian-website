@@ -3,13 +3,15 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useSound } from "@/components/sound-context";
 import {
-  createCalmStudioAmbience,
+  createSampleAmbience,
+  SOUNDSCAPE_AUDIO_URLS,
   type AmbientHandle,
 } from "@/lib/ambient-audio";
 
 export function useHeroSanctuaryAudio() {
   const { muted, unlocked, unlockAudio } = useSound();
   const padRef = useRef<AmbientHandle | null>(null);
+  const loadingRef = useRef<Promise<AmbientHandle> | null>(null);
   const volumeRef = useRef(0);
   const mutedRef = useRef(muted);
 
@@ -34,9 +36,20 @@ export function useHeroSanctuaryAudio() {
     const ctx = await unlockAudio();
     if (!ctx) return;
     if (!padRef.current) {
-      padRef.current = createCalmStudioAmbience(ctx);
+      if (!loadingRef.current) {
+        loadingRef.current = createSampleAmbience(
+          ctx,
+          SOUNDSCAPE_AUDIO_URLS.journaling,
+        ).finally(() => {
+          loadingRef.current = null;
+        });
+      }
+      padRef.current = await loadingRef.current;
     }
     await padRef.current.resume();
+    if (!mutedRef.current && volumeRef.current > 0) {
+      padRef.current.setTargetVolume(volumeRef.current, 0.5);
+    }
   }, [unlockAudio]);
 
   const setSanctuaryVolume = useCallback((level: number) => {

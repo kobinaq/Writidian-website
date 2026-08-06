@@ -3,11 +3,8 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useSound } from "@/components/sound-context";
 import {
-  createAmberDriftAmbience,
-  createBasementDoorAjarAmbience,
-  createBubblyReflectionAmbience,
-  createDustyPhotoFrameAmbience,
-  createRainBirdsongAmbience,
+  createSampleAmbience,
+  SOUNDSCAPE_AUDIO_URLS,
   type AmbientHandle,
 } from "@/lib/ambient-audio";
 
@@ -18,11 +15,16 @@ export type SoundscapeSceneId =
   | "horror"
   | "non-binaural";
 
+const SCENE_IDS = Object.keys(
+  SOUNDSCAPE_AUDIO_URLS,
+) as SoundscapeSceneId[];
+
 export function useSoundscapeAudio() {
   const { muted, unlockAudio } = useSound();
   const bedsRef = useRef<Partial<Record<SoundscapeSceneId, AmbientHandle>>>(
     {},
   );
+  const loadingRef = useRef<Promise<typeof bedsRef.current> | null>(null);
   const activeRef = useRef<SoundscapeSceneId | null>(null);
   const mutedRef = useRef(muted);
   const inSectionRef = useRef(false);
@@ -49,43 +51,53 @@ export function useSoundscapeAudio() {
   const ensureBeds = useCallback(async () => {
     const ctx = await unlockAudio();
     if (!ctx) return null;
-    if (!bedsRef.current.journaling) {
-      bedsRef.current.journaling = createBubblyReflectionAmbience(ctx);
+
+    if (bedsRef.current.journaling) {
+      await Promise.all(
+        Object.values(bedsRef.current).map((b) => b?.resume()),
+      );
+      return bedsRef.current;
     }
-    if (!bedsRef.current["literary-fiction"]) {
-      bedsRef.current["literary-fiction"] = createDustyPhotoFrameAmbience(ctx);
+
+    if (!loadingRef.current) {
+      loadingRef.current = (async () => {
+        const loaded = await Promise.all(
+          SCENE_IDS.map(async (id) => {
+            const bed = await createSampleAmbience(
+              ctx,
+              SOUNDSCAPE_AUDIO_URLS[id],
+            );
+            return [id, bed] as const;
+          }),
+        );
+        for (const [id, bed] of loaded) {
+          bedsRef.current[id] = bed;
+        }
+        await Promise.all(
+          Object.values(bedsRef.current).map((b) => b?.resume()),
+        );
+        return bedsRef.current;
+      })().finally(() => {
+        loadingRef.current = null;
+      });
     }
-    if (!bedsRef.current.romance) {
-      bedsRef.current.romance = createAmberDriftAmbience(ctx);
-    }
-    if (!bedsRef.current.horror) {
-      bedsRef.current.horror = createBasementDoorAjarAmbience(ctx);
-    }
-    if (!bedsRef.current["non-binaural"]) {
-      bedsRef.current["non-binaural"] = createRainBirdsongAmbience(ctx);
-    }
-    await Promise.all(
-      Object.values(bedsRef.current).map((b) => b?.resume()),
-    );
-    return bedsRef.current;
+
+    return loadingRef.current;
   }, [unlockAudio]);
 
   const setScene = useCallback(
     async (scene: SoundscapeSceneId | null) => {
-      if (scene === activeRef.current && inSectionRef.current === (scene !== null)) {
+      if (
+        scene === activeRef.current &&
+        inSectionRef.current === (scene !== null)
+      ) {
         return;
       }
       const beds = await ensureBeds();
       if (!beds) return;
       activeRef.current = scene;
       inSectionRef.current = scene !== null;
-      ([
-        "journaling",
-        "literary-fiction",
-        "romance",
-        "horror",
-        "non-binaural",
-      ] as SoundscapeSceneId[]).forEach((id) => {
+      SCENE_IDS.forEach((id) => {
         const target =
           !mutedRef.current && scene === id && inSectionRef.current ? 1 : 0;
         beds[id]?.setTargetVolume(target, 0.55);

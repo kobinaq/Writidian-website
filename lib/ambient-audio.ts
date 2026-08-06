@@ -8,6 +8,64 @@ export type AmbientHandle = {
   stop: () => void;
 };
 
+/** MPEG beds in /public — matched to SOUNDSCAPE_SCENES titles. */
+export const SOUNDSCAPE_AUDIO_URLS = {
+  journaling: "/Bubbly%20reflection.mpeg",
+  "literary-fiction": "/Dusty%20Photo%20Frame.mpeg",
+  romance: "/Amber%20Drift.mpeg",
+  horror: "/Basement%20Door%20Ajar.mpeg",
+  "non-binaural": "/Light%20rain%20%2B%20Birdsong.mpeg",
+} as const;
+
+/** Loop a decoded audio file with the same gain API as synth beds. */
+export async function createSampleAmbience(
+  ctx: AudioContext,
+  url: string,
+  maxGain = 0.75,
+): Promise<AmbientHandle> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to load ambience: ${url}`);
+  }
+  const arrayBuffer = await response.arrayBuffer();
+  const buffer = await ctx.decodeAudioData(arrayBuffer.slice(0));
+
+  const master = ctx.createGain();
+  master.gain.value = 0;
+  master.connect(ctx.destination);
+
+  const source = ctx.createBufferSource();
+  source.buffer = buffer;
+  source.loop = true;
+  source.connect(master);
+  source.start();
+
+  return {
+    setTargetVolume(level: number, ramp = 0.45) {
+      const now = ctx.currentTime;
+      const clamped = Math.max(0, Math.min(1, level)) * maxGain;
+      master.gain.cancelScheduledValues(now);
+      master.gain.setTargetAtTime(clamped, now, ramp);
+    },
+    async resume() {
+      if (ctx.state === "suspended") await ctx.resume();
+    },
+    stop() {
+      try {
+        source.stop();
+      } catch {
+        /* ignore */
+      }
+      master.gain.value = 0;
+      try {
+        master.disconnect();
+      } catch {
+        /* ignore */
+      }
+    },
+  };
+}
+
 function createMaster(ctx: AudioContext, maxGain: number) {
   const master = ctx.createGain();
   master.gain.value = 0;

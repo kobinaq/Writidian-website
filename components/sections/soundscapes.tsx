@@ -148,8 +148,29 @@ export function Soundscapes() {
           ))}
         </div>
 
-        {/* Scene caption — bottom left */}
-        <div className="absolute bottom-20 left-5 z-10 max-w-sm sm:bottom-24 sm:left-8 lg:left-14">
+        {/* Title + body — bottom left */}
+        <div className="absolute bottom-20 left-5 z-10 max-w-md text-left sm:bottom-24 sm:left-8 lg:left-14">
+          <h2 className="font-serif text-[clamp(1.5rem,4.2vw,2.75rem)] leading-[1.1] tracking-tight text-paper">
+            {COPY.soundscapesTitle}
+          </h2>
+          <p className="font-accent mt-3 text-sm leading-relaxed text-paper/80 sm:mt-4 sm:text-base">
+            {COPY.soundscapesBody}
+          </p>
+          <ul className="font-accent mt-3 hidden space-y-2 text-left text-sm leading-relaxed text-paper/75 md:block">
+            {COPY.soundscapeBullets.map((bullet) => (
+              <li key={bullet} className="flex gap-3">
+                <span
+                  aria-hidden
+                  className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-gold"
+                />
+                <span>{bullet}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Scene caption — bottom right */}
+        <div className="absolute bottom-20 right-5 z-10 max-w-sm text-right sm:bottom-24 sm:right-8 lg:right-14">
           <p
             ref={titleRef}
             className="font-eyebrow text-[10px] uppercase tracking-[0.22em] text-gold sm:text-xs"
@@ -158,27 +179,6 @@ export function Soundscapes() {
             ref={captionRef}
             className="mt-1.5 font-serif text-xl leading-snug text-paper sm:mt-2 sm:text-3xl"
           />
-        </div>
-
-        {/* Title + body — bottom right so copy isn't stacked on one side */}
-        <div className="absolute bottom-20 right-5 z-10 max-w-md text-right sm:bottom-24 sm:right-8 lg:right-14">
-          <p className="font-accent text-sm leading-relaxed text-paper/80 sm:text-base">
-            {COPY.soundscapesBody}
-          </p>
-          <h2 className="mt-3 font-serif text-[clamp(1.5rem,4.2vw,2.75rem)] leading-[1.1] tracking-tight text-paper sm:mt-4">
-            {COPY.soundscapesTitle}
-          </h2>
-          <ul className="font-accent mt-3 hidden space-y-2 text-left text-sm leading-relaxed text-paper/75 md:block">
-            {COPY.soundscapeBullets.map((bullet) => (
-              <li key={bullet} className="flex justify-end gap-3">
-                <span className="text-right">{bullet}</span>
-                <span
-                  aria-hidden
-                  className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-gold"
-                />
-              </li>
-            ))}
-          </ul>
         </div>
 
         <div className="absolute bottom-0 z-20 w-full overflow-hidden border-t border-white/15 bg-espresso/25 py-3 text-paper backdrop-blur-[2px] sm:py-4">
