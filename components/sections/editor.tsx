@@ -129,8 +129,8 @@ export function Editor() {
           </div>
 
           <div className="px-4 sm:px-6">
-            <p className="font-serif text-lg font-semibold text-[#eaeaea]/70">
-              I had a dream
+            <p className="font-serif text-lg font-semibold uppercase text-[#eaeaea]/70">
+              I HAD A DREAM
             </p>
             <div className="mt-3 border-t border-[#F9F8F4]/10" />
           </div>

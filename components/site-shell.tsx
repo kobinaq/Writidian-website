@@ -7,7 +7,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
   return (
     <SmoothScroll>
       <Nav />
-      <main className="w-full max-w-full overflow-x-hidden pt-20 sm:pt-24">
+      <main className="w-full max-w-full overflow-x-hidden">
         {children}
       </main>
       <Footer />

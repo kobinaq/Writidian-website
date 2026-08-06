@@ -221,7 +221,6 @@ export function SanctuaryReveal() {
   const veilRef = useRef<HTMLDivElement>(null);
   const noiseLineRef = useRef<HTMLDivElement>(null);
   const captionRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const { unlock, setSanctuaryVolume, fadeOutPastHero } =
     useHeroSanctuaryAudio();
@@ -242,7 +241,6 @@ export function SanctuaryReveal() {
       const clutterEl = clutterRef.current;
       const veil = veilRef.current;
       const caption = captionRef.current;
-      const progress = progressRef.current;
       if (!root || !pin || !scene || !clutterEl) return;
 
       const reduced = window.matchMedia(
@@ -259,7 +257,6 @@ export function SanctuaryReveal() {
         gsap.set(veil, { opacity: 0 });
         if (noiseLine) gsap.set(noiseLine, { opacity: 0 });
         gsap.set(caption, { opacity: 1, y: 0 });
-        if (progress) gsap.set(progress, { scaleX: 1 });
         return;
       }
 
@@ -275,7 +272,6 @@ export function SanctuaryReveal() {
         scale: 1,
         filter: "blur(0px)",
       });
-      if (progress) gsap.set(progress, { scaleX: 0 });
 
       const tl = gsap.timeline({
         defaults: { ease: "none" },
@@ -336,7 +332,6 @@ export function SanctuaryReveal() {
       );
       tl.to(veil, { opacity: 0, duration: 0.45 }, 0.22);
       tl.to(caption, { opacity: 1, y: 0, duration: 0.3 }, 0.55);
-      if (progress) tl.to(progress, { scaleX: 1, duration: 1 }, 0);
 
       const unlockOnce = () => {
         void unlock();
@@ -442,13 +437,9 @@ export function SanctuaryReveal() {
           ref={captionRef}
           className="absolute inset-x-0 bottom-0 z-30 bg-gradient-to-t from-espresso/95 via-espresso/50 to-transparent px-5 pb-[max(3.5rem,calc(env(safe-area-inset-bottom)+2.5rem))] pt-24 text-center sm:px-8 sm:pb-16 sm:pt-32"
         >
-          <div className="mx-auto flex max-w-md items-center gap-4">
-            <span aria-hidden className="h-px flex-1 bg-gold-soft/40" />
-            <p className="font-eyebrow whitespace-nowrap text-[10px] uppercase tracking-[0.3em] text-gold-soft sm:text-[11px]">
-              Your writing sanctuary
-            </p>
-            <span aria-hidden className="h-px flex-1 bg-gold-soft/40" />
-          </div>
+          <p className="font-eyebrow text-[10px] uppercase tracking-[0.3em] text-gold-soft sm:text-[11px]">
+            Your writing sanctuary
+          </p>
           <p className="mx-auto mt-4 max-w-2xl font-serif text-2xl leading-snug text-paper sm:mt-5 sm:text-4xl">
             In here, it&rsquo;s just you, your thoughts{" "}
             <span className="italic text-gold-soft">and the page.</span>
@@ -456,10 +447,6 @@ export function SanctuaryReveal() {
           <p className="font-accent mx-auto mt-3 max-w-lg text-sm leading-relaxed text-paper/65 sm:text-base">
             {COPY.sanctuaryBody}
           </p>
-        </div>
-
-        <div className="absolute inset-x-5 bottom-3 z-40 h-px overflow-hidden bg-paper/15 sm:inset-x-16 sm:bottom-5">
-          <div ref={progressRef} className="hero-progress h-full bg-gold-soft" />
         </div>
       </div>
     </div>
