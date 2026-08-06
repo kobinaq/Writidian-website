@@ -388,15 +388,15 @@ export const STAT_PANELS = [
   {
     id: "resonance",
     label: "Soundscape Resonance",
-    value: "Bubbly Reflection",
+    value: "Journaling",
     unit: "top",
     caption: "The rooms you return to while you write.",
     bars: [
-      { label: "Bubbly Reflection", value: 0.92 },
-      { label: "Dusty Photo Frame", value: 0.78 },
-      { label: "Amber Drift", value: 0.64 },
-      { label: "Basement Door Ajar", value: 0.51 },
-      { label: "Light rain + birdsong", value: 0.38 },
+      { label: "Journaling", value: 0.92 },
+      { label: "Literary fiction", value: 0.78 },
+      { label: "Romance", value: 0.64 },
+      { label: "Horror", value: 0.51 },
+      { label: "Non-binaural", value: 0.38 },
     ],
   },
   {
