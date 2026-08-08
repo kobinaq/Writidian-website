@@ -26,6 +26,7 @@ export function useSoundscapeAudio() {
   );
   const loadingRef = useRef<Promise<typeof bedsRef.current> | null>(null);
   const activeRef = useRef<SoundscapeSceneId | null>(null);
+  const pendingRef = useRef<SoundscapeSceneId | null | undefined>(undefined);
   const mutedRef = useRef(muted);
   const inSectionRef = useRef(false);
 
@@ -87,6 +88,7 @@ export function useSoundscapeAudio() {
 
   const setScene = useCallback(
     async (scene: SoundscapeSceneId | null) => {
+      pendingRef.current = scene;
       if (
         scene === activeRef.current &&
         inSectionRef.current === (scene !== null)
@@ -95,12 +97,14 @@ export function useSoundscapeAudio() {
       }
       const beds = await ensureBeds();
       if (!beds) return;
+      // Ignore stale requests if the playhead moved while beds were loading
+      if (pendingRef.current !== scene) return;
       activeRef.current = scene;
       inSectionRef.current = scene !== null;
       SCENE_IDS.forEach((id) => {
         const target =
           !mutedRef.current && scene === id && inSectionRef.current ? 1 : 0;
-        beds[id]?.setTargetVolume(target, 0.55);
+        beds[id]?.setTargetVolume(target, 0.35);
       });
     },
     [ensureBeds],
@@ -108,10 +112,11 @@ export function useSoundscapeAudio() {
 
   const fadeOutSection = useCallback(() => {
     if (!inSectionRef.current && activeRef.current === null) return;
+    pendingRef.current = null;
     inSectionRef.current = false;
     activeRef.current = null;
     Object.values(bedsRef.current).forEach((bed) => {
-      bed?.setTargetVolume(0, 0.7);
+      bed?.setTargetVolume(0, 0.5);
     });
   }, []);
 

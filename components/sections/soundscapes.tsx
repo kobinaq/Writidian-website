@@ -11,7 +11,18 @@ import { useRef } from "react";
 registerGsap();
 
 const SCENE_IDS = SOUNDSCAPE_SCENES.map((scene) => scene.id) as SoundscapeSceneId[];
+const SCENE_COUNT = SOUNDSCAPE_SCENES.length;
+/** Relative timeline length per scene (hold + crossfade window). */
+const SEGMENT = 1;
+const FADE = 0.22;
 const PARALLAX_START = -7;
+
+function sceneIndexFromProgress(progress: number) {
+  return Math.min(
+    SCENE_COUNT - 1,
+    Math.max(0, Math.floor(progress * SCENE_COUNT * 0.999)),
+  );
+}
 
 export function Soundscapes() {
   const rootRef = useRef<HTMLElement>(null);
@@ -56,7 +67,12 @@ export function Soundscapes() {
 
       gsap.set(cards, { opacity: 0 });
       gsap.set(cards[0], { opacity: 1 });
-      gsap.set(cards[0]?.querySelectorAll("[data-scene-image], [data-scene-foreground]"), { yPercent: 0, scale: 1 });
+      cards.forEach((card) => {
+        const image = card.querySelector("[data-scene-image]");
+        const foreground = card.querySelector("[data-scene-foreground]");
+        if (image) gsap.set(image, { yPercent: PARALLAX_START, scale: 1.08 });
+        if (foreground) gsap.set(foreground, { yPercent: 9, scale: 1.14 });
+      });
       titleEl.textContent = SOUNDSCAPE_SCENES[0].category;
       caption.textContent = SOUNDSCAPE_SCENES[0].title;
 
@@ -76,7 +92,7 @@ export function Soundscapes() {
           onEnterBack: () => {
             void unlockAudio().then(() => ensureBeds());
             lastIndexRef.current = -1;
-            syncScene(SCENE_IDS.length - 1);
+            syncScene(SCENE_COUNT - 1);
           },
           onLeave: () => {
             lastIndexRef.current = -1;
@@ -86,36 +102,42 @@ export function Soundscapes() {
             lastIndexRef.current = -1;
             fadeOutSection();
           },
-          onUpdate: (self) => {
-            const index = Math.min(
-              SCENE_IDS.length - 1,
-              Math.floor(self.progress * 0.999 * SCENE_IDS.length),
-            );
-            syncScene(index);
-          },
+        },
+        // Use scrubbed timeline progress so audio matches the visible crossfade
+        onUpdate: () => {
+          syncScene(sceneIndexFromProgress(tl.progress()));
         },
       });
 
       SOUNDSCAPE_SCENES.forEach((scene, index) => {
-        if (index === 0) return;
-        const previous = cards[index - 1];
-        const next = cards[index];
-        const at = (index - 1) * 0.27;
-        tl.to(previous, { opacity: 0, duration: 0.2 }, at);
-        tl.to(next, { opacity: 1, duration: 0.2 }, at);
+        const card = cards[index];
+        const image = card.querySelector("[data-scene-image]");
+        const foreground = card.querySelector("[data-scene-foreground]");
+        const at = index * SEGMENT;
 
-        tl.fromTo(
-          next.querySelector("[data-scene-image]"),
-          { yPercent: PARALLAX_START, scale: 1.08 },
-          { yPercent: 0, scale: 1, duration: 0.42, ease: "none" },
-          at,
-        );
-        tl.fromTo(
-          next.querySelector("[data-scene-foreground]"),
-          { yPercent: 9, scale: 1.14 },
-          { yPercent: -2, scale: 1, duration: 0.52, ease: "none" },
-          at,
-        );
+        // Every scene (including the first) gets parallax across its segment
+        if (image) {
+          tl.fromTo(
+            image,
+            { yPercent: PARALLAX_START, scale: 1.08 },
+            { yPercent: 0, scale: 1, duration: SEGMENT * 0.85, ease: "none" },
+            at,
+          );
+        }
+        if (foreground) {
+          tl.fromTo(
+            foreground,
+            { yPercent: 9, scale: 1.14 },
+            { yPercent: -2, scale: 1, duration: SEGMENT, ease: "none" },
+            at,
+          );
+        }
+
+        if (index > 0) {
+          const previous = cards[index - 1];
+          tl.to(previous, { opacity: 0, duration: FADE, ease: "none" }, at);
+          tl.to(card, { opacity: 1, duration: FADE, ease: "none" }, at);
+        }
 
         tl.call(
           () => {
@@ -123,7 +145,7 @@ export function Soundscapes() {
             caption.textContent = scene.title;
           },
           undefined,
-          at + 0.05,
+          at,
         );
       });
     },
