@@ -45,7 +45,9 @@ export function ProseSection({
       <h2 className="font-serif text-xl tracking-tight text-ink sm:text-2xl">
         {title}
       </h2>
-      <div className="space-y-3 text-ink-muted">{children}</div>
+      <div className="space-y-3 break-words text-ink-muted [&_a]:text-gold [&_a]:underline [&_a]:underline-offset-2">
+        {children}
+      </div>
     </section>
   );
 }

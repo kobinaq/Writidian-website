@@ -174,7 +174,7 @@ export function Problem() {
     >
       <div
         ref={pinRef}
-        className="relative flex h-[100dvh] flex-col items-center justify-center overflow-hidden px-5 pb-16 pt-24 sm:px-8 sm:pt-28"
+        className="relative flex h-[100dvh] flex-col items-center justify-center overflow-hidden px-5 pb-14 pt-20 sm:px-8 sm:pb-16 sm:pt-28"
       >
         <ProblemCharacters />
         <p className="relative z-10 max-w-5xl text-center font-serif text-[clamp(1.15rem,4.2vw,2.9rem)] leading-[1.3] tracking-tight">
@@ -189,7 +189,7 @@ export function Problem() {
           ))}
         </p>
 
-        <div className="relative z-10 mt-8 max-w-2xl text-center sm:mt-12">
+        <div className="relative z-10 mt-6 max-w-2xl text-center sm:mt-12">
           <p
             data-follow-up
             className="font-accent text-base leading-relaxed text-paper/75 sm:text-lg"
@@ -198,7 +198,7 @@ export function Problem() {
           </p>
           <p
             data-follow-up
-            className="font-eyebrow mt-5 text-[11px] uppercase tracking-[0.3em] text-gold-soft sm:mt-7"
+            className="font-eyebrow mt-4 text-[11px] uppercase tracking-[0.3em] text-gold-soft sm:mt-7"
           >
             {COPY.problemBridge}
           </p>

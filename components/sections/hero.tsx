@@ -67,7 +67,8 @@ function IpadMockup() {
               muted
               loop
               playsInline
-              preload="auto"
+              preload="metadata"
+              poster="/images/writing-sanctuary-focus.jpg"
               aria-label="Writidian product demo"
             >
               <source src="/videos/herodemo.webm" type="video/webm" />
@@ -155,7 +156,7 @@ export function Hero() {
     <section
       id="top"
       ref={rootRef}
-      className="relative flex min-h-[100dvh] items-center overflow-hidden bg-paper"
+      className="relative flex min-h-[100dvh] items-center overflow-hidden bg-paper pb-[env(safe-area-inset-bottom)]"
     >
       <div
         aria-hidden

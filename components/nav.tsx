@@ -2,14 +2,19 @@
 
 import { Button } from "@/components/ui/button";
 import { useSound } from "@/components/sound-context";
-import { SITE } from "@/lib/constants";
-import { useEffect, useState } from "react";
+import { APP_URL, SITE } from "@/lib/constants";
+import { useEffect, useId, useState } from "react";
 
 const LINKS = [
   { href: "/#sanctuary", label: "Sanctuary", id: "sanctuary" },
   { href: "/#soundscapes", label: "Sound", id: "soundscapes" },
   { href: "/#prompt", label: "Prompt", id: "prompt" },
   { href: "/#editor", label: "Write", id: "editor" },
+] as const;
+
+const EXTRA_LINKS = [
+  { href: "/about", label: "About" },
+  { href: "/privacy", label: "Privacy" },
 ] as const;
 
 function SoundIcon({ muted }: { muted: boolean }) {
@@ -51,9 +56,39 @@ function SoundIcon({ muted }: { muted: boolean }) {
   );
 }
 
+function MenuIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      aria-hidden
+    >
+      {open ? (
+        <>
+          <path d="M6 6l12 12" />
+          <path d="M18 6 6 18" />
+        </>
+      ) : (
+        <>
+          <path d="M4 7h16" />
+          <path d="M4 12h16" />
+          <path d="M4 17h16" />
+        </>
+      )}
+    </svg>
+  );
+}
+
 export function Nav() {
   const { muted, toggleMuted, setMuted, unlockAudio } = useSound();
   const [active, setActive] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuId = useId();
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -79,11 +114,24 @@ export function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
   return (
-    <header className="relative z-50 px-3 pt-3 sm:px-5 sm:pt-4">
+    <header className="relative z-50 px-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-5 sm:pt-4">
       <div className="relative mx-auto max-w-6xl rounded-sm">
         <div className="flex h-14 items-center justify-between gap-3 px-1 sm:h-16 sm:px-2">
-          {/* Wordmark */}
           <a
             href="/"
             className="group relative shrink-0 font-serif text-lg tracking-tight text-ink sm:text-2xl"
@@ -95,7 +143,6 @@ export function Nav() {
             />
           </a>
 
-          {/* Reading list — desktop */}
           <nav
             aria-label="Page sections"
             className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-6 md:flex lg:gap-8"
@@ -106,7 +153,7 @@ export function Nav() {
                 <a
                   key={link.id}
                   href={link.href}
-                  className={`font-eyebrow group/link relative flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 ${
+                  className={`font-eyebrow group/link relative flex min-h-11 items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] transition-colors duration-300 ${
                     isActive ? "text-gold" : "text-ink-muted hover:text-ink"
                   }`}
                 >
@@ -130,8 +177,7 @@ export function Nav() {
             })}
           </nav>
 
-          {/* Actions */}
-          <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+          <div className="flex shrink-0 items-center gap-0.5 sm:gap-2">
             <button
               type="button"
               onClick={() => {
@@ -140,7 +186,7 @@ export function Nav() {
               }}
               aria-pressed={muted}
               aria-label={muted ? "Unmute sound" : "Mute sound"}
-              className={`group relative flex h-10 w-10 items-center justify-center transition-colors duration-300 ${
+              className={`relative flex h-11 w-11 items-center justify-center transition-colors duration-300 ${
                 muted
                   ? "text-ink-muted hover:text-ink"
                   : "text-gold hover:text-ink"
@@ -155,20 +201,103 @@ export function Nav() {
               >
                 <SoundIcon muted={muted} />
               </span>
-              <span className="font-eyebrow pointer-events-none absolute left-1/2 top-full z-10 mt-1.5 -translate-x-1/2 whitespace-nowrap rounded-sm border border-ink/10 bg-paper px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-ink opacity-0 shadow-sm transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100">
+              <span className="font-eyebrow pointer-events-none absolute left-1/2 top-full z-10 mt-1.5 -translate-x-1/2 whitespace-nowrap rounded-sm border border-ink/10 bg-paper px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-ink opacity-0 shadow-sm transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100 md:block">
                 {muted ? "Sound off" : "Sound on"}
               </span>
             </button>
 
             <Button
               variant="primary"
-              className="!rounded-sm !px-3.5 !py-2 !text-[11px] uppercase tracking-[0.14em] sm:!px-4 sm:!text-xs"
+              className="!min-h-11 !rounded-sm !px-3.5 !py-2.5 !text-[11px] uppercase tracking-[0.14em] sm:!px-4 sm:!text-xs"
+            >
+              Sign up
+            </Button>
+
+            <button
+              type="button"
+              className="flex h-11 w-11 items-center justify-center text-ink md:hidden"
+              aria-expanded={menuOpen}
+              aria-controls={menuId}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              onClick={() => setMenuOpen((o) => !o)}
+            >
+              <MenuIcon open={menuOpen} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {menuOpen ? (
+        <div
+          id={menuId}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Site menu"
+          className="fixed inset-0 z-[70] flex flex-col bg-paper md:hidden"
+          style={{
+            paddingTop: "max(1rem, env(safe-area-inset-top))",
+            paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))",
+          }}
+        >
+          <div className="flex items-center justify-between px-4 py-2">
+            <a
+              href="/"
+              className="font-serif text-xl tracking-tight text-ink"
+              onClick={() => setMenuOpen(false)}
+            >
+              {SITE.name}
+            </a>
+            <button
+              type="button"
+              className="flex h-11 w-11 items-center justify-center text-ink"
+              aria-label="Close menu"
+              onClick={() => setMenuOpen(false)}
+            >
+              <MenuIcon open />
+            </button>
+          </div>
+
+          <nav
+            aria-label="Mobile sections"
+            className="mt-6 flex flex-1 flex-col gap-1 px-5"
+          >
+            {LINKS.map((link) => (
+              <a
+                key={link.id}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className={`font-serif flex min-h-14 items-center border-b border-ink/8 text-2xl tracking-tight transition-colors ${
+                  active === link.id ? "text-gold" : "text-ink"
+                }`}
+              >
+                {link.label}
+              </a>
+            ))}
+            <div className="mt-8 space-y-1">
+              {EXTRA_LINKS.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="font-eyebrow flex min-h-11 items-center text-[12px] uppercase tracking-[0.2em] text-ink-muted"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </nav>
+
+          <div className="px-5 pt-4">
+            <Button
+              variant="primary"
+              className="!w-full !max-w-none !rounded-sm"
+              href={APP_URL}
             >
               Sign up
             </Button>
           </div>
         </div>
-      </div>
+      ) : null}
     </header>
   );
 }

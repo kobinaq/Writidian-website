@@ -91,6 +91,77 @@ function compassPoint(
   };
 }
 
+function subscribeNarrow(onStoreChange: () => void) {
+  const mq = window.matchMedia("(max-width: 1023px)");
+  mq.addEventListener("change", onStoreChange);
+  return () => mq.removeEventListener("change", onStoreChange);
+}
+
+function getNarrowSnapshot() {
+  return window.matchMedia("(max-width: 1023px)").matches;
+}
+
+function getNarrowServerSnapshot() {
+  return false;
+}
+
+function MobileStatsStack() {
+  return (
+    <section
+      id="stats"
+      className="scroll-mt-24 bg-surface/50 px-5 py-16 sm:px-8 sm:py-24"
+    >
+      <div className="mx-auto max-w-3xl">
+        {STAGES.map((stage) => (
+          <div key={stage.id} className="mb-12 last:mb-0">
+            <h2 className="font-serif text-[clamp(1.6rem,5vw,2.5rem)] leading-[1.1] tracking-tight text-ink">
+              {stage.title}
+            </h2>
+            <p className="font-accent mt-4 text-base leading-relaxed text-ink-muted">
+              {stage.body}
+            </p>
+            {stage.bullets ? (
+              <ul className="font-accent mt-4 space-y-2 text-base leading-relaxed text-ink-muted">
+                {stage.bullets.map((bullet) => (
+                  <li key={bullet} className="flex gap-3">
+                    <span
+                      aria-hidden
+                      className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-gold"
+                    />
+                    {bullet}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </div>
+        ))}
+
+        <div className="mt-4 space-y-4">
+          {STAT_PANELS.map((panel) => (
+            <article
+              key={panel.id}
+              className="rounded-2xl border border-ink/8 bg-paper/70 px-5 py-5"
+            >
+              <p className="font-eyebrow text-[11px] uppercase tracking-[0.18em] text-gold">
+                {panel.label}
+              </p>
+              <p className="mt-3 font-serif text-3xl text-ink">
+                {panel.value}
+                {panel.unit ? (
+                  <span className="ml-1 text-base text-gold">{panel.unit}</span>
+                ) : null}
+              </p>
+              <p className="mt-2 text-base leading-relaxed text-ink-muted">
+                {panel.caption}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function Stats() {
   const rootRef = useRef<HTMLElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
@@ -108,6 +179,11 @@ export function Stats() {
     getReducedMotionSnapshot,
     getReducedMotionServerSnapshot,
   );
+  const isNarrow = useSyncExternalStore(
+    subscribeNarrow,
+    getNarrowSnapshot,
+    getNarrowServerSnapshot,
+  );
 
   const heatCells = useMemo(
     () =>
@@ -120,7 +196,7 @@ export function Stats() {
 
   useGSAP(
     () => {
-      if (reducedMotion) return;
+      if (reducedMotion || isNarrow) return;
 
       const root = rootRef.current;
       const pin = pinRef.current;
@@ -506,7 +582,7 @@ export function Stats() {
         scrollTriggerRef.current = null;
       };
     },
-    { dependencies: [reducedMotion] },
+    { dependencies: [reducedMotion, isNarrow] },
   );
 
   const jumpToPanel = (index: number) => {
@@ -523,7 +599,6 @@ export function Stats() {
       } else {
         window.scrollTo({ top: target, behavior: "smooth" });
       }
-      // Ensure ScrollTrigger catches up even if Lenis onComplete is skipped
       window.setTimeout(() => ScrollTrigger.update(), 1100);
     };
 
@@ -551,57 +626,8 @@ export function Stats() {
     })
     .join(" ");
 
-  if (reducedMotion) {
-    return (
-      <section id="stats" className="bg-surface/50 px-5 py-20 sm:px-8 sm:py-40">
-        <div className="mx-auto max-w-6xl">
-          {STAGES.map((stage) => (
-            <div key={stage.id} className="mb-10 last:mb-0">
-              <h2 className="font-serif text-[clamp(1.6rem,4vw,3rem)] leading-[1.1] tracking-tight text-ink">
-                {stage.title}
-              </h2>
-              <p className="font-accent mt-4 max-w-xl text-base leading-relaxed text-ink-muted sm:mt-5 sm:text-lg">
-                {stage.body}
-              </p>
-              {stage.bullets ? (
-                <ul className="font-accent mt-4 max-w-xl space-y-2 text-sm leading-relaxed text-ink-muted sm:text-base">
-                  {stage.bullets.map((bullet) => (
-                    <li key={bullet} className="flex gap-3">
-                      <span
-                        aria-hidden
-                        className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-gold"
-                      />
-                      {bullet}
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </div>
-          ))}
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {STAT_PANELS.map((panel) => (
-              <div
-                key={panel.id}
-                className="rounded-[1.25rem] border border-transparent bg-transparent p-5"
-              >
-                <p className="text-[10px] uppercase tracking-[0.18em] text-gold">
-                  {panel.label}
-                </p>
-                <p className="mt-3 font-serif text-3xl text-ink">
-                  {panel.value}
-                  {panel.unit ? (
-                    <span className="ml-1 text-base text-gold">
-                      {panel.unit}
-                    </span>
-                  ) : null}
-                </p>
-                <p className="mt-2 text-sm text-ink-muted">{panel.caption}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
+  if (reducedMotion || isNarrow) {
+    return <MobileStatsStack />;
   }
 
   return (

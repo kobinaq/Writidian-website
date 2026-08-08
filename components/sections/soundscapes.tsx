@@ -170,12 +170,12 @@ export function Soundscapes() {
           ))}
         </div>
 
-        {/* Title + body — bottom left */}
-        <div className="absolute bottom-20 left-5 z-10 max-w-md text-left sm:bottom-24 sm:left-8 lg:left-14">
-          <h2 className="font-serif text-[clamp(1.5rem,4.2vw,2.75rem)] leading-[1.1] tracking-tight text-paper">
+        {/* Marketing copy — top on mobile, bottom-left on desktop */}
+        <div className="absolute left-5 right-5 top-24 z-10 max-w-md text-left md:bottom-24 md:top-auto md:right-auto sm:left-8 lg:left-14 lg:bottom-28">
+          <h2 className="font-serif text-[clamp(1.35rem,4.2vw,2.75rem)] leading-[1.1] tracking-tight text-paper">
             {COPY.soundscapesTitle}
           </h2>
-          <p className="font-accent mt-3 text-sm leading-relaxed text-paper/80 sm:mt-4 sm:text-base">
+          <p className="font-accent mt-2 text-sm leading-relaxed text-paper/80 sm:mt-4 sm:text-base md:mt-3">
             {COPY.soundscapesBody}
           </p>
           <ul className="font-accent mt-3 hidden space-y-2 text-left text-sm leading-relaxed text-paper/75 md:block">
@@ -191,19 +191,19 @@ export function Soundscapes() {
           </ul>
         </div>
 
-        {/* Scene caption — bottom right */}
-        <div className="absolute bottom-20 right-5 z-10 max-w-sm text-right sm:bottom-24 sm:right-8 lg:right-14">
+        {/* Scene caption — single column above marquee on mobile; bottom-right on desktop */}
+        <div className="absolute bottom-[calc(3.25rem+env(safe-area-inset-bottom))] left-5 right-5 z-10 text-left md:bottom-24 md:left-auto md:right-8 md:max-w-sm md:text-right lg:right-14 lg:bottom-28">
           <p
             ref={titleRef}
-            className="font-eyebrow text-[10px] uppercase tracking-[0.22em] text-gold sm:text-xs"
+            className="font-eyebrow text-[11px] uppercase tracking-[0.22em] text-gold sm:text-xs"
           />
           <p
             ref={captionRef}
-            className="mt-1.5 font-serif text-xl leading-snug text-paper sm:mt-2 sm:text-3xl"
+            className="mt-1.5 font-serif text-lg leading-snug text-paper sm:mt-2 sm:text-3xl"
           />
         </div>
 
-        <div className="absolute bottom-0 z-20 w-full overflow-hidden border-t border-white/15 bg-espresso/25 py-3 text-paper backdrop-blur-[2px] sm:py-4">
+        <div className="absolute bottom-0 z-20 w-full overflow-hidden border-t border-white/15 bg-espresso/25 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 text-paper backdrop-blur-[2px] sm:py-4 sm:pb-[max(1rem,env(safe-area-inset-bottom))]">
           <div className="marquee-track font-eyebrow flex w-max gap-8 whitespace-nowrap px-4 text-[11px] uppercase tracking-[0.2em] text-paper/75 sm:gap-10 sm:text-sm">
             {[...GENRES, ...GENRES].map((genre, index) => (
               <span key={`${genre}-${index}`} className="flex items-center gap-8 sm:gap-10">
@@ -245,8 +245,7 @@ function PhotoSceneArtwork({
         alt=""
         fill
         priority={priority}
-        unoptimized
-        sizes="100vw"
+        sizes="(max-width: 768px) 100vw, 55vw"
         className="soundscape-photo-foreground object-cover blur-[1.25px]"
         data-scene-foreground
       />

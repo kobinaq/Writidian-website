@@ -125,12 +125,19 @@ function EtymologyEquation() {
   return (
     <div
       ref={rootRef}
-      className="mx-auto flex max-w-4xl flex-col items-center gap-5 px-5 pb-16 font-serif text-2xl text-ink sm:flex-row sm:justify-center sm:gap-7 sm:pb-24 sm:text-4xl"
+      className="mx-auto flex max-w-4xl flex-col items-center gap-3 px-5 pb-16 font-serif text-2xl text-ink sm:flex-row sm:justify-center sm:gap-7 sm:pb-24 sm:text-4xl"
     >
       {ABOUT.equation.map((part, i) => (
-        <div key={part.word} className="flex items-center gap-5 sm:gap-7">
+        <div
+          key={part.word}
+          className="flex flex-col items-center gap-3 sm:flex-row sm:gap-7"
+        >
           {i > 0 ? (
-            <span data-eq className="text-gold" aria-hidden>
+            <span
+              data-eq
+              className="text-gold"
+              aria-hidden
+            >
               {i === ABOUT.equation.length - 1 ? "=" : "+"}
             </span>
           ) : null}
@@ -140,7 +147,7 @@ function EtymologyEquation() {
             </span>
             {part.note ? (
               <span
-                className={`mt-2 font-sans text-[10px] uppercase tracking-[0.2em] sm:text-xs ${
+                className={`mt-2 font-sans text-xs uppercase tracking-[0.2em] ${
                   part.emphasis ? "text-gold" : "text-ink-muted"
                 }`}
               >
@@ -165,7 +172,7 @@ export function AboutPageContent() {
       <EtymologyEquation />
 
       {/* Thinking — image-led band */}
-      <section className="relative min-h-[70vh] overflow-hidden">
+      <section className="relative min-h-[min(60dvh,560px)] overflow-hidden sm:min-h-[70vh]">
         <Image
           src="/images/writing-sanctuary-focus.jpg"
           alt="A focused writer at a quiet desk"
@@ -178,12 +185,12 @@ export function AboutPageContent() {
           aria-hidden
           className="absolute inset-0 bg-gradient-to-t from-espresso/85 via-espresso/45 to-espresso/25"
         />
-        <div className="relative z-10 mx-auto flex min-h-[70vh] max-w-3xl items-end px-5 py-16 sm:px-8 sm:py-24">
+        <div className="relative z-10 mx-auto flex min-h-[min(60dvh,560px)] max-w-3xl items-end px-5 pb-[max(4rem,env(safe-area-inset-bottom))] pt-16 sm:min-h-[70vh] sm:px-8 sm:py-24">
           <Reveal y={40} className="w-full">
             <p className="font-eyebrow text-[11px] uppercase tracking-[0.22em] text-gold-soft">
               Why we write
             </p>
-            <p className="mt-5 font-serif text-[clamp(1.5rem,4vw,2.15rem)] leading-[1.25] text-paper">
+            <p className="mt-5 font-serif text-[clamp(1.35rem,4vw,2.15rem)] leading-[1.25] text-paper">
               {thinking}
             </p>
           </Reveal>
@@ -224,7 +231,9 @@ export function AboutPageContent() {
             {purpose}
           </p>
           <div className="mt-10 flex flex-col items-center gap-4 sm:mt-12">
-            <Button href={APP_URL}>Begin writing</Button>
+            <Button href={APP_URL} className="max-md:!w-full max-md:!max-w-xs">
+              Begin writing
+            </Button>
             <p className="font-eyebrow text-[11px] uppercase tracking-[0.2em] text-ink-muted">
               Free to start
             </p>

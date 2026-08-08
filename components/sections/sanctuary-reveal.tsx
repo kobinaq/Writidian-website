@@ -38,21 +38,25 @@ function NotificationCard({
   index: number;
   compact?: boolean;
 }) {
-  const floatDuration = 3.2 + (index % 5) * 0.35;
-  const floatDelay = index * 0.18;
-  const tilt = ((index % 5) - 2) * 2.2;
-  const floatY = compact ? 4 : 8;
+  const reduced =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   const theme = themeFor(brand);
-  const iconSize = compact ? 22 : 28;
+  const iconSize = compact ? 18 : 22;
+  const floatY = 5 + (index % 3) * 2.5;
+  const floatDuration = 3.4 + (index % 4) * 0.45;
+  const floatDelay = index * 0.18;
+  const tilt = ((index % 5) - 2) * 1.1;
 
   const shell =
     theme === "dark"
-      ? "border border-white/10 bg-[#1C1C1E]/95 text-white"
+      ? "bg-[#1c1c1e]/92 text-white ring-1 ring-white/10"
       : theme === "discord"
-        ? "border border-white/10 bg-[#2B2D31]/96 text-white"
+        ? "bg-[#313338]/95 text-white ring-1 ring-white/10"
         : theme === "whatsapp"
-          ? "border border-[#25D366]/25 bg-white/95 text-ink"
-          : "border border-black/5 bg-white/94 text-ink";
+          ? "bg-[#efeae2]/95 text-ink ring-1 ring-black/5"
+          : "bg-white/92 text-ink ring-1 ring-black/5";
 
   const muted =
     theme === "dark" || theme === "discord"
@@ -70,46 +74,62 @@ function NotificationCard({
   return (
     <motion.div
       className={`relative ${compact ? "w-[min(48vw,12.5rem)]" : "w-[min(74vw,18rem)]"}`}
-      initial={{ opacity: 0, scale: 0.82, y: 18 }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-        y: [0, -floatY, 0],
-        rotate: [tilt, tilt + 1.4, tilt],
-      }}
-      transition={{
-        opacity: { duration: 0.45, delay: floatDelay * 0.35 },
-        scale: {
-          type: "spring",
-          stiffness: 280,
-          damping: 18,
-          delay: floatDelay * 0.35,
-        },
-        y: {
-          duration: floatDuration,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: floatDelay,
-        },
-        rotate: {
-          duration: floatDuration * 1.15,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: floatDelay,
-        },
-      }}
+      initial={reduced ? false : { opacity: 0, scale: 0.82, y: 18 }}
+      animate={
+        reduced
+          ? { opacity: 1, scale: 1, y: 0, rotate: tilt }
+          : {
+              opacity: 1,
+              scale: 1,
+              y: [0, -floatY, 0],
+              rotate: [tilt, tilt + 1.4, tilt],
+            }
+      }
+      transition={
+        reduced
+          ? { duration: 0 }
+          : {
+              opacity: { duration: 0.45, delay: floatDelay * 0.35 },
+              scale: {
+                type: "spring",
+                stiffness: 280,
+                damping: 18,
+                delay: floatDelay * 0.35,
+              },
+              y: {
+                duration: floatDuration,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: floatDelay,
+              },
+              rotate: {
+                duration: floatDuration * 1.15,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: floatDelay,
+              },
+            }
+      }
     >
       <motion.span
         aria-hidden
         className="absolute -right-1 -top-1 z-10 h-2.5 w-2.5 rounded-full sm:h-3 sm:w-3"
         style={{ background: accent }}
-        animate={{ scale: [1, 1.35, 1], opacity: [1, 0.55, 1] }}
-        transition={{
-          duration: 1.6 + (index % 3) * 0.2,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: index * 0.12,
-        }}
+        animate={
+          reduced
+            ? { scale: 1, opacity: 1 }
+            : { scale: [1, 1.35, 1], opacity: [1, 0.55, 1] }
+        }
+        transition={
+          reduced
+            ? { duration: 0 }
+            : {
+                duration: 1.6 + (index % 3) * 0.2,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: index * 0.12,
+              }
+        }
       />
 
       <div

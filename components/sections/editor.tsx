@@ -149,7 +149,7 @@ export function Editor() {
               </p>
             ))}
             <p className="font-serif text-lg text-[#F9F8F4] sm:text-xl">
-              <span className="inline-block h-[1.1em] w-0.5 animate-pulse bg-[#C6A87C] align-middle" />
+              <span className="inline-block h-[1.1em] w-0.5 animate-pulse bg-[#C6A87C] align-middle motion-reduce:animate-none" />
             </p>
           </div>
 

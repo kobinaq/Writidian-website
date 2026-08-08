@@ -6,7 +6,7 @@ import { COPY } from "@/lib/constants";
 
 export function FinalCta() {
   return (
-    <section className="relative overflow-hidden bg-espresso px-5 py-20 text-paper sm:px-8 sm:py-48">
+    <section className="relative overflow-hidden bg-espresso px-5 py-20 pb-[max(5rem,env(safe-area-inset-bottom))] text-paper sm:px-8 sm:py-48">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 opacity-40"
@@ -23,7 +23,12 @@ export function FinalCta() {
           {COPY.finalSupport}
         </p>
         <div className="mt-8 flex justify-center sm:mt-12">
-          <Button variant="inverse">Sign up for free</Button>
+          <Button
+            variant="inverse"
+            className="max-md:!w-full max-md:!max-w-xs"
+          >
+            Sign up for free
+          </Button>
         </div>
       </Reveal>
     </section>

@@ -66,7 +66,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-ink/10 bg-surface/60">
+    <footer className="border-t border-ink/10 bg-surface/60 pb-[env(safe-area-inset-bottom)]">
       <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-16">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           <div className="sm:col-span-2 lg:col-span-1">
@@ -91,7 +91,7 @@ export function Footer() {
                       : undefined
                   }
                   aria-label={social.label}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-ink/10 text-ink-muted transition-colors hover:border-gold/40 hover:text-ink"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-ink/10 text-ink-muted transition-colors hover:border-gold/40 hover:text-ink"
                 >
                   <SocialIcon id={social.id} />
                 </a>
@@ -127,7 +127,7 @@ export function Footer() {
                               rel: "noopener noreferrer",
                             }
                           : {})}
-                        className="text-sm text-ink-muted transition-colors hover:text-ink"
+                        className="inline-flex min-h-11 items-center text-sm text-ink-muted transition-colors hover:text-ink"
                       >
                         {link.label}
                       </a>

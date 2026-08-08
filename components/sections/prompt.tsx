@@ -1,6 +1,6 @@
 "use client";
 
-import { COPY, SAMPLE_PROMPTS } from "@/lib/constants";
+import { APP_URL, COPY, SAMPLE_PROMPTS } from "@/lib/constants";
 import { gsap, registerGsap, ScrollTrigger } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
@@ -114,7 +114,7 @@ export function Prompt() {
         });
 
         cycleTl.to(front, {
-          x: -140,
+          x: window.matchMedia("(max-width: 767px)").matches ? -72 : -140,
           rotate: -10,
           opacity: 0,
           duration: 0.55,
@@ -217,7 +217,7 @@ export function Prompt() {
                 ).text
               }
             </p>
-            <div className="mt-8 inline-flex rounded-full border px-6 py-2.5 text-sm tracking-wide sm:mt-12 sm:px-7 sm:py-3">
+            <div className="mt-8 inline-flex min-h-11 items-center rounded-full border px-6 py-2.5 text-sm tracking-wide sm:mt-12 sm:px-7 sm:py-3">
               Write Now
             </div>
             {/* Room for the two peeking cards below */}
@@ -238,9 +238,14 @@ export function Prompt() {
               <p className="font-prompt mt-8 text-[clamp(1.05rem,2.1vw,1.5rem)] leading-relaxed text-ink">
                 {prompt.text}
               </p>
-              <div className="mt-8 inline-flex rounded-full border border-gold px-6 py-2.5 text-sm tracking-wide text-gold sm:mt-12 sm:px-7 sm:py-3">
+              <a
+                href={APP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 inline-flex min-h-11 items-center rounded-full border border-gold px-6 py-2.5 text-sm tracking-wide text-gold transition-colors hover:bg-gold/10 sm:mt-12 sm:px-7 sm:py-3"
+              >
                 Write Now
-              </div>
+              </a>
             </article>
           ))}
         </div>

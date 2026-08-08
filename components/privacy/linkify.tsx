@@ -31,7 +31,7 @@ export function linkifyText(text: string): ReactNode[] {
       <a
         key={`${match.index}-${token}`}
         href={href}
-        className="text-gold underline-offset-2 hover:underline"
+        className="break-words text-gold underline underline-offset-2 hover:text-ink"
         {...(href.startsWith("http")
           ? { target: "_blank", rel: "noopener noreferrer" }
           : {})}
