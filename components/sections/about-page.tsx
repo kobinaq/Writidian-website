@@ -59,7 +59,7 @@ function LexiconHero() {
       <div className="relative mx-auto max-w-3xl">
         <p
           data-lex
-          className="font-eyebrow text-[12px] uppercase tracking-[0.24em] text-gold"
+          className="font-eyebrow text-[12px] uppercase tracking-[0.24em] text-ink"
         >
           {ABOUT.title}
         </p>
@@ -76,7 +76,7 @@ function LexiconHero() {
 
         <p
           data-lex
-          className="font-eyebrow mt-4 text-[12px] uppercase tracking-[0.2em] text-gold sm:mt-5"
+          className="font-eyebrow mt-4 text-[12px] uppercase tracking-[0.2em] text-ink-muted sm:mt-5"
         >
           {lexicon.gloss}
         </p>
@@ -96,7 +96,7 @@ function LexiconHero() {
 
         <dl data-lex className="mt-10 space-y-7 sm:mt-12 sm:space-y-8">
           <div>
-            <dt className="font-eyebrow text-[11px] uppercase tracking-[0.2em] text-gold">
+            <dt className="font-eyebrow text-[11px] uppercase tracking-[0.2em] text-ink">
               {lexicon.etymologyLabel}
             </dt>
             <dd className="mt-2 font-serif text-xl leading-snug text-ink sm:text-2xl">
@@ -107,7 +107,7 @@ function LexiconHero() {
             </dd>
           </div>
           <div>
-            <dt className="font-eyebrow text-[11px] uppercase tracking-[0.2em] text-gold">
+            <dt className="font-eyebrow text-[11px] uppercase tracking-[0.2em] text-ink">
               {lexicon.meaningLabel}
             </dt>
             <dd className="mt-2 font-serif text-xl italic leading-snug text-ink sm:text-2xl">
@@ -127,7 +127,7 @@ function PhilosophyBands() {
     <>
       <section className="bg-paper px-5 py-16 sm:px-8 sm:py-24">
         <Reveal className="mx-auto max-w-3xl">
-          <p className="font-eyebrow text-[11px] uppercase tracking-[0.22em] text-gold">
+          <p className="font-eyebrow text-[11px] uppercase tracking-[0.22em] text-ink">
             Belief
           </p>
           <p className="mt-5 font-serif text-[clamp(1.4rem,3.5vw,2.1rem)] leading-[1.3] text-ink">
@@ -157,7 +157,7 @@ function PhilosophyBands() {
 
       <section className="bg-surface/60 px-5 py-16 sm:px-8 sm:py-24">
         <Reveal className="mx-auto max-w-3xl">
-          <p className="font-eyebrow text-[11px] uppercase tracking-[0.22em] text-gold">
+          <p className="font-eyebrow text-[11px] uppercase tracking-[0.22em] text-ink">
             Purpose
           </p>
           <p className="mt-5 font-serif text-[clamp(1.4rem,3.5vw,2.1rem)] leading-[1.3] text-ink">
@@ -245,7 +245,7 @@ function VisionMission() {
 
       <section className="bg-paper px-5 py-20 sm:px-8 sm:py-32">
         <Reveal className="mx-auto max-w-3xl text-center sm:text-left">
-          <p className="font-eyebrow text-[11px] uppercase tracking-[0.22em] text-gold">
+          <p className="font-eyebrow text-[11px] uppercase tracking-[0.22em] text-ink">
             {ABOUT.mission.label}
           </p>
           <p className="mt-6 font-serif text-[clamp(1.5rem,4vw,2.5rem)] leading-[1.22] text-ink">
